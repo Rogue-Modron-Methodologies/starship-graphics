@@ -7,15 +7,11 @@
 //
 //  The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
-
 #ifndef RESOURCE_H
 #define RESOURCE_H
 
 #include <string>
 #include "Object.h"
-
-
-using namespace std;
 
 class Resource : public Object
 {
@@ -30,7 +26,7 @@ public:
 		rCap = 4;			///////////////////////  SB 2
 	}
 
-	Resource(Resource &right, sf::Vector2f pos, int num, string name)
+	Resource(Resource &right, sf::Vector2f pos, int num, std::string name)
 	{
 		this->name = name;
 		this->num = num;

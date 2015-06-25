@@ -7,7 +7,6 @@
 //
 //  The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
-
 #include "Universe.h"
 #include "Game.h"
 
@@ -42,7 +41,7 @@ void Universe::printCurrentAdventure(sf::RenderWindow &gWindow)
 {
 	for (int i = 0; i < 3; i++)
 	{
-		cout << "Adventure Card " << i + 1 << endl;
+		std::cout << "Adventure Card " << i + 1 << std::endl;
 		cAdv[i]->displayCard(gWindow);
 	}
 }
@@ -112,17 +111,17 @@ Card** Universe::getSector(int num)
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
 void Universe::adventureDeckSetup()
 {
-	stringstream ss;
+	std::stringstream ss;
 	std::string name, buffer, mission, requirement, temp;
 	int deckNum, astro, fame, resourceNum, vicPts;
 	AdventureCard* tempCard = 0;
 	int ctr2 = 0, ctr3 = 0, ctr4 = 0;
 	AdventureCard* tAry2[3]; AdventureCard* tAry3[3]; AdventureCard* tAry4[3];
 
-	ifstream inputFile(ADVENTURELIST.c_str());
+	std::ifstream inputFile(ADVENTURELIST.c_str());
 	if (!inputFile)
 	{
-		cout << ADVENTURELIST.c_str() << " failed to open.  Terminating Program\n";
+		std::cout << ADVENTURELIST.c_str() << " failed to open.  Terminating Program\n";
 		exit(EXIT_FAILURE);
 	}
 	getline(inputFile, buffer); // Title Line
@@ -196,17 +195,17 @@ void Universe::adventureDeckSetup()
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
 void Universe::universeSetup()
 {
-	stringstream ss;
+	std::stringstream ss;
 	std::string name, buffer, transaction, temp;
 	int deckNum, value, pts, resource, limit, type;
 	int ctr0 = 0, ctr1 = 0, ctr2 = 0, ctr3 = 0, ctr4 = 0;
 	Card* list0[40]; Card* list1[7]; Card* list2[7]; Card* list3[7]; Card* list4[7];
 	Card* tempCard = 0;
 
-	ifstream inputFile(CARDLIST.c_str());
+	std::ifstream inputFile(CARDLIST.c_str());
 	if (!inputFile)
 	{
-		cout << CARDLIST.c_str() << " failed to open.  Terminating Program\n";
+		std::cout << CARDLIST.c_str() << " failed to open.  Terminating Program\n";
 		exit(EXIT_FAILURE);
 	}
 	getline(inputFile, buffer); // Title Line

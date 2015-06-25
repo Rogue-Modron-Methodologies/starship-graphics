@@ -7,7 +7,6 @@
 //
 //  The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
-
 #ifndef STARSHIP_H
 #define STARSHIP_H
 
@@ -19,7 +18,6 @@
 #include "Module.h"
 #include "Card.h"
 
-using namespace std;
 enum Booster {B1, B2, B3};
 enum Laser {L1, L2, L3};
 enum ShipHold {H1, H2};
@@ -80,7 +78,9 @@ public:
 	void makeSmall();
 	void makeBig();
 	void bigLeftClicked(sf::RenderWindow &window, std::string &statusUpdate);
-	void bigRightClicked(sf::RenderWindow &window, std::string &statusUpdate);
+	void bigRightClicked(sf::RenderWindow &window, std::string &statusUpdate); 
+	void gainResource(int type, std::string &statusUpdate);
+	void loseResource(int type, std::string &statusUpdate);
 	
 	
 };

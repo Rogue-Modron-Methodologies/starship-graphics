@@ -7,13 +7,10 @@
 //
 //  The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
-
 #ifndef CARD_H
 #define CARD_H
 
 #include "Object.h"
-
-
 
 const sf::Vector2f CRDSIZE = { 500, 500 };
 const sf::Vector2u CSRCSZE = { 250, 385 };

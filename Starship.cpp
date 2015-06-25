@@ -7,7 +7,6 @@
 //
 //  The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
-
 #include "Starship.h"
 
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
@@ -191,7 +190,7 @@ void Starship::makeSmall()
 //  Checks all ship objects for mouse selection
 //
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
-void Starship::bigLeftClicked(sf::RenderWindow &gWindow, string &statusUpdate)
+void Starship::bigLeftClicked(sf::RenderWindow &gWindow, std::string &statusUpdate)
 {
 	if (resources[Science]->isTargeted(gWindow))
 		resources[Science]->gainResource(statusUpdate);
@@ -218,9 +217,9 @@ void Starship::bigLeftClicked(sf::RenderWindow &gWindow, string &statusUpdate)
 	else if (lasers[L3]->isTargeted(gWindow))
 		addLaser(L3, statusUpdate);
 	else if (shipHold[H1]->isTargeted(gWindow)) ////////////////////////////////////////////////////
-		cout << H1;
+		std::cout << H1;
 	else if (shipHold[H2]->isTargeted(gWindow)) //////////////////////////////////////////////////// 
-		cout << H2;
+		std::cout << H2;
 }
 
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
@@ -228,7 +227,7 @@ void Starship::bigLeftClicked(sf::RenderWindow &gWindow, string &statusUpdate)
 //  Checks all ship objects for mouse selection
 //
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
-void Starship::bigRightClicked(sf::RenderWindow &gWindow, string &statusUpdate)
+void Starship::bigRightClicked(sf::RenderWindow &gWindow, std::string &statusUpdate)
 {
 	if (resources[Science]->isTargeted(gWindow))
 		resources[Science]->loseResource(statusUpdate);
@@ -243,10 +242,30 @@ void Starship::bigRightClicked(sf::RenderWindow &gWindow, string &statusUpdate)
 	else if (resources[Carbon]->isTargeted(gWindow))
 		resources[Carbon]->loseResource(statusUpdate);
 	else if (shipHold[H1]->isTargeted(gWindow)) ////////////////////////////////////////////////////
-		cout << H1;
+		std::cout << H1;
 	else if (shipHold[H2]->isTargeted(gWindow)) ////////////////////////////////////////////////////
-		cout << H2;
+		std::cout << H2;
 
+}
+
+// (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
+//  
+//  Gains a resource of a chosen type
+//
+// (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
+void Starship::gainResource(int type, std::string &statusUpdate)
+{
+	resources[type]->gainResource(statusUpdate);
+}
+
+// (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
+//  
+//  Loses a resource of a chosen type
+//
+// (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
+void Starship::loseResource(int type, std::string &statusUpdate)
+{
+	resources[type]->loseResource(statusUpdate);
 }
 
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
@@ -254,7 +273,7 @@ void Starship::bigRightClicked(sf::RenderWindow &gWindow, string &statusUpdate)
 //  Adds or upgrades a laser if allowed
 //
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
-void Starship::addLaser(int pos, string &statusUpdate)
+void Starship::addLaser(int pos, std::string &statusUpdate)
 {
 	if (lasers[pos]->getNum() < 2)
 	{
@@ -282,7 +301,7 @@ void Starship::addLaser(int pos, string &statusUpdate)
 //  Adds or upgrades a booster if allowed
 //
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
-void Starship::addBooster(int pos, string &statusUpdate)
+void Starship::addBooster(int pos, std::string &statusUpdate)
 {
 	if (boosters[pos]->getNum() < 2)
 	{

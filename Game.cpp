@@ -7,7 +7,6 @@
 //
 //  The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
-
 #include "Game.h"
 
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
@@ -18,7 +17,7 @@
 Game::Game()
 {
 	if (!font.loadFromFile(FNTFLE)){
-		cout << "Font not Loaded" << endl;
+		std::cout << "Font not Loaded" << std::endl;
 	}
 	P1 = new Player("Player1", 1);		// Default names for bugtesting
 	P2 = new Player("Player2", 2);		// Default names for bugtesting
@@ -80,7 +79,11 @@ void Game::playerSetup()
 	tempCard->getSprite()->setTextureRect(sf::IntRect(tempCard->getSrcPos().x * tempCard->getSrcSze().y, tempCard->getSrcPos().y * tempCard->getSrcSze().y, tempCard->getSrcSze().x, tempCard->getSrcSze().y));
 	P1->getColonyZone()->insertNode(tempCard);
 
-	tempCard = new ColonyCard(-1, "Colony: Alioth VIII", colony, Carbon, 1, 1, STRFILE, TRDSPOS, CRDSSCL);
+	tempCard = new ColonyCard(-1, "Colony: Alioth VIII", colony, Carbon, 1, 1, STRFILE, TRDSPOS, { .35f, .35f });
+	tempCard->getSprite()->setTextureRect(sf::IntRect(tempCard->getSrcPos().x * tempCard->getSrcSze().y, tempCard->getSrcPos().y * tempCard->getSrcSze().y, tempCard->getSrcSze().x, tempCard->getSrcSze().y));
+	P1->getTradeZone()->insertNode(tempCard);
+
+	tempCard = new ColonyCard(-1, "Colony: Alioth VIII", colony, Carbon, 1, 1, STRFILE, TRDSPOS, { .35f, .35f });
 	tempCard->getSprite()->setTextureRect(sf::IntRect(tempCard->getSrcPos().x * tempCard->getSrcSze().y, tempCard->getSrcPos().y * tempCard->getSrcSze().y, tempCard->getSrcSze().x, tempCard->getSrcSze().y));
 	P1->getTradeZone()->insertNode(tempCard);
 
@@ -113,6 +116,7 @@ void Game::gameLoop()
 //		cin >> choice;
 //	}
 	sf::Event event;
+	int tempType;
 	while (gWindow.isOpen())
 	{
 		if (!phaseSetupComplete)
@@ -182,10 +186,10 @@ void Game::gameLoop()
 					break;
 
 				case sf::Event::MouseMoved:
-					std::cout << endl;
+					std::cout << std::endl;
 					if (cPlyr->getStarship()->isTargeted(gWindow) && cPlyr->getStarship()->isSmall())
 					{
-						cout << "P1 Ship Glows" << endl;
+						std::cout << "P1 Ship Glows" << std::endl;
 					}
 					break;
 				case sf::Event::MouseButtonPressed:
@@ -218,21 +222,21 @@ void Game::gameLoop()
 						else if (sf::Mouse::isButtonPressed(sf::Mouse::Right))
 							cPlyr->makeBig();
 					}
-					// Colony Zone (Large) is clicked
-					else if (!cPlyr->getColonyZone()->isSmall() && cPlyr->getColonyZone()->isZoneTargeted(gWindow))
+					// Colony Zone (Large List) is clicked
+					else if (!cPlyr->getColonyZone()->isSmall() && !cPlyr->getColonyZone()->showIconOnly() && cPlyr->getColonyZone()->isZoneTargeted(gWindow, tempType))
 					{
 						if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
-							cout << "Resource Gained" << endl;
+							cPlyr->getStarship()->gainResource(tempType, statusUpdate);
 						else if (sf::Mouse::isButtonPressed(sf::Mouse::Right))
-							cout << "Resource Lost" << endl;
+							cPlyr->getStarship()->loseResource(tempType, statusUpdate);
 					}
-					// Trade Zone (Large) is clicked
-					else if (!cPlyr->getTradeZone()->isSmall() && cPlyr->getTradeZone()->isZoneTargeted(gWindow))
+					// Trade Zone (Large List) is clicked
+					else if (!cPlyr->getTradeZone()->isSmall() && !cPlyr->getTradeZone()->showIconOnly() && cPlyr->getTradeZone()->isZoneTargeted(gWindow, tempType))
 					{	
 						if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
-							cout << "Resource Gained" << endl;
+							cPlyr->getStarship()->gainResource(tempType, statusUpdate);
 						else if (sf::Mouse::isButtonPressed(sf::Mouse::Right))
-							cout << "Resource Lost" << endl;
+							cPlyr->getStarship()->loseResource(tempType, statusUpdate);
 					}
 					//  Starship (Large) && Empty Space is clicked
 					else if (!cPlyr->getStarship()->isTargeted(gWindow) && !cPlyr->getStarship()->isSmall())
@@ -293,9 +297,10 @@ void Game::phaseSetup()
 	case production:
 		phaseNameString.setString("Production Phase");
 		dieRoll = rollSpeedDie();
-		cout << dieRoll << endl;
+		std::cout << dieRoll << std::endl;
 		cPlyr->getStarship()->calcMaxDistance(dieRoll);
-//		cPlyr->makeBig();
+		cPlyr->makeBig();
+		cPlyr->expandColonyZone();
 		break;
 	case flight:
 		phaseNameString.setString("Flight Phase");
@@ -321,7 +326,7 @@ void Game::endPhase()
 	cPhase++;
 	if (cPhase == 4)
 	{
-		cout << "Checkwin Here?" << endl;
+		std::cout << "Checkwin Here?" << std::endl;
 		cPhase = 0;
 	}
 	phaseSetupComplete = false;		
@@ -353,7 +358,7 @@ void Game::updateGameWindow(sf::RenderWindow &gWindow)
 //  updates the Error String and timer with the error message
 //
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
-void Game::setError(string error)
+void Game::setError(std::string error)
 {
 	errorTimer = 255;
 	errorString.setString(error);

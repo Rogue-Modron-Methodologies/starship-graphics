@@ -7,7 +7,6 @@
 //
 //  The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
-
 #include "Resource.h"	
 
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
@@ -26,7 +25,7 @@ void Resource::update()
 //  Attemps to use a resource
 //
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
-bool Resource::loseResource(string &statusUpdate)
+bool Resource::loseResource(std::string &statusUpdate)
 {
 	if (num > 0)		// num: current resource quantity
 	{
@@ -43,7 +42,7 @@ bool Resource::loseResource(string &statusUpdate)
 //  Attemps to gain a resource
 //
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
-bool Resource::gainResource(string &statusUpdate)
+bool Resource::gainResource(std::string &statusUpdate)
 {
 	if (num < rCap)	// num: current resource quantity
 	{

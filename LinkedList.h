@@ -7,7 +7,6 @@
 //
 //  The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
-
 #ifndef Linked_List_H
 #define Linked_List_H
 
@@ -76,7 +75,7 @@ bool isIconTargeted(sf::RenderWindow &gWindow) const{
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯)
 // Checks to see if any card in the List has been targeted   
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯)
-bool isZoneTargeted(sf::RenderWindow &gWindow) const
+bool isZoneTargeted(sf::RenderWindow &gWindow, int &type) const
 {
 	ListNode<T> *walker;  
 
@@ -87,7 +86,7 @@ bool isZoneTargeted(sf::RenderWindow &gWindow) const
 	{
 		if (walker->getData()->isTargeted(gWindow))
 		{
-			cout << "Card Targeted" << endl;
+			type = walker->getData()->getType();
 			return true;
 		}
 		walker = walker->getNext();

@@ -7,7 +7,6 @@
 //
 //  The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
-
 #include "Player.h"
 
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
@@ -21,7 +20,7 @@ Player::Player(std::string name, int num)
 	ColonyZone = new LinkedList<Card>;
 	TradeZone = new LinkedList<Card>;
 	if (!font.loadFromFile(FNTFLE)){
-		cout << "Font not Loaded" << endl;
+		std::cout << "Font not Loaded" << std::endl;
 	}
 	cZoneString.setFont(font);
 	cZoneString.setString("Colony");
@@ -39,27 +38,27 @@ Player::Player(std::string name, int num)
 
 	astroIcon = new Object(ASTFLE, STDSZE, { 90, 860 }, { .15f, .15f }, { 200, 200 }, 25);	// sb 25
 	astroString.setFont(font);
-	astroString.setString(to_string(astroIcon->getNum()));							
+	astroString.setString(std::to_string(astroIcon->getNum()));
 	astroString.setPosition({ 130, 855 });
 
 	vPtIcon = new Object(SYM1FLE, STDSZE, { 180, 860 }, { .21f, .21f }, { 150, 150 }, 1);		// sb 1
 	vPtIcon->getSprite()->setTextureRect(sf::IntRect(vPtIcon->getSrcPos().x * vPtIcon->getSrcSze().y, vPtIcon->getSrcPos().y * vPtIcon->getSrcSze().y, vPtIcon->getSrcSze().y, vPtIcon->getSrcSze().y));
 	vPtString.setFont(font);
-	vPtString.setString(to_string(vPtIcon->getNum()));
+	vPtString.setString(std::to_string(vPtIcon->getNum()));
 	vPtString.setPosition({ 220, 855 });
 	
 	frPtIcon = new Object(vPtIcon, { 260, 860 }, 1);			// sb 0
 	frPtIcon->setSrcPos({ 1 , 0 });
 	frPtIcon->getSprite()->setTextureRect(sf::IntRect(frPtIcon->getSrcPos().x * frPtIcon->getSrcSze().y, frPtIcon->getSrcPos().y * frPtIcon->getSrcSze().y, frPtIcon->getSrcSze().y, frPtIcon->getSrcSze().y));
 	frPtString.setFont(font);
-	frPtString.setString(to_string(frPtIcon->getNum()));
+	frPtString.setString(std::to_string(frPtIcon->getNum()));
 	frPtString.setPosition({ 300, 855 });
 
 	fmPtIcon = new Object(vPtIcon, { 340, 860 }, 1);			// sb 0
 	fmPtIcon->setSrcPos({ 2, 0 });
 	fmPtIcon->getSprite()->setTextureRect(sf::IntRect(fmPtIcon->getSrcPos().x * fmPtIcon->getSrcSze().y, fmPtIcon->getSrcPos().y * fmPtIcon->getSrcSze().y, fmPtIcon->getSrcSze().y, fmPtIcon->getSrcSze().y));
 	fmPtString.setFont(font);
-	fmPtString.setString(to_string(fmPtIcon->getNum()));
+	fmPtString.setString(std::to_string(fmPtIcon->getNum()));
 	fmPtString.setPosition({ 380, 855 });
 
 }
