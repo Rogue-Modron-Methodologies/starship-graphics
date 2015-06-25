@@ -1,0 +1,69 @@
+Deck,Type,Resource,Value,Transaction,Limit,Points,Name
+0,0,1,1,Both,0,0,Trade Planet: Planctoinis VII
+0,0,1,2,Both,0,0,Trade Planet: Sputsallia IV
+0,0,1,3,Both,0,1,Trade Planet: Saiph VI
+0,0,1,4,Both,0,0,Trade Planet: Pobeckifiked VI
+0,0,1,5,Both,0,0,Trade Planet: Califasperum V
+0,0,3,1,Both,0,0,Trade Planet: Ireoni VII
+0,0,3,2,Both,0,0,Trade Planet: Cupperius IV
+0,0,3,3,Both,0,1,Trade Planet: Aigel X
+0,0,3,4,Both,0,0,Trade Planet: Leedsi X
+0,0,3,5,Both,0,0,Trade Planet: Bazaltide IV
+0,0,0,1,Both,0,0,Trade Planet: Corendium VII
+0,0,0,2,Both,0,0,Trade Planet: Tostoku I
+0,0,0,3,Both,0,1,Trade Planet: Beteigeuze VI
+0,0,0,4,Both,0,0,Trade Planet: Marsitis VI
+0,0,0,5,Both,0,0,Trade Planet: Quartzee X
+0,0,2,1,Both,0,0,Trade Planet: Litigus IX
+0,0,2,2,Both,0,0,Trade Planet: Gonsarium II
+0,0,2,3,Both,0,1,Trade Planet: Mintaka II
+0,0,2,4,Both,0,0,Trade Planet: Brocollar II
+0,0,2,5,Both,0,0,Trade Planet: Phlatiarum V
+0,0,5,1,Both,0,0,Trade Planet: Martkwal VIII
+0,0,5,2,Both,0,0,Trade Planet: Beowulf's Bane
+0,0,5,3,Both,0,1,Trade Planet: Alnitak IX
+0,0,5,4,Both,0,0,Trade Planet: Parapeckis VII
+0,0,5,5,Both,0,0,Trade Planet: Martiin-Tempest II
+0,2,3,2,N/A,0,1,Pirate
+0,2,3,3,N/A,0,1,Pirate
+0,0,6,3,Buy,1,0,Diplomat Outpost
+0,0,6,3,Buy,1,0,Diplomat Outpost
+0,1,4,1,N/A,0,1,Colony: Phekda VI
+0,1,0,2,N/A,0,1,Colony: Dubhe IV
+0,1,1,3,N/A,0,1,Colony: Merak V
+0,1,3,1,N/A,0,1,Colony: Bellatrix I
+0,1,3,2,N/A,0,1,Colony: Heka II
+0,1,2,3,N/A,0,1,Colony: Alkor III
+0,0,4,3,Both,0,0,Library: Kopernicus II
+0,3,-1,0,N/A,0,0,Hades
+0,3,-1,0,N/A,0,0,Pallas
+0,3,-1,0,N/A,0,0,Picasso
+0,3,-1,0,N/A,0,0,Poseidon
+1,4,-1,0,N/A,0,0,Lost Planet: LP101
+1,4,-1,0,N/A,0,0,Lost Planet: LP102
+1,2,3,2,N/A,0,1,Pirate
+1,2,3,3,N/A,0,1,Pirate
+1,2,3,4,N/A,0,1,Pirate
+1,0,6,3,Buy,1,1,Diplomat Outpost
+1,0,4,4,Sell,1,1,Green Folk Outpost
+2,4,-1,0,N/A,0,0,Lost Planet: LP103
+2,4,-1,0,N/A,0,0,Lost Planet: LP104
+2,2,5,4,cannon,0,0,Pirate
+2,2,5,5,module,0,0,Pirate
+2,0,4,2,Buy,1,1,Scientist Outpost
+2,1,0,3,N/A,0,1,Colony: Benet-Nash IX
+2,1,1,2,N/A,0,1,Colony: Mizar X
+3,4,-1,0,N/A,0,0,Lost Planet: LP105
+3,4,-1,0,N/A,0,0,Lost Planet: LP106
+3,2,5,5,module,0,1,Pirate
+3,2,5,6,module,0,1,Pirate
+3,0,6,3,Sell,2,1,Merchant Outpost
+3,1,2,2,N/A,0,1,Colony: Enif I
+3,1,3,3,N/A,0,1,Colony: Theta Pegasi II
+4,4,-1,0,N/A,0,0,Lost Planet: LP107
+4,4,-1,0,N/A,0,0,Lost Planet: LP108
+4,4,-1,0,N/A,0,0,Lost Planet: LP109
+4,4,-1,0,N/A,0,0,Lost Planet: LP110
+4,2,5,6,module,0,1,Pirate
+4,2,5,7,module,0,1,Pirate
+4,0,-1,0,N/A,0,2,Galactic Council: Median

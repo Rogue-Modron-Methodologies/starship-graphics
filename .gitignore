@@ -26,3 +26,18 @@
 *.exe
 *.out
 *.app
+*.tlog
+Debug/vc120.pdb
+*.log
+*.pdb
+x64/Debug/Starship Game.ilk
+*.pyd
+*.zip
+*.idb
+*.py
+*.db
+Starship Game.vcxproj
+*.user
+Starship Game.vcxproj.filters
+*.sdf
+Starship Game.sln
