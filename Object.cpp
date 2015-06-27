@@ -14,13 +14,13 @@
 // Creates the texture and sprite for the object.  
 // Sets the inital scale, source position, and screen position.
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
-Object::Object(std::string fileName, sf::Vector2f size, sf::Vector2f pos, sf::Vector2f scale, sf::Vector2u srcSize, int num, std::string name)
+Object::Object(std::string fileName, sf::Vector2f pos, sf::Vector2f scale, sf::Vector2u srcSize, sf::Vector2u srcPos, int num, std::string name)
 {
 	smallDisplay = true;
 	if (!texture.loadFromFile(fileName))
 		std::cout << fileName << " failed to open!\n";	
 	this->srcSize = srcSize;
-	this->srcPos = { 0, 0 };
+	this->srcPos = srcPos;
 	sprite = new sf::Sprite;
 	sprite->setTexture(texture);
 	if (srcSize != sf::Vector2u{0,0})
@@ -32,11 +32,32 @@ Object::Object(std::string fileName, sf::Vector2f size, sf::Vector2f pos, sf::Ve
 };
 
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
+// Constructor -
+// Creates the texture and sprite for the object.  
+// Sets source size and source position.
+// (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
+Object::Object(std::string fileName, sf::Vector2u srcSize, sf::Vector2u srcPos, int num, std::string name)
+{
+	smallDisplay = true;
+	if (!texture.loadFromFile(fileName))
+		std::cout << fileName << " failed to open!\n";
+	this->srcSize = srcSize;
+	this->srcPos = srcPos;
+	sprite = new sf::Sprite;
+	sprite->setTexture(texture);
+	if (srcSize != sf::Vector2u{ 0, 0 })
+		sprite->setTextureRect(this->getIntRect());
+	this->num = num;
+	this->string = name;
+}
+
+
+// (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
 //  Copy Constructor - 
 //  For When Objects want to share the same texture.
 //
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
-Object::Object(Object & right, sf::Vector2f pos, int num)
+Object::Object(Object & right, int num, std::string name)
 {
 	this->smallDisplay = right.smallDisplay;
 	this->srcSize = right.srcSize;
@@ -46,27 +67,8 @@ Object::Object(Object & right, sf::Vector2f pos, int num)
 	sprite->setTexture(texture);
 	sprite->setTextureRect(this->getIntRect());
 	sprite->setScale(right.getScale());
-	sprite->setPosition(pos);
 	this->num = num;
-}
-
-// (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
-//  Copy Constructor - 
-//  For When Objects want to share the same texture.
-//  Overload to accept pointer to Object
-// (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
-Object::Object(Object *right, sf::Vector2f pos, int num)
-{
-	this->smallDisplay = right->smallDisplay;
-	this->srcSize = right->srcSize;
-	this->srcPos = right->srcPos;
-	this->texture = right->texture;
-	sprite = new sf::Sprite;
-	sprite->setTexture(texture);
-	sprite->setTextureRect(sf::IntRect(srcPos.x * srcSize.y, srcPos.y * srcSize.y, srcSize.y, srcSize.y));
-	sprite->setScale(right->getScale());
-	sprite->setPosition(pos);
-	this->num = num;
+	string = name;
 }
 
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
@@ -96,20 +98,6 @@ bool Object::isTargeted(sf::RenderWindow &gWindow)
 }
 
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
-// Update Funtion -
-// Currently updates the TextureRect to new position when called
-// 
-// (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
-void Object::update()
-{
-	sprite->setTextureRect(sf::IntRect(srcPos.x * srcSize.y, srcPos.y * srcSize.y, srcSize.y, srcSize.y));
-	//srcPos.x++;
-	//if (srcPos.x * srcSize.y >= texture.getSize().x)
-	//{
-	//	srcPos.x = 0;
-	//}
-}
-// (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
 // Draw -
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
 void Object::draw(sf::RenderTarget& target, sf::RenderStates states) const
@@ -131,8 +119,20 @@ void Object::draw(sf::RenderTarget& target, sf::RenderStates states) const
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
 sf::IntRect Object::getIntRect()
 {
-	
-	return sf::IntRect(srcPos.x * srcSize.y, srcPos.y * srcSize.y, srcSize.x, srcSize.y);
-//        tempCard->getSrcPos().x * tempCard->getSrcSze().y, tempCard->getSrcPos().y * tempCard->getSrcSze().y, tempCard->getSrcSze().x, tempCard->getSrcSze().y)
+	return sf::IntRect(srcPos.x * srcSize.x, srcPos.y * srcSize.y, srcSize.x, srcSize.y);
+}
 
+// (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
+// Update Funtion -
+// Currently updates the TextureRect to new position when called
+// 
+// (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
+void Object::update()
+{
+	sprite->setTextureRect(sf::IntRect(srcPos.x * srcSize.y, srcPos.y * srcSize.y, srcSize.y, srcSize.y));
+	//srcPos.x++;
+	//if (srcPos.x * srcSize.y >= texture.getSize().x)
+	//{
+	//	srcPos.x = 0;
+	//}
 }

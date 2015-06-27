@@ -32,7 +32,7 @@ private:
 public:
 	Universe()
 	{
-		board = new Object ("resources/board/starrynight.png", sf::Vector2f(1200, 900), sf::Vector2f(0, 0), sf::Vector2f(3.1f, 3.6f));
+		board = new Object ("resources/board/starrynight.png", sf::Vector2f(0, 0), sf::Vector2f(3.1f, 3.6f));
 		universeSetup();
 		adventureDeckSetup();
 		ExtraDeckPtr = 0;

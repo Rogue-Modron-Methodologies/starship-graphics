@@ -30,35 +30,39 @@ Player::Player(std::string name, int num)
 	tZoneString.setString("Trade");
 	tZoneString.setPosition({ 130, 515 });
 
-	plyIcon = new Object(ICNFLE, STDSZE, { 10, 820 }, { .3f, .3f }, { 250, 250 }, num);
+	plyIcon = new Object(ICNFLE, { 10, 820 }, { .75f, .75f }, { 100, 100 }, { 0, 0 }, num);
 	nameString.setFont(font);
 	nameString.setString(name);
 	nameString.setPosition({ 90, 820 });	
 
-	astroIcon = new Object(ASTFLE, STDSZE, { 90, 860 }, { .15f, .15f }, { 200, 200 }, 25);	// sb 25
-	astroString.setFont(font);
-	astroString.setString(std::to_string(astroIcon->getNum()));
-	astroString.setPosition({ 130, 855 });
-
-	vPtIcon = new Object(SYM1FLE, STDSZE, { 180, 860 }, { .21f, .21f }, { 150, 150 }, 1);		// sb 1
+	vPtIcon = new Object(SYM1FLE, { 180, 860 }, { .35f, .35f }, { 100, 100 }, { 0, 0 }, 1);		// sb 1
 	vPtString.setFont(font);
 	vPtString.setString(std::to_string(vPtIcon->getNum()));
 	vPtString.setPosition({ 220, 855 });
 	
-	frPtIcon = new Object(vPtIcon, { 260, 860 }, 1);			// sb 0
+	frPtIcon = new Object(*vPtIcon, 1, "frPtIcon");			// sb 0
+	frPtIcon->setPosition({ 260, 860 });
 	frPtIcon->setSrcPos({ 1 , 0 });
 	frPtIcon->getSprite()->setTextureRect(frPtIcon->getIntRect());
 	frPtString.setFont(font);
 	frPtString.setString(std::to_string(frPtIcon->getNum()));
 	frPtString.setPosition({ 300, 855 });
 
-	fmPtIcon = new Object(vPtIcon, { 340, 860 }, 1);			// sb 0
+	fmPtIcon = new Object(*vPtIcon, 1, "fmPtIcon");			// sb 0
+	fmPtIcon->setPosition({ 340, 860 });
 	fmPtIcon->setSrcPos({ 2, 0 });
 	fmPtIcon->getSprite()->setTextureRect(fmPtIcon->getIntRect());
 	fmPtString.setFont(font);
 	fmPtString.setString(std::to_string(fmPtIcon->getNum()));
 	fmPtString.setPosition({ 380, 855 });
 
+	astroIcon = new Object(*vPtIcon, 25, "astroIcon");	// sb 25
+	astroIcon->setPosition({ 90, 860 });
+	astroIcon->setSrcPos({ 3, 0 });
+	astroIcon->getSprite()->setTextureRect(astroIcon->getIntRect()); /////////////////  can do better
+	astroString.setFont(font);
+	astroString.setString(std::to_string(astroIcon->getNum()));
+	astroString.setPosition({ 130, 855 });
 }
  
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
@@ -118,12 +122,12 @@ void Player::draw(sf::RenderWindow &gWindow)
 void Player::makeBig()
 {
 	starship->makeBig();
-	cZoneString.setPosition(COLLPOS - sf::Vector2f(0, 35));
+	cZoneString.setPosition(CLPOS - sf::Vector2f(0, 35));
 	ColonyZone->setIconOnly(true);
-	ColonyZone->updateList(COLLPOS, CRDLSCL);
-	tZoneString.setPosition(TRDLPOS - sf::Vector2f(0, 35));
+	ColonyZone->updateList(CLPOS, CRDLSCL);
+	tZoneString.setPosition(TLPOS - sf::Vector2f(0, 35));
 	TradeZone->setIconOnly(true);
-	TradeZone->updateList(TRDLPOS, CRDLSCL);
+	TradeZone->updateList(TLPOS, CRDLSCL);
 }
 
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
@@ -135,11 +139,11 @@ void Player::makeSmall()
 {
 	starship->makeSmall();
 	ColonyZone->setIconOnly(true);
-	cZoneString.setPosition(COLSPOS - sf::Vector2f(0, 35));
-	ColonyZone->updateList(COLSPOS, CRDSSCL);
-	tZoneString.setPosition(TRDSPOS - sf::Vector2f(0, 35));
+	cZoneString.setPosition(CSPOS - sf::Vector2f(0, 35));
+	ColonyZone->updateList(CSPOS, CRDSSCL);
+	tZoneString.setPosition(TSPOS - sf::Vector2f(0, 35));
 	TradeZone->setIconOnly(true);
-	TradeZone->updateList(TRDSPOS, CRDSSCL);
+	TradeZone->updateList(TSPOS, CRDSSCL);
 
 }
 
@@ -150,8 +154,8 @@ void Player::makeSmall()
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
 void Player::expandColonyZone()
 {
-	cZoneString.setPosition(COLLPOS - sf::Vector2f(0, 35));
-	ColonyZone->updateList(COLLPOS, CRDLSCL);
+	cZoneString.setPosition(CLPOS - sf::Vector2f(0, 35));
+	ColonyZone->updateList(CLPOS, CRDLSCL);
 	ColonyZone->setIconOnly(false);
 	tZoneString.setPosition(sf::Vector2f(1050, 575));
 	TradeZone->updateList(sf::Vector2f(1050,610), CRDLSCL);
@@ -165,8 +169,8 @@ void Player::expandColonyZone()
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
 void Player::expandTradeZone()
 {
-	tZoneString.setPosition(COLLPOS - sf::Vector2f(0, 35));
-	TradeZone->updateList(COLLPOS, CRDLSCL);
+	tZoneString.setPosition(CLPOS - sf::Vector2f(0, 35));
+	TradeZone->updateList(CLPOS, CRDLSCL);
 	TradeZone->setIconOnly(false);
 	cZoneString.setPosition(sf::Vector2f(1050, 575));
 	ColonyZone->updateList(sf::Vector2f(1050, 610), CRDLSCL);

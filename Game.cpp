@@ -58,7 +58,7 @@ void Game::playerSetup()
 	Card* tempCard;
 
 	//M		colony	Carbon	1	N/A	0	1	Colony: Alioth VIII
-	tempCard = new ColonyCard(-1, "Colony: Alioth VIII", colony, Carbon, 1, 1, STRFILE, COLSPOS, CRDSSCL);
+	tempCard = new ColonyCard(-1, "Colony: Alioth VIII", colony, Carbon, 1, 1, STRFILE, CLPOS, CRDSSCL);
 //	tempCard->setSrcPos({ 1, 0 });
 	tempCard->getSprite()->setTextureRect(tempCard->getIntRect());
 	P1->getColonyZone()->insertNode(tempCard);
@@ -91,7 +91,7 @@ void Game::playerSetup()
 
 
 	//S		colony	Fuel		1	N/A	0	1	Colony: Megrez VII
-	tempCard = new ColonyCard(-1, "Colony: Megrez VII", colony, Fuel, 1, 1, STRFILE, COLSPOS, CRDSSCL);
+	tempCard = new ColonyCard(-1, "Colony: Megrez VII", colony, Fuel, 1, 1, STRFILE, CLPOS, CRDSSCL);
 	tempCard->setSrcPos({ 1, 0 });
 	tempCard->getSprite()->setTextureRect(tempCard->getIntRect());
 	P2->getColonyZone()->insertNode(tempCard);

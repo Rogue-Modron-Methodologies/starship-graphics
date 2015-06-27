@@ -16,15 +16,12 @@
 
 const std::string ICNFLE = "resources/board/icons.png";		//  Source file name for trade/colony ships
 const std::string FNTFLE = "resources/board/unique.ttf";		//  Source file name for Font
-const std::string ASTFLE = "resources/board/astro.png";		//  Source file name for Astro Icon
 const std::string SYM1FLE = "resources/board/symbols.png";		//  Source file for Victory/Fame/Friendship Icons
 const std::string SY21FLE = "resources/board/symbols2.png";		//  Source file for Hero/Friend of the People
-const sf::Vector2f CRDSSCL = sf::Vector2f(.35f, .35f);		//  Card Small Scale
-const sf::Vector2f CRDLSCL = sf::Vector2f(.5f, .5f);		//  Card Large Scale
-const sf::Vector2f COLSPOS = sf::Vector2f(30, 550);		//  Screen Position for Small Scale Colony Icon
-const sf::Vector2f TRDSPOS = sf::Vector2f(130, 550);		//  Screen Position for Small Scale Trade Icon
-const sf::Vector2f COLLPOS = sf::Vector2f(30, 610);		//  Screen Position for Large Scale Colony Icon
-const sf::Vector2f TRDLPOS = sf::Vector2f(180, 610);		//  Screen Position for Large Scale Trade Icon
+const sf::Vector2f CSPOS = sf::Vector2f(30, 550);				//  Screen Position for Small Scale Colony Icon
+const sf::Vector2f TSPOS = sf::Vector2f(130, 550);			//  Screen Position for Small Scale Trade Icon
+const sf::Vector2f CLPOS = sf::Vector2f(30, 610);				//  Screen Position for Large Scale Colony Icon
+const sf::Vector2f TLPOS = sf::Vector2f(180, 610);			//  Screen Position for Large Scale Trade Icon
 
 class Player 
 {
@@ -36,7 +33,7 @@ private:
 	LinkedList<Card>* TradeZone;		//  Trade Zone 
 	sf::Text tZoneString;			//  Trade Zone Text String
 	Object *plyIcon;				//  Player Icon 
-	sf::Text nameString;			
+	sf::Text nameString;			//  Player Name Text String
 	Object *astroIcon;				//  Astro Icon and quantity
 	sf::Text astroString;			//  Astro Text String
 	Object *vPtIcon;				//  Victory Point Icon and quantity

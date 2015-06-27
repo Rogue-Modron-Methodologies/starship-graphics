@@ -14,6 +14,8 @@
 
 const sf::Vector2f CRDSIZE = { 500, 500 };
 const sf::Vector2u CSRCSZE = { 250, 385 };
+const sf::Vector2f CRDSSCL = sf::Vector2f(.35f, .35f);		//  Card Small Scale
+const sf::Vector2f CRDLSCL = sf::Vector2f(.5f, .5f);		//  Card Large Scale
 class Card : public Object
 {
 private:
@@ -27,8 +29,8 @@ public:
 		this->type = type;
 	}
 
-	Card(std::string fileName, sf::Vector2f pos, sf::Vector2f scale, int num = 0, std::string name = "", int type = 0)
-		: Object(fileName, CRDSIZE, pos, scale, CSRCSZE, num, name)
+	Card(std::string fileName, sf::Vector2f pos, sf::Vector2f scale, sf::Vector2u srcPos = { 0, 0 }, int num = 0, std::string name = "", int type = 0)
+		: Object(fileName, pos, scale, CSRCSZE, srcPos, num, name)
 	{
 		this->num = num;
 		this->string = string;

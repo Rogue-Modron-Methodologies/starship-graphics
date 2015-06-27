@@ -14,31 +14,46 @@
 //		
 //		
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
-Starship::Starship(std::string fileName, sf::Vector2f size, sf::Vector2f pos, sf::Vector2f scale) : Object(fileName, size, pos, scale)
+Starship::Starship(std::string fileName, sf::Vector2f pos, sf::Vector2f scale) : Object(fileName, pos, scale)
 {
-	
 	resources = new Resource*[5];
-	resources[Science] = new Resource(ARWFILE, STDSZE, (sprite->getPosition() + sf::Vector2f(1130 * STDSCL.x, 280 * STDSCL.y)), STDSCL, sf::Vector2u(250, 250), 1, "Science");
+	resources[Science] = new Resource(ARWFILE, sf::Vector2u(65, 65), 1);
+	resources[Science]->setRelPos(sf::Vector2f{ 243, 59 });
 	resources[Science]->setName("Science");
-	resources[Ore] = new Resource(*resources[Science], (sprite->getPosition() + sf::Vector2f(2530 * STDSCL.x, 280 * STDSCL.y)), 1, "Ore");
-	resources[Fuel] = new Resource(*resources[Science], (sprite->getPosition() + sf::Vector2f(3240 * STDSCL.x, 280 * STDSCL.y)), 1, "Fuel");
-	resources[TradeGood] = new Resource(*resources[Science], (sprite->getPosition() + sf::Vector2f(1130 * STDSCL.x, 1700 * STDSCL.y)), 1, "TradeGood");
-	resources[Wheat] = new Resource(*resources[Science], (sprite->getPosition() + sf::Vector2f(2530 * STDSCL.x, 1700 * STDSCL.y)), 1, "Wheat");
-	resources[Carbon] = new Resource(*resources[Science], (sprite->getPosition() + sf::Vector2f(3240 * STDSCL.x, 1700 * STDSCL.y)), 1, "Carbon");
-	
+	resources[Ore] = new Resource(*resources[Science], 1, "Ore");
+	resources[Ore]->setRelPos(sf::Vector2f{ 555, 59 });
+	resources[Fuel] = new Resource(*resources[Science], 1, "Fuel");
+	resources[Fuel]->setRelPos(sf::Vector2f{ 715, 59 });
+	resources[TradeGood] = new Resource(*resources[Science], 1, "TradeGood");
+	resources[TradeGood]->setRelPos(sf::Vector2f{ 243, 374 });
+	resources[Wheat] = new Resource(*resources[Science], 1, "Wheat");
+	resources[Wheat]->setRelPos(sf::Vector2f{ 555, 374 });
+	resources[Carbon] = new Resource(*resources[Science], 1, "Carbon");
+	resources[Carbon]->setRelPos(sf::Vector2f{ 713, 374 });
+
 	boosters = new Object*[3];
-	boosters[B1] = new Object(BSTFILE, STDSZE, (sprite->getPosition() + sf::Vector2f(90 * STDSCL.x, 580 * STDSCL.y)), STDSCL, sf::Vector2u(500, 500), 1);
-	boosters[B2] = new Object(*boosters[L1], (sprite->getPosition() + sf::Vector2f(90 * STDSCL.x, 980 * STDSCL.y)), 0);
-	boosters[B3] = new Object(*boosters[L1], (sprite->getPosition() + sf::Vector2f(90 * STDSCL.x, 1370 * STDSCL.y)), 1);
+	boosters[B1] = new Object(BSTFILE, sf::Vector2u(125, 75), sf::Vector2u(0, 0), 1, "B1");
+	boosters[B1]->setRelPos(sf::Vector2f{ 0, 125});
+	boosters[B2] = new Object(*boosters[L1], 1, "B2");
+	boosters[B2]->setRelPos(sf::Vector2f{ 0, 210 });
+	boosters[B3] = new Object(*boosters[L1], 1, "B3");
+	boosters[B3]->setRelPos(sf::Vector2f{ 0, 295 });
 	
 	lasers = new Object*[3];
-	lasers[L1] = new Object(LSRFILE, STDSZE, (sprite->getPosition() + sf::Vector2f(4100 * STDSCL.x, 580 * STDSCL.y)), STDSCL, sf::Vector2u(500, 500), 0);
-	lasers[L2] = new Object(*lasers[L1], (sprite->getPosition() + sf::Vector2f(4100 * STDSCL.x, 980 * STDSCL.y)), 1);
-	lasers[L3] = new Object(*lasers[L1], (sprite->getPosition() + sf::Vector2f(4100 * STDSCL.x, 1370 * STDSCL.y)), 0);
+	lasers[L1] = new Object(LSRFILE, sf::Vector2u(125, 75), sf::Vector2u(0, 0), 1, "L1");
+	lasers[L1]->setRelPos(sf::Vector2f{ 908, 125 });
+	lasers[L2] = new Object(*lasers[L1], 1, "L2");
+	lasers[L2]->setRelPos(sf::Vector2f{ 908, 210 });
+	lasers[L3] = new Object(*lasers[L1], 1, "L3");
+	lasers[L3]->setRelPos(sf::Vector2f{ 908, 295 });
 
 	shipHold = new Object*[2];
-	shipHold[H1] = new Object(SHPFILE, STDSZE, (sprite->getPosition() + sf::Vector2f(660 * STDSCL.x, 815 * STDSCL.y)), STDSCL, sf::Vector2u(500, 500), 1);
-	shipHold[H2] = new Object(*shipHold[H1], (sprite->getPosition() + sf::Vector2f(660 * STDSCL.x, 1115 * STDSCL.y)));
+	shipHold[H1] = new Object(SHPFILE, sf::Vector2u(100, 60), sf::Vector2u(0, 0), 1, "H1");
+	shipHold[H1]->setRelPos(sf::Vector2f{ 160, 190 });
+	shipHold[H2] = new Object(*shipHold[L1], 1, "H2");
+	shipHold[H2]->setSrcPos({ 1, 0 });
+	shipHold[H2]->getSprite()->setTextureRect(shipHold[H2]->getIntRect());
+	shipHold[H2]->setRelPos(sf::Vector2f{ 160, 250 });
 
 	maxActions = 2;
 }	
@@ -115,36 +130,22 @@ void Starship::makeBig()
 	smallDisplay = false;
 	sprite->setScale(LRGSCL);
 	sprite->setPosition(LRGPOS);
-	resources[Science]->setScale(LRGSCL);
-	resources[Science]->setPos((sprite->getPosition() + sf::Vector2f(1120 * LRGSCL.x, 280 * LRGSCL.y)));
-	resources[Ore]->setScale(LRGSCL);
-	resources[Ore]->setPos((sprite->getPosition() + sf::Vector2f(2520 * LRGSCL.x, 280 * LRGSCL.y)));
-	resources[Fuel]->setScale(LRGSCL);
-	resources[Fuel]->setPos((sprite->getPosition() + sf::Vector2f(3230 * LRGSCL.x, 280 * LRGSCL.y)));
-	resources[TradeGood]->setScale(LRGSCL);
-	resources[TradeGood]->setPos((sprite->getPosition() + sf::Vector2f(1120 * LRGSCL.x, 1700 * LRGSCL.y)));
-	resources[Wheat]->setScale(LRGSCL);
-	resources[Wheat]->setPos((sprite->getPosition() + sf::Vector2f(2520 * LRGSCL.x, 1700 * LRGSCL.y)));
-	resources[Carbon]->setScale(LRGSCL);
-	resources[Carbon]->setPos((sprite->getPosition() + sf::Vector2f(3230 * LRGSCL.x, 1700 * LRGSCL.y)));
-	lasers[L1]->setScale(LRGSCL);
-	lasers[L1]->setPos((sprite->getPosition() + sf::Vector2f(4100 * LRGSCL.x, 585 * LRGSCL.y)));
-	lasers[L2]->setScale(LRGSCL);
-	lasers[L2]->setPos((sprite->getPosition() + sf::Vector2f(4100 * LRGSCL.x, 985 * LRGSCL.y)));
-	lasers[L3]->setScale(LRGSCL);
-	lasers[L3]->setPos((sprite->getPosition() + sf::Vector2f(4100 * LRGSCL.x, 1370 * LRGSCL.y)));
-	boosters[B1]->setScale(LRGSCL);
-	boosters[B1]->setPos((sprite->getPosition() + sf::Vector2f(90 * LRGSCL.x, 580 * LRGSCL.y)));
-	boosters[B2]->setScale(LRGSCL);
-	boosters[B2]->setPos((sprite->getPosition() + sf::Vector2f(90 * LRGSCL.x, 980 * LRGSCL.y)));
-	boosters[B3]->setScale(LRGSCL);
-	boosters[B3]->setPos((sprite->getPosition() + sf::Vector2f(90 * LRGSCL.x, 1370 * LRGSCL.y)));
-	shipHold[H1]->setScale(LRGSCL);
-	shipHold[H1]->setPos((sprite->getPosition() + sf::Vector2f(660 * LRGSCL.x, 815 * LRGSCL.y)));
-	shipHold[H2]->setScale(LRGSCL);
-	shipHold[H2]->setPos((sprite->getPosition() + sf::Vector2f(660 * LRGSCL.x, 1115 * LRGSCL.y)));
+	update(resources[Science], LRGSCL);
+	update(resources[Ore], LRGSCL);
+	update(resources[Fuel], LRGSCL);
+	update(resources[TradeGood], LRGSCL);
+	update(resources[Wheat], LRGSCL);
+	update(resources[Ore], LRGSCL);
+	update(resources[Carbon], LRGSCL);
+	update(lasers[L1], LRGSCL);
+	update(lasers[L2], LRGSCL);
+	update(lasers[L3], LRGSCL);
+	update(boosters[B1], LRGSCL);
+	update(boosters[B2], LRGSCL);
+	update(boosters[B3], LRGSCL);
+	update(shipHold[H1], LRGSCL);
+	update(shipHold[H2], LRGSCL);
 }
-
 
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
 //  
@@ -154,36 +155,22 @@ void Starship::makeBig()
 void Starship::makeSmall()
 {
 	smallDisplay = true;
-	sprite->setScale(STDSCL);
-	sprite->setPosition(STDPOS);
-	resources[Science]->setScale(STDSCL);
-	resources[Science]->setPos((sprite->getPosition() + sf::Vector2f(1130 * STDSCL.x, 280 * STDSCL.y)));
-	resources[Ore]->setScale(STDSCL);
-	resources[Ore]->setPos((sprite->getPosition() + sf::Vector2f(2530 * STDSCL.x, 280 * STDSCL.y)));
-	resources[Fuel]->setScale(STDSCL);
-	resources[Fuel]->setPos((sprite->getPosition() + sf::Vector2f(3240 * STDSCL.x, 280 * STDSCL.y)));
-	resources[TradeGood]->setScale(STDSCL);
-	resources[TradeGood]->setPos((sprite->getPosition() + sf::Vector2f(1130 * STDSCL.x, 1700 * STDSCL.y)));
-	resources[Wheat]->setScale(STDSCL);
-	resources[Wheat]->setPos((sprite->getPosition() + sf::Vector2f(2530 * STDSCL.x, 1700 * STDSCL.y)));
-	resources[Carbon]->setScale(STDSCL);
-	resources[Carbon]->setPos((sprite->getPosition() + sf::Vector2f(3240 * STDSCL.x, 1700 * STDSCL.y)));
-	lasers[L1]->setScale(STDSCL);
-	lasers[L1]->setPos((sprite->getPosition() + sf::Vector2f(4100 * STDSCL.x, 585 * STDSCL.y)));
-	lasers[L2]->setScale(STDSCL);
-	lasers[L2]->setPos((sprite->getPosition() + sf::Vector2f(4100 * STDSCL.x, 985 * STDSCL.y)));
-	lasers[L3]->setScale(STDSCL);
-	lasers[L3]->setPos((sprite->getPosition() + sf::Vector2f(4100 * STDSCL.x, 1370 * STDSCL.y)));
-	boosters[B1]->setScale(STDSCL);
-	boosters[B1]->setPos((sprite->getPosition() + sf::Vector2f(0 * STDSCL.x, 580 * STDSCL.y)));
-	boosters[B2]->setScale(STDSCL);
-	boosters[B2]->setPos((sprite->getPosition() + sf::Vector2f(0 * STDSCL.x, 980 * STDSCL.y)));
-	boosters[B3]->setScale(STDSCL);
-	boosters[B3]->setPos((sprite->getPosition() + sf::Vector2f(0 * STDSCL.x, 1370 * STDSCL.y)));
-	shipHold[H1]->setScale(STDSCL);
-	shipHold[H1]->setPos((sprite->getPosition() + sf::Vector2f(660 * STDSCL.x, 815 * STDSCL.y)));
-	shipHold[H2]->setScale(STDSCL);
-	shipHold[H2]->setPos((sprite->getPosition() + sf::Vector2f(660 * STDSCL.x, 1115 * STDSCL.y)));
+	sprite->setScale(SMLSCL);
+	sprite->setPosition(SMLPOS);
+	update(resources[Science], SMLSCL);
+	update(resources[Ore], SMLSCL);
+	update(resources[Fuel], SMLSCL);
+	update(resources[TradeGood], SMLSCL);
+	update(resources[Wheat], SMLSCL);
+	update(resources[Carbon], SMLSCL);
+	update(lasers[L1], SMLSCL);
+	update(lasers[L2], SMLSCL);
+	update(lasers[L3], SMLSCL);
+	update(boosters[B1], SMLSCL);
+	update(boosters[B2], SMLSCL);
+	update(boosters[B3], SMLSCL);
+	update(shipHold[H1], SMLSCL);
+	update(shipHold[H2], SMLSCL);
 }
 
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
@@ -251,26 +238,6 @@ void Starship::bigRightClicked(sf::RenderWindow &gWindow, std::string &statusUpd
 
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
 //  
-//  Gains a resource of a chosen type
-//
-// (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
-void Starship::gainResource(int type, std::string &statusUpdate)
-{
-	resources[type]->gainResource(statusUpdate);
-}
-
-// (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
-//  
-//  Loses a resource of a chosen type
-//
-// (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
-void Starship::loseResource(int type, std::string &statusUpdate)
-{
-	resources[type]->loseResource(statusUpdate);
-}
-
-// (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
-//  
 //  Adds or upgrades a laser if allowed
 //
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
@@ -323,4 +290,15 @@ void Starship::addBooster(int pos, std::string &statusUpdate)
 	}
 	else
 		statusUpdate = "Booster is already at maximum!";
+}
+
+// (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
+//  
+//  Updates position and scale of objects relative to the ship
+//
+// (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
+void Starship::update(Object *o, sf::Vector2f scale)
+{
+	o->getSprite()->setScale(scale);
+	o->getSprite()->setPosition((sprite->getPosition() + sf::Vector2f(o->getRelPos().x * scale.x, o->getRelPos().y * scale.y)));
 }

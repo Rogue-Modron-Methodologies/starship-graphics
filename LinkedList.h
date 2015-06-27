@@ -251,7 +251,7 @@ void updateList(sf::Vector2f pos, sf::Vector2f scale)
 	{
 		// Update screen position and scale of Node.
 		walker->getData()->setScale(scale);
-		walker->getData()->setPos(pos + sf::Vector2f{150.0f * cardCnt, 0});
+		walker->getData()->setPosition(pos + sf::Vector2f{ 150.0f * cardCnt, 0 });
 		// Move to the next node.
 		walker = walker->getNext();
 		cardCnt++;

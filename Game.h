@@ -34,7 +34,7 @@ private:
 	int cPhase;
 	sf::Text phaseNameString;			//  Phase Name Text String
 	sf::Text errorString;				//  Error Text String
-	std::string statusUpdate;				//  Catches errors from called functions
+	std::string statusUpdate;			//  Catches errors from called functions
 	int errorTimer;
 	int speedDie[6];
 	int combatDie[6];

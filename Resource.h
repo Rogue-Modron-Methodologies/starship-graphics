@@ -20,27 +20,12 @@ private:
 	int rCap;
 	
 public:
-	Resource(std::string fileName, sf::Vector2f size, sf::Vector2f pos, sf::Vector2f scale, sf::Vector2u srcSize = { 0, 0 }, int num = 1,
-		std::string name = "bad") : Object(fileName, size, pos, scale, srcSize, num, name)
-	{
-		rCap = 4;			///////////////////////  SB 2
-	}
-
-	Resource(Resource &right, sf::Vector2f pos, int num, std::string name)
-	{
-		this->name = name;
-		this->num = num;
-		this->srcSize = right.srcSize;
-		this->srcPos = right.srcPos;
-		this->texture = right.texture;
-		this->sprite = new sf::Sprite;
-		sprite->setTexture(texture);
-		sprite->setTextureRect(sf::IntRect(srcPos.x * srcSize.y, srcPos.y * srcSize.y, srcSize.y, srcSize.y));
-		sprite->setScale(right.getScale());
-		sprite->setPosition(pos);
-		rCap = 4;			///////////////////////  SB 2
-	}
+	Resource(std::string fileName, sf::Vector2u srcSize, int num, std::string name = "Science", 
+		sf::Vector2u srcPos = sf::Vector2u{ 0, 0 }) : Object(fileName, srcSize, srcPos, num, name)
+	{	rCap = 4;	}		///////////////////////  SB 2
+	Resource(Resource &right, int num, std::string name);
 	void update();
+	void update(sf::Vector2f pos, sf::Vector2f scale);
 	void setName(std::string name){ this->name = name; }
 	std::string getName() const { return name; }
 	bool loseResource(std::string &error);
