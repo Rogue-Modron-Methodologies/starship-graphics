@@ -23,7 +23,7 @@ public:
 	Card(int num = 0, std::string name = "", int type = 0)
 	{
 		this->num = num;
-		this->name = name;
+		this->string = string;
 		this->type = type;
 	}
 
@@ -31,13 +31,13 @@ public:
 		: Object(fileName, CRDSIZE, pos, scale, CSRCSZE, num, name)
 	{
 		this->num = num;
-		this->name = name;
+		this->string = string;
 		this->type = type;
 	}
 	virtual Card* operator= (Card* right)
 	{
 		this->num = right->num;
-		this->name = right->name;
+		this->string = right->string;
 		this->type = right->type;
 		return this;
 	}
@@ -46,13 +46,13 @@ public:
 	void setDeckNum(int num)
 	{  this->num = num;  }
 	void setName(std::string name)
-	{  this->name = name;  }
+	{	this->string = name;}
 	void setType(int type)
 	{	this->type = type;	}
 	int getDeckNum() const
 	{  return num; 	}
 	std::string getName() const
-	{  return name;	}
+	{	return string;}
 	int getType() const
 	{	return type;	}
 	virtual std::string getRequirement() const

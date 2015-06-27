@@ -16,6 +16,7 @@
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
 Starship::Starship(std::string fileName, sf::Vector2f size, sf::Vector2f pos, sf::Vector2f scale) : Object(fileName, size, pos, scale)
 {
+	
 	resources = new Resource*[5];
 	resources[Science] = new Resource(ARWFILE, STDSZE, (sprite->getPosition() + sf::Vector2f(1130 * STDSCL.x, 280 * STDSCL.y)), STDSCL, sf::Vector2u(250, 250), 1, "Science");
 	resources[Science]->setName("Science");
@@ -36,7 +37,7 @@ Starship::Starship(std::string fileName, sf::Vector2f size, sf::Vector2f pos, sf
 	lasers[L3] = new Object(*lasers[L1], (sprite->getPosition() + sf::Vector2f(4100 * STDSCL.x, 1370 * STDSCL.y)), 0);
 
 	shipHold = new Object*[2];
-	shipHold[H1] = new Object(SHPFILE, STDSZE, (sprite->getPosition() + sf::Vector2f(660 * STDSCL.x, 815 * STDSCL.y)), STDSCL, sf::Vector2u(1000, 500), 1);
+	shipHold[H1] = new Object(SHPFILE, STDSZE, (sprite->getPosition() + sf::Vector2f(660 * STDSCL.x, 815 * STDSCL.y)), STDSCL, sf::Vector2u(500, 500), 1);
 	shipHold[H2] = new Object(*shipHold[H1], (sprite->getPosition() + sf::Vector2f(660 * STDSCL.x, 1115 * STDSCL.y)));
 
 	maxActions = 2;
@@ -281,13 +282,13 @@ void Starship::addLaser(int pos, std::string &statusUpdate)
 		{
 			lasers[pos]->setNum(lasers[pos]->getNum() + 1);
 			lasers[pos]->setSrcPos({ 0, 0 });
-			lasers[pos]->getSprite()->setTextureRect(sf::IntRect(lasers[pos]->getSrcPos().x * lasers[pos]->getSrcSze().y, lasers[pos]->getSrcPos().y * lasers[pos]->getSrcSze().y, lasers[pos]->getSrcSze().x, lasers[pos]->getSrcSze().y));
+			lasers[pos]->getSprite()->setTextureRect(lasers[pos]->getIntRect());
 		}
 		else if(lasers[L1]->getNum() >= 1 && lasers[L2]->getNum() >= 1 && lasers[L3]->getNum() >= 1)
 		{
 			lasers[pos]->setNum(lasers[pos]->getNum() + 1);
 			lasers[pos]->setSrcPos({ 1, 0 });
-			lasers[pos]->getSprite()->setTextureRect(sf::IntRect(lasers[pos]->getSrcPos().x * lasers[pos]->getSrcSze().y, lasers[pos]->getSrcPos().y * lasers[pos]->getSrcSze().y, lasers[pos]->getSrcSze().x, lasers[pos]->getSrcSze().y));
+			lasers[pos]->getSprite()->setTextureRect(lasers[pos]->getIntRect());
 		}
 		else
 			statusUpdate = "All Lasers must be upgraded to Level 1!";
@@ -309,13 +310,13 @@ void Starship::addBooster(int pos, std::string &statusUpdate)
 		{
 			boosters[pos]->setNum(boosters[pos]->getNum() + 1);
 			boosters[pos]->setSrcPos({ 0, 0 });
-			boosters[pos]->getSprite()->setTextureRect(sf::IntRect(boosters[pos]->getSrcPos().x * boosters[pos]->getSrcSze().y, boosters[pos]->getSrcPos().y * boosters[pos]->getSrcSze().y, boosters[pos]->getSrcSze().x, boosters[pos]->getSrcSze().y));
+			boosters[pos]->getSprite()->setTextureRect(boosters[pos]->getIntRect());
 		}
 		else if(boosters[B1]->getNum() >= 1 && boosters[B2]->getNum() >= 1 && boosters[B3]->getNum() >= 1)
 		{
 			boosters[pos]->setNum(boosters[pos]->getNum() + 1);
 			boosters[pos]->setSrcPos({ 1, 0 });
-			boosters[pos]->getSprite()->setTextureRect(sf::IntRect(boosters[pos]->getSrcPos().x * boosters[pos]->getSrcSze().y, boosters[pos]->getSrcPos().y * boosters[pos]->getSrcSze().y, boosters[pos]->getSrcSze().x, boosters[pos]->getSrcSze().y));
+			boosters[pos]->getSprite()->setTextureRect(boosters[pos]->getIntRect());
 		}
 		else
 			statusUpdate = "All Boosters must be upgraded to Level 1!";

@@ -60,7 +60,7 @@ void Game::playerSetup()
 	//M		colony	Carbon	1	N/A	0	1	Colony: Alioth VIII
 	tempCard = new ColonyCard(-1, "Colony: Alioth VIII", colony, Carbon, 1, 1, STRFILE, COLSPOS, CRDSSCL);
 //	tempCard->setSrcPos({ 1, 0 });
-	tempCard->getSprite()->setTextureRect(sf::IntRect(tempCard->getSrcPos().x * tempCard->getSrcSze().y, tempCard->getSrcPos().y * tempCard->getSrcSze().y, tempCard->getSrcSze().x, tempCard->getSrcSze().y));
+	tempCard->getSprite()->setTextureRect(tempCard->getIntRect());
 	P1->getColonyZone()->insertNode(tempCard);
 
 
@@ -68,23 +68,23 @@ void Game::playerSetup()
 	
 	///////////////////////   BEGIN TEST STUFF
 	tempCard = new ColonyCard(-1, "Colony: Alioth VIII", colony, Carbon, 1, 1, STRFILE, { 400, 690 }, { .35f, .35f });
-	tempCard->getSprite()->setTextureRect(sf::IntRect(tempCard->getSrcPos().x * tempCard->getSrcSze().y, tempCard->getSrcPos().y * tempCard->getSrcSze().y, tempCard->getSrcSze().x, tempCard->getSrcSze().y));
+	tempCard->getSprite()->setTextureRect(tempCard->getIntRect());
 	P1->getColonyZone()->insertNode(tempCard);
 
-	tempCard = new ColonyCard(-1, "Colony: Alioth VIII", colony, Carbon, 1, 1, STRFILE, { 500, 690 }, { .35f, .35f });
-	tempCard->getSprite()->setTextureRect(sf::IntRect(tempCard->getSrcPos().x * tempCard->getSrcSze().y, tempCard->getSrcPos().y * tempCard->getSrcSze().y, tempCard->getSrcSze().x, tempCard->getSrcSze().y));
+	tempCard = new ColonyCard(-1, "Colony: Alioth VIII", colony, Carbon, 1, 1, STRFILE, { 400, 690 }, { .35f, .35f });
+	tempCard->getSprite()->setTextureRect(tempCard->getIntRect());
 	P1->getColonyZone()->insertNode(tempCard);
 
-	tempCard = new ColonyCard(-1, "Colony: Alioth VIII", colony, Carbon, 1, 1, STRFILE, { 600, 690 }, { .35f, .35f });
-	tempCard->getSprite()->setTextureRect(sf::IntRect(tempCard->getSrcPos().x * tempCard->getSrcSze().y, tempCard->getSrcPos().y * tempCard->getSrcSze().y, tempCard->getSrcSze().x, tempCard->getSrcSze().y));
+	tempCard = new ColonyCard(-1, "Colony: Alioth VIII", colony, Carbon, 1, 1, STRFILE, { 400, 690 }, { .35f, .35f });
+	tempCard->getSprite()->setTextureRect(tempCard->getIntRect());
 	P1->getColonyZone()->insertNode(tempCard);
 
-	tempCard = new ColonyCard(-1, "Colony: Alioth VIII", colony, Carbon, 1, 1, STRFILE, TRDSPOS, { .35f, .35f });
-	tempCard->getSprite()->setTextureRect(sf::IntRect(tempCard->getSrcPos().x * tempCard->getSrcSze().y, tempCard->getSrcPos().y * tempCard->getSrcSze().y, tempCard->getSrcSze().x, tempCard->getSrcSze().y));
+	tempCard = new ColonyCard(-1, "Colony: Alioth VIII", colony, Carbon, 1, 1, STRFILE, { 400, 690 }, { .35f, .35f });
+	tempCard->getSprite()->setTextureRect(tempCard->getIntRect());
 	P1->getTradeZone()->insertNode(tempCard);
 
-	tempCard = new ColonyCard(-1, "Colony: Alioth VIII", colony, Carbon, 1, 1, STRFILE, TRDSPOS, { .35f, .35f });
-	tempCard->getSprite()->setTextureRect(sf::IntRect(tempCard->getSrcPos().x * tempCard->getSrcSze().y, tempCard->getSrcPos().y * tempCard->getSrcSze().y, tempCard->getSrcSze().x, tempCard->getSrcSze().y));
+	tempCard = new ColonyCard(-1, "Colony: Alioth VIII", colony, Carbon, 1, 1, STRFILE, { 400, 690 }, { .35f, .35f });
+	tempCard->getSprite()->setTextureRect(tempCard->getIntRect());
 	P1->getTradeZone()->insertNode(tempCard);
 
 	///////////////////////   END TEST STUFF
@@ -93,7 +93,7 @@ void Game::playerSetup()
 	//S		colony	Fuel		1	N/A	0	1	Colony: Megrez VII
 	tempCard = new ColonyCard(-1, "Colony: Megrez VII", colony, Fuel, 1, 1, STRFILE, COLSPOS, CRDSSCL);
 	tempCard->setSrcPos({ 1, 0 });
-	tempCard->getSprite()->setTextureRect(sf::IntRect(tempCard->getSrcPos().x * tempCard->getSrcSze().y, tempCard->getSrcPos().y * tempCard->getSrcSze().y, tempCard->getSrcSze().x, tempCard->getSrcSze().y));
+	tempCard->getSprite()->setTextureRect(tempCard->getIntRect());
 	P2->getColonyZone()->insertNode(tempCard);
 	
 }

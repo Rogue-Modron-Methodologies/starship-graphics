@@ -24,11 +24,11 @@ Object::Object(std::string fileName, sf::Vector2f size, sf::Vector2f pos, sf::Ve
 	sprite = new sf::Sprite;
 	sprite->setTexture(texture);
 	if (srcSize != sf::Vector2u{0,0})
-		sprite->setTextureRect(sf::IntRect(srcPos.x * srcSize.y, srcPos.y * srcSize.y, srcSize.y, srcSize.y));
+		sprite->setTextureRect(this->getIntRect());
 	sprite->setScale(scale);
 	sprite->setPosition(pos);
 	this->num = num;
-	this->name = name;
+	this->string = name;
 };
 
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
@@ -44,7 +44,7 @@ Object::Object(Object & right, sf::Vector2f pos, int num)
 	this->texture = right.texture;
 	sprite = new sf::Sprite;
 	sprite->setTexture(texture);
-	sprite->setTextureRect(sf::IntRect(srcPos.x * srcSize.y, srcPos.y * srcSize.y, srcSize.y, srcSize.y));
+	sprite->setTextureRect(this->getIntRect());
 	sprite->setScale(right.getScale());
 	sprite->setPosition(pos);
 	this->num = num;
@@ -108,4 +108,31 @@ void Object::update()
 	//{
 	//	srcPos.x = 0;
 	//}
+}
+// (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
+// Draw -
+// (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
+void Object::draw(sf::RenderTarget& target, sf::RenderStates states) const
+{
+	// apply the entity's transform -- combine it with the one that was passed by the caller
+	//states.transform *= getTransform(); // getTransform() is defined by sf::Transformable
+
+	// apply the texture
+//	states.texture = &m_texture;
+
+	// you may also override states.shader or states.blendMode if you want
+
+	// draw the vertex array
+	//target.draw(m_vertices, states);
+}
+
+// (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
+//Returns an IntRect based on the objects SrcPos and SrcSize
+// (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
+sf::IntRect Object::getIntRect()
+{
+	
+	return sf::IntRect(srcPos.x * srcSize.y, srcPos.y * srcSize.y, srcSize.x, srcSize.y);
+//        tempCard->getSrcPos().x * tempCard->getSrcSze().y, tempCard->getSrcPos().y * tempCard->getSrcSze().y, tempCard->getSrcSze().x, tempCard->getSrcSze().y)
+
 }

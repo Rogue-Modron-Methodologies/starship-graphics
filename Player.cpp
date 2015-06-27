@@ -30,8 +30,7 @@ Player::Player(std::string name, int num)
 	tZoneString.setString("Trade");
 	tZoneString.setPosition({ 130, 515 });
 
-	plyIcon = new Object(ICNFLE, STDSZE, { 10, 820 }, { .3f, .3f }, { 500, 250 }, num);
-	plyIcon->getSprite()->setTextureRect(sf::IntRect(plyIcon->getSrcPos().x * plyIcon->getSrcSze().y, plyIcon->getSrcPos().y * plyIcon->getSrcSze().y, plyIcon->getSrcSze().y, plyIcon->getSrcSze().y));
+	plyIcon = new Object(ICNFLE, STDSZE, { 10, 820 }, { .3f, .3f }, { 250, 250 }, num);
 	nameString.setFont(font);
 	nameString.setString(name);
 	nameString.setPosition({ 90, 820 });	
@@ -42,21 +41,20 @@ Player::Player(std::string name, int num)
 	astroString.setPosition({ 130, 855 });
 
 	vPtIcon = new Object(SYM1FLE, STDSZE, { 180, 860 }, { .21f, .21f }, { 150, 150 }, 1);		// sb 1
-	vPtIcon->getSprite()->setTextureRect(sf::IntRect(vPtIcon->getSrcPos().x * vPtIcon->getSrcSze().y, vPtIcon->getSrcPos().y * vPtIcon->getSrcSze().y, vPtIcon->getSrcSze().y, vPtIcon->getSrcSze().y));
 	vPtString.setFont(font);
 	vPtString.setString(std::to_string(vPtIcon->getNum()));
 	vPtString.setPosition({ 220, 855 });
 	
 	frPtIcon = new Object(vPtIcon, { 260, 860 }, 1);			// sb 0
 	frPtIcon->setSrcPos({ 1 , 0 });
-	frPtIcon->getSprite()->setTextureRect(sf::IntRect(frPtIcon->getSrcPos().x * frPtIcon->getSrcSze().y, frPtIcon->getSrcPos().y * frPtIcon->getSrcSze().y, frPtIcon->getSrcSze().y, frPtIcon->getSrcSze().y));
+	frPtIcon->getSprite()->setTextureRect(frPtIcon->getIntRect());
 	frPtString.setFont(font);
 	frPtString.setString(std::to_string(frPtIcon->getNum()));
 	frPtString.setPosition({ 300, 855 });
 
 	fmPtIcon = new Object(vPtIcon, { 340, 860 }, 1);			// sb 0
 	fmPtIcon->setSrcPos({ 2, 0 });
-	fmPtIcon->getSprite()->setTextureRect(sf::IntRect(fmPtIcon->getSrcPos().x * fmPtIcon->getSrcSze().y, fmPtIcon->getSrcPos().y * fmPtIcon->getSrcSze().y, fmPtIcon->getSrcSze().y, fmPtIcon->getSrcSze().y));
+	fmPtIcon->getSprite()->setTextureRect(fmPtIcon->getIntRect());
 	fmPtString.setFont(font);
 	fmPtString.setString(std::to_string(fmPtIcon->getNum()));
 	fmPtString.setPosition({ 380, 855 });
@@ -87,7 +85,7 @@ Player::~Player()
 void Player::update()
 {
 	plyIcon->setSrcPosX(plyIcon->getNum() - 1);
-	plyIcon->getSprite()->setTextureRect(sf::IntRect(plyIcon->getSrcPos().x * plyIcon->getSrcSze().y, plyIcon->getSrcPos().y * plyIcon->getSrcSze().y, plyIcon->getSrcSze().y, plyIcon->getSrcSze().y));
+	plyIcon->getSprite()->setTextureRect(plyIcon->getIntRect());
 }
 
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
