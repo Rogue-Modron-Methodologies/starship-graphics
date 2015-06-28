@@ -16,7 +16,7 @@
 class Resource : public Object
 {
 private:
-	std::string name;
+	//std::string name;
 	int rCap;
 	
 public:
@@ -24,10 +24,9 @@ public:
 		sf::Vector2u srcPos = sf::Vector2u{ 0, 0 }) : Object(fileName, srcSize, srcPos, num, name)
 	{	rCap = 4;	}		///////////////////////  SB 2
 	Resource(Resource &right, int num, std::string name);
+	int getRCap() const  { return rCap; }
 	void update();
 	void update(sf::Vector2f pos, sf::Vector2f scale);
-	void setName(std::string name){ this->name = name; }
-	std::string getName() const { return name; }
 	bool loseResource(std::string &error);
 	bool gainResource(std::string &error);
 	

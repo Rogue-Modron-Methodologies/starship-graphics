@@ -32,6 +32,9 @@ Game::Game()
 	errorString.setStyle(sf::Text::Bold);
 	errorString.setPosition({ 550, 820 });
 	errorTimer = 255;
+	infoString.setFont(font);
+	infoString.setStyle(sf::Text::Bold);
+	infoString.setPosition({ 35, 30 });
 	cPlyr = P2;
 	playerSetup();
 	initSDie();
@@ -63,9 +66,6 @@ void Game::playerSetup()
 	tempCard->getSprite()->setTextureRect(tempCard->getIntRect());
 	P1->getColonyZone()->insertNode(tempCard);
 
-
-
-	
 	///////////////////////   BEGIN TEST STUFF
 	tempCard = new ColonyCard(-1, "Colony: Alioth VIII", colony, Carbon, 1, 1, STRFILE, { 400, 690 }, { .35f, .35f });
 	tempCard->getSprite()->setTextureRect(tempCard->getIntRect());
@@ -261,12 +261,14 @@ void Game::gameLoop()
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
 void Game::initSDie()
 {
-	speedDie[0] = 1;
-	speedDie[1] = 1;
-	speedDie[2] = 2;
-	speedDie[3] = 2;
-	speedDie[4] = 3;
-	speedDie[5] = 3;
+	flightDie.icon = new Object(SDIEFLE, sf::Vector2u(200, 200), sf::Vector2u(0, 0), 1, "flight die");
+//	flightDie.text.setFont(font);
+	//speedDie[0] = 1;
+	//speedDie[1] = 1;
+	//speedDie[2] = 2;
+	//speedDie[3] = 2;
+	//speedDie[4] = 3;
+	//speedDie[5] = 3;
 }
 
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
@@ -297,19 +299,26 @@ void Game::phaseSetup()
 	case production:
 		phaseNameString.setString("Production Phase");
 		dieRoll = rollSpeedDie();
-		std::cout << dieRoll << std::endl;
+		infoString.setString("Die roll: " + std::to_string(dieRoll));
 		cPlyr->getStarship()->calcMaxDistance(dieRoll);
 		cPlyr->makeBig();
 		cPlyr->expandColonyZone();
 		break;
 	case flight:
 		phaseNameString.setString("Flight Phase");
+		cPlyr->makeSmall();
+		infoString.setString("Max Flight: " + std::to_string(cPlyr->getStarship()->getMaxDistance()));
 		break;
 	case trades:
 		phaseNameString.setString("Trade Phase");
+		infoString.setString("Max Trades: 2");
+		cPlyr->makeBig();
+		cPlyr->expandTradeZone();
 		break;
 	case build:
 		phaseNameString.setString("Build Phase");
+		infoString.setString("Max Builds: N/A");
+		cPlyr->makeBig();
 		break;
 	}
 	phaseSetupComplete = true;
@@ -342,6 +351,7 @@ void Game::updateGameWindow(sf::RenderWindow &gWindow)
 	universe->getBoard()->draw(gWindow);
 	cPlyr->draw(gWindow);
 	gWindow.draw(phaseNameString);
+	gWindow.draw(infoString);
 	if (statusUpdate.length())
 		setError(statusUpdate);
 	statusUpdate.clear();

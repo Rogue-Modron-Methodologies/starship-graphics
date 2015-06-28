@@ -23,6 +23,12 @@ const sf::Vector2f TSPOS = sf::Vector2f(130, 550);			//  Screen Position for Sma
 const sf::Vector2f CLPOS = sf::Vector2f(30, 610);				//  Screen Position for Large Scale Colony Icon
 const sf::Vector2f TLPOS = sf::Vector2f(180, 610);			//  Screen Position for Large Scale Trade Icon
 
+struct Icon						// For When an object needs to be paired with displayable text
+{
+	sf::Text text;					//  Text String
+	Object *icon;					//  Icon 
+};
+
 class Player 
 {
 private:	
@@ -32,32 +38,20 @@ private:
 	sf::Text cZoneString;			//  Colony Zone Text String
 	LinkedList<Card>* TradeZone;		//  Trade Zone 
 	sf::Text tZoneString;			//  Trade Zone Text String
-	Object *plyIcon;				//  Player Icon 
-	sf::Text nameString;			//  Player Name Text String
-	Object *astroIcon;				//  Astro Icon and quantity
-	sf::Text astroString;			//  Astro Text String
-	Object *vPtIcon;				//  Victory Point Icon and quantity
-	sf::Text vPtString;				//  Victory Point Text String
-	Object *frPtIcon;				//  Friend Point Icon and quantity (for friend of the people)
-	sf::Text frPtString;			//  Friend Point Text String
-	Object *fmPtIcon;				//  Fame Point Icon and quantity (for hero of the people)
-	sf::Text fmPtString;			//  Fame Point Text String
+	Icon player;					//  Player Icon 
+	Icon astro;					//  Astro Icon
+	Icon vicPt;					//  Victory Point Icon
+	Icon frdPt;					//  Friend Point Icon (for friend of the people)
+	Icon fmPt;					//  Fame Point Icon (for hero of the people)
 
 public:
 	Player(std::string name = "EMPTY", int num = -99);
 	~Player();
 	// getters and setters
-	Starship* getStarship() const
-	{  return starship;  }
-	LinkedList<Card>* getColonyZone() const
-	{	return ColonyZone;	}
-	LinkedList<Card>* getTradeZone() const
-	{	return TradeZone;	}
-	std::string getName() const
-	{	return nameString.getString();	}
-	void setName(std::string name)
-	{	nameString.setString(name);	}
-	int getAstro() const  { return astroIcon->getNum(); }
+	Starship* getStarship() const {  return starship;  }
+	LinkedList<Card>* getColonyZone() const {	return ColonyZone;	}
+	LinkedList<Card>* getTradeZone() const 	{	return TradeZone;	}
+	int getAstro() const  { return astro.icon->getNum(); }
 	void update();
 	void draw(sf::RenderWindow &gWindow);
 	void drawCPlyrStats(sf::RenderWindow &gWindow);

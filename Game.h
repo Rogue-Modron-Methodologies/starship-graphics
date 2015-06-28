@@ -21,6 +21,7 @@
 const int CARDLISTSIZE = 71;					//  number of cards in the deck
 const std::string CARDLIST = "starship.csv";
 const std::string ADVENTURELIST = "starship2.csv";
+const std::string SDIEFLE = "resources/board/flightdie.png";
 
 enum Phases{ production, flight, trades, build };
 
@@ -31,12 +32,15 @@ private:
 	Universe *universe;
 	sf::RenderWindow gWindow;
 	sf::Font font;
-	int cPhase;
+	int cPhase;						//  Current Phase Num
 	sf::Text phaseNameString;			//  Phase Name Text String
 	sf::Text errorString;				//  Error Text String
 	std::string statusUpdate;			//  Catches errors from called functions
+	sf::Text infoString;				//  Info Text String
 	int errorTimer;
-	int speedDie[6];
+	Icon flightDie;
+//	Icon combatDie;
+	//int fDie[6];
 	int combatDie[6];
 	bool phaseSetupComplete;
 
@@ -57,7 +61,7 @@ public:
 	{	return universe;	}
 
 	int rollSpeedDie()
-	{	return speedDie[rand() % 6];	}
+	{	return rand() % 3 + 1;	}
 	int rollCombatDie()
 	{	return combatDie[rand() % 6];	}
 	void startGame()

@@ -40,7 +40,6 @@ private:
 	Object **lasers;				//  Pointer to array of three lasers
 	Object **boosters;				//  Pointer to array of three lasers
 	Object **shipHold;				//  Pointer to array of two ships (Trade/Colony)
-	int rCap;						//  Max resources a player may have in a hold
 	int maxActions;				//  Max actions in the flight phase
 	int maxMovement;				//  Max movement in the flight phase
 
@@ -50,7 +49,6 @@ public:
 	~Starship();
 
 	//  Getters/Setters
-	int getRCap() const  { return rCap;	}
 	int getMaxDistance() const  { return maxMovement;	}
 
 	//  Misc Inline Functions

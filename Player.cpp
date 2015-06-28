@@ -30,39 +30,39 @@ Player::Player(std::string name, int num)
 	tZoneString.setString("Trade");
 	tZoneString.setPosition({ 130, 515 });
 
-	plyIcon = new Object(ICNFLE, { 10, 820 }, { .75f, .75f }, { 100, 100 }, { 0, 0 }, num);
-	nameString.setFont(font);
-	nameString.setString(name);
-	nameString.setPosition({ 90, 820 });	
+	player.icon = new Object(ICNFLE, { 10, 820 }, { .75f, .75f }, { 100, 100 }, { 0, 0 }, num);
+	player.text.setFont(font);
+	player.text.setString(name);
+	player.text.setPosition({ 90, 820 });
 
-	vPtIcon = new Object(SYM1FLE, { 180, 860 }, { .35f, .35f }, { 100, 100 }, { 0, 0 }, 1);		// sb 1
-	vPtString.setFont(font);
-	vPtString.setString(std::to_string(vPtIcon->getNum()));
-	vPtString.setPosition({ 220, 855 });
+	vicPt.icon = new Object(SYM1FLE, { 180, 860 }, { .35f, .35f }, { 100, 100 }, { 0, 0 }, 1);		// sb 1
+	vicPt.text.setFont(font);
+	vicPt.text.setString(std::to_string(vicPt.icon->getNum()));
+	vicPt.text.setPosition({ 220, 855 });
 	
-	frPtIcon = new Object(*vPtIcon, 1, "frPtIcon");			// sb 0
-	frPtIcon->setPosition({ 260, 860 });
-	frPtIcon->setSrcPos({ 1 , 0 });
-	frPtIcon->getSprite()->setTextureRect(frPtIcon->getIntRect());
-	frPtString.setFont(font);
-	frPtString.setString(std::to_string(frPtIcon->getNum()));
-	frPtString.setPosition({ 300, 855 });
+	frdPt.icon = new Object(*vicPt.icon, 1, "frPtIcon");			// sb 0
+	frdPt.icon->setPosition({ 260, 860 });
+	frdPt.icon->setSrcPos({ 1, 0 });
+	frdPt.icon->getSprite()->setTextureRect(frdPt.icon->getIntRect());
+	frdPt.text.setFont(font);
+	frdPt.text.setString(std::to_string(frdPt.icon->getNum()));
+	frdPt.text.setPosition({ 300, 855 });
 
-	fmPtIcon = new Object(*vPtIcon, 1, "fmPtIcon");			// sb 0
-	fmPtIcon->setPosition({ 340, 860 });
-	fmPtIcon->setSrcPos({ 2, 0 });
-	fmPtIcon->getSprite()->setTextureRect(fmPtIcon->getIntRect());
-	fmPtString.setFont(font);
-	fmPtString.setString(std::to_string(fmPtIcon->getNum()));
-	fmPtString.setPosition({ 380, 855 });
+	fmPt.icon = new Object(*vicPt.icon, 1, "fmPtIcon");			// sb 0
+	fmPt.icon->setPosition({ 340, 860 });
+	fmPt.icon->setSrcPos({ 2, 0 });
+	fmPt.icon->getSprite()->setTextureRect(fmPt.icon->getIntRect());
+	fmPt.text.setFont(font);
+	fmPt.text.setString(std::to_string(fmPt.icon->getNum()));
+	fmPt.text.setPosition({ 380, 855 });
 
-	astroIcon = new Object(*vPtIcon, 25, "astroIcon");	// sb 25
-	astroIcon->setPosition({ 90, 860 });
-	astroIcon->setSrcPos({ 3, 0 });
-	astroIcon->getSprite()->setTextureRect(astroIcon->getIntRect()); /////////////////  can do better
-	astroString.setFont(font);
-	astroString.setString(std::to_string(astroIcon->getNum()));
-	astroString.setPosition({ 130, 855 });
+	astro.icon = new Object(*vicPt.icon, 25, "astroIcon");	// sb 25
+	astro.icon->setPosition({ 90, 860 });
+	astro.icon->setSrcPos({ 3, 0 });
+	astro.icon->getSprite()->setTextureRect(astro.icon->getIntRect()); /////////////////  can do better
+	astro.text.setFont(font);
+	astro.text.setString(std::to_string(astro.icon->getNum()));
+	astro.text.setPosition({ 130, 855 });
 }
  
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
@@ -75,10 +75,11 @@ Player::~Player()
 	delete starship;
 	delete ColonyZone;
 	delete TradeZone;
-	delete plyIcon;
-	delete vPtIcon;
-	delete frPtIcon;
-	delete fmPtIcon;
+	delete player.icon;
+	delete vicPt.icon;
+	delete frdPt.icon;
+	delete fmPt.icon;
+	delete astro.icon;
 }
 
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
@@ -88,8 +89,8 @@ Player::~Player()
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
 void Player::update()
 {
-	plyIcon->setSrcPosX(plyIcon->getNum() - 1);
-	plyIcon->getSprite()->setTextureRect(plyIcon->getIntRect());
+	player.icon->setSrcPosX(player.icon->getNum() - 1);
+	player.icon->getSprite()->setTextureRect(player.icon->getIntRect());
 }
 
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
@@ -184,16 +185,16 @@ void Player::expandTradeZone()
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
 void Player::drawCPlyrStats(sf::RenderWindow &gWindow)
 {
-	plyIcon->draw(gWindow);
-	gWindow.draw(nameString);
-	astroIcon->draw(gWindow);
-	gWindow.draw(astroString);
-	vPtIcon->draw(gWindow);
-	gWindow.draw(vPtString);
-	frPtIcon->draw(gWindow);
-	gWindow.draw(frPtString);
-	fmPtIcon->draw(gWindow);
-	gWindow.draw(fmPtString);
+	player.icon->draw(gWindow);
+	gWindow.draw(player.text);
+	astro.icon->draw(gWindow);
+	gWindow.draw(astro.text);
+	vicPt.icon->draw(gWindow);
+	gWindow.draw(vicPt.text);
+	frdPt.icon->draw(gWindow);
+	gWindow.draw(frdPt.text);
+	fmPt.icon->draw(gWindow);
+	gWindow.draw(fmPt.text);
 	gWindow.draw(cZoneString);
 	gWindow.draw(tZoneString);
 

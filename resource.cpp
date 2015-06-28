@@ -16,7 +16,7 @@
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
 Resource::Resource(Resource &right, int num, std::string name)
 {
-	this->name = name;
+	this->string = name;
 	this->num = num;
 	this->srcSize = right.srcSize;
 	this->srcPos = right.srcPos;
@@ -51,7 +51,7 @@ bool Resource::loseResource(std::string &statusUpdate)
 		update();
 		return true;
 	}
-	statusUpdate = name + " hold is empty!";
+	statusUpdate = string + " hold is empty!";
 	return false;
 }
 
@@ -68,6 +68,6 @@ bool Resource::gainResource(std::string &statusUpdate)
 		update();
 		return true;
 	}
-	statusUpdate = name + " hold is full!";
+	statusUpdate = string + " hold is full!";
 	return false;
 }

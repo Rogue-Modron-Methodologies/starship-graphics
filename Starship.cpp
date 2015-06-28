@@ -19,32 +19,31 @@ Starship::Starship(std::string fileName, sf::Vector2f pos, sf::Vector2f scale) :
 	resources = new Resource*[5];
 	resources[Science] = new Resource(ARWFILE, sf::Vector2u(65, 65), 1);
 	resources[Science]->setRelPos(sf::Vector2f{ 243, 59 });
-	resources[Science]->setName("Science");
 	resources[Ore] = new Resource(*resources[Science], 1, "Ore");
 	resources[Ore]->setRelPos(sf::Vector2f{ 555, 59 });
 	resources[Fuel] = new Resource(*resources[Science], 1, "Fuel");
-	resources[Fuel]->setRelPos(sf::Vector2f{ 715, 59 });
+	resources[Fuel]->setRelPos(sf::Vector2f{ 713, 59 });
 	resources[TradeGood] = new Resource(*resources[Science], 1, "TradeGood");
 	resources[TradeGood]->setRelPos(sf::Vector2f{ 243, 374 });
 	resources[Wheat] = new Resource(*resources[Science], 1, "Wheat");
 	resources[Wheat]->setRelPos(sf::Vector2f{ 555, 374 });
 	resources[Carbon] = new Resource(*resources[Science], 1, "Carbon");
-	resources[Carbon]->setRelPos(sf::Vector2f{ 713, 374 });
+	resources[Carbon]->setRelPos(sf::Vector2f{ 712, 374 });
 
 	boosters = new Object*[3];
 	boosters[B1] = new Object(BSTFILE, sf::Vector2u(125, 75), sf::Vector2u(0, 0), 1, "B1");
 	boosters[B1]->setRelPos(sf::Vector2f{ 0, 125});
-	boosters[B2] = new Object(*boosters[L1], 1, "B2");
+	boosters[B2] = new Object(*boosters[L1], 0, "B2");
 	boosters[B2]->setRelPos(sf::Vector2f{ 0, 210 });
 	boosters[B3] = new Object(*boosters[L1], 1, "B3");
 	boosters[B3]->setRelPos(sf::Vector2f{ 0, 295 });
 	
 	lasers = new Object*[3];
-	lasers[L1] = new Object(LSRFILE, sf::Vector2u(125, 75), sf::Vector2u(0, 0), 1, "L1");
+	lasers[L1] = new Object(LSRFILE, sf::Vector2u(125, 75), sf::Vector2u(0, 0), 0, "L1");
 	lasers[L1]->setRelPos(sf::Vector2f{ 908, 125 });
 	lasers[L2] = new Object(*lasers[L1], 1, "L2");
 	lasers[L2]->setRelPos(sf::Vector2f{ 908, 210 });
-	lasers[L3] = new Object(*lasers[L1], 1, "L3");
+	lasers[L3] = new Object(*lasers[L1], 0, "L3");
 	lasers[L3]->setRelPos(sf::Vector2f{ 908, 295 });
 
 	shipHold = new Object*[2];
