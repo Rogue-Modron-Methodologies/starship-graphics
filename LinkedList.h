@@ -173,35 +173,21 @@ void displayList(sf::RenderWindow &gWindow) const{
 }
 
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯)
-//  Shows the value stored in each node of the linked list in 
-//  front to rear order.                             
+//  Checks to see if num is in the list                         
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯)
-bool findColonyResources(int dieRoll, T* rtdAtry[], int& lineCount){
+bool findColonyResource(int num){
 	ListNode<T> *walker;  // To move through the list
-	lineCount = 0;
 	bool flag = false;
 
-	// Position walker after the front sentinel.
 	walker = front->getNext();
 
-	// While walker doesn't point to rear, traverse the list.
 	while (walker != rear)
 	{
-		if (walker->getData()->getActNum() == dieRoll)
-		{ 
-			// Display line count of this node.
-			cout << lineCount + 1 << "\n";
-			// Display the value in this node.
-			walker->getData()->printCard();
-			rtdAtry[lineCount] = walker->getData();
-			flag = true;
-		}
-		// Move to the next node.
+		if (walker->getData()->getActNum() == num)
+			return true;
 		walker = walker->getNext();
-		lineCount++;
 	}
-	cout << endl;
-	return flag;
+	return false;
 }
 
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯)

@@ -54,9 +54,7 @@ public:
 	//  Misc Inline Functions
 	void calcMaxDistance(int dieRoll)  { maxMovement = (dieRoll + totalBoosters()); }	
 	int totalBoosters()  { return boosters[B1]->getNum() + boosters[B2]->getNum() + boosters[B3]->getNum(); }			// called by calcMaxDistance and events	
-	void gainResource(int type, std::string &statusUpdate){ resources[type]->gainResource(statusUpdate); }
-	void loseResource(int type, std::string &statusUpdate){ resources[type]->loseResource(statusUpdate); }
-	
+
 	//  Prototypes
 	void draw(sf::RenderWindow &window);
 	void addLaser(int pos, std::string &statusUpdate);
@@ -69,7 +67,8 @@ public:
 	void bigLeftClicked(sf::RenderWindow &window, std::string &statusUpdate);
 	void bigRightClicked(sf::RenderWindow &window, std::string &statusUpdate); 
 	void update(Object *o, sf::Vector2f scale);
-
+	bool gainResource(int type, std::string &statusUpdate);
+	bool loseResource(int type, std::string &statusUpdate);
 };
 
 #endif // STARSHIP_H

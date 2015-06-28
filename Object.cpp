@@ -24,7 +24,7 @@ Object::Object(std::string fileName, sf::Vector2f pos, sf::Vector2f scale, sf::V
 	sprite = new sf::Sprite;
 	sprite->setTexture(texture);
 	if (srcSize != sf::Vector2u{0,0})
-		sprite->setTextureRect(this->getIntRect());
+		updateTextRect();
 	sprite->setScale(scale);
 	sprite->setPosition(pos);
 	this->num = num;
@@ -46,7 +46,7 @@ Object::Object(std::string fileName, sf::Vector2u srcSize, sf::Vector2u srcPos, 
 	sprite = new sf::Sprite;
 	sprite->setTexture(texture);
 	if (srcSize != sf::Vector2u{ 0, 0 })
-		sprite->setTextureRect(this->getIntRect());
+		updateTextRect();
 	this->num = num;
 	this->string = name;
 }
@@ -65,7 +65,7 @@ Object::Object(Object & right, int num, std::string name)
 	this->texture = right.texture;
 	sprite = new sf::Sprite;
 	sprite->setTexture(texture);
-	sprite->setTextureRect(this->getIntRect());
+	updateTextRect();
 	sprite->setScale(right.getScale());
 	this->num = num;
 	string = name;
@@ -115,24 +115,11 @@ void Object::draw(sf::RenderTarget& target, sf::RenderStates states) const
 }
 
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
-//Returns an IntRect based on the objects SrcPos and SrcSize
-// (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
-sf::IntRect Object::getIntRect()
-{
-	return sf::IntRect(srcPos.x * srcSize.x, srcPos.y * srcSize.y, srcSize.x, srcSize.y);
-}
-
-// (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
 // Update Funtion -
 // Currently updates the TextureRect to new position when called
 // 
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
-void Object::update()
+void Object::updateTextRect()
 {
-	sprite->setTextureRect(sf::IntRect(srcPos.x * srcSize.y, srcPos.y * srcSize.y, srcSize.y, srcSize.y));
-	//srcPos.x++;
-	//if (srcPos.x * srcSize.y >= texture.getSize().x)
-	//{
-	//	srcPos.x = 0;
-	//}
+	sprite->setTextureRect(sf::IntRect(srcPos.x * srcSize.x, srcPos.y * srcSize.y, srcSize.x, srcSize.y));
 }

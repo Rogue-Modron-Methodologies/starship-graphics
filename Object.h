@@ -57,11 +57,10 @@ public:
 	bool isSmall() const  { return smallDisplay; }
 
 	// Prototypes
-	virtual void update();
+	virtual void updateTextRect();
 	virtual void draw(sf::RenderWindow &window) { window.draw(*sprite); }
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 	bool isTargeted(sf::RenderWindow &gWindow);
-	sf::IntRect getIntRect();
 };
 
 #endif  // OBJECT_H

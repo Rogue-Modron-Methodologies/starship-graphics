@@ -19,11 +19,19 @@ Game::Game()
 	if (!font.loadFromFile(FNTFLE)){
 		std::cout << "Font not Loaded" << std::endl;
 	}
+	flightDie.icon = new Object(SDIEFLE, sf::Vector2u(200, 200), sf::Vector2u(0, 0), 1, "flight die");
+	flightDie.icon->setScale({.4f, .4f});
+	flightDie.icon->setPosition({ 350, 525 });
+	flightDie.text.setFont(font);
+	flightDie.text.setStyle(sf::Text::Bold);
+	flightDie.text.setPosition({ 440, 545 });
 	P1 = new Player("Player1", 1);		// Default names for bugtesting
 	P2 = new Player("Player2", 2);		// Default names for bugtesting
 	universe = new Universe;
 	gWindow.create(sf::VideoMode(1200, 900), "Starship Game");
 	phaseSetupComplete = false;
+	phaseComplete = false;
+	gainProductionResource = false;
 	cPhase = production;
 	phaseNameString.setFont(font);
 	phaseNameString.setString("Production Phase");
@@ -34,10 +42,9 @@ Game::Game()
 	errorTimer = 255;
 	infoString.setFont(font);
 	infoString.setStyle(sf::Text::Bold);
-	infoString.setPosition({ 35, 30 });
+	infoString.setPosition({ 40, 30 });
 	cPlyr = P2;
 	playerSetup();
-	initSDie();
 	initCDie();
 }
 
@@ -63,28 +70,28 @@ void Game::playerSetup()
 	//M		colony	Carbon	1	N/A	0	1	Colony: Alioth VIII
 	tempCard = new ColonyCard(-1, "Colony: Alioth VIII", colony, Carbon, 1, 1, STRFILE, CLPOS, CRDSSCL);
 //	tempCard->setSrcPos({ 1, 0 });
-	tempCard->getSprite()->setTextureRect(tempCard->getIntRect());
+	tempCard->updateTextRect();
 	P1->getColonyZone()->insertNode(tempCard);
 
 	///////////////////////   BEGIN TEST STUFF
 	tempCard = new ColonyCard(-1, "Colony: Alioth VIII", colony, Carbon, 1, 1, STRFILE, { 400, 690 }, { .35f, .35f });
-	tempCard->getSprite()->setTextureRect(tempCard->getIntRect());
+	tempCard->updateTextRect();
 	P1->getColonyZone()->insertNode(tempCard);
 
 	tempCard = new ColonyCard(-1, "Colony: Alioth VIII", colony, Carbon, 1, 1, STRFILE, { 400, 690 }, { .35f, .35f });
-	tempCard->getSprite()->setTextureRect(tempCard->getIntRect());
+	tempCard->updateTextRect();
 	P1->getColonyZone()->insertNode(tempCard);
 
 	tempCard = new ColonyCard(-1, "Colony: Alioth VIII", colony, Carbon, 1, 1, STRFILE, { 400, 690 }, { .35f, .35f });
-	tempCard->getSprite()->setTextureRect(tempCard->getIntRect());
+	tempCard->updateTextRect();
 	P1->getColonyZone()->insertNode(tempCard);
 
 	tempCard = new ColonyCard(-1, "Colony: Alioth VIII", colony, Carbon, 1, 1, STRFILE, { 400, 690 }, { .35f, .35f });
-	tempCard->getSprite()->setTextureRect(tempCard->getIntRect());
+	tempCard->updateTextRect();
 	P1->getTradeZone()->insertNode(tempCard);
 
 	tempCard = new ColonyCard(-1, "Colony: Alioth VIII", colony, Carbon, 1, 1, STRFILE, { 400, 690 }, { .35f, .35f });
-	tempCard->getSprite()->setTextureRect(tempCard->getIntRect());
+	tempCard->updateTextRect();
 	P1->getTradeZone()->insertNode(tempCard);
 
 	///////////////////////   END TEST STUFF
@@ -93,7 +100,7 @@ void Game::playerSetup()
 	//S		colony	Fuel		1	N/A	0	1	Colony: Megrez VII
 	tempCard = new ColonyCard(-1, "Colony: Megrez VII", colony, Fuel, 1, 1, STRFILE, CLPOS, CRDSSCL);
 	tempCard->setSrcPos({ 1, 0 });
-	tempCard->getSprite()->setTextureRect(tempCard->getIntRect());
+	tempCard->updateTextRect();
 	P2->getColonyZone()->insertNode(tempCard);
 	
 }
@@ -133,14 +140,41 @@ void Game::gameLoop()
 				case sf::Event::KeyPressed:
 					if (event.key.code == sf::Keyboard::Escape)
 						gWindow.close();
-					if (event.key.code == sf::Keyboard::Return)
+					if (event.key.code == sf::Keyboard::Return && phaseComplete)
 						endPhase();
 					break;
+				case sf::Event::MouseButtonPressed:
+					// Colony Zone (Large Icon) is clicked
+					if (!cPlyr->getColonyZone()->isSmall() && cPlyr->getColonyZone()->showIconOnly() && cPlyr->getColonyZone()->isIconTargeted(gWindow))
+					{
+						if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+							cPlyr->expandColonyZone();
+						else if (sf::Mouse::isButtonPressed(sf::Mouse::Right))
+							cPlyr->makeBig();
+					}
+					else if (!cPlyr->getTradeZone()->isSmall() && cPlyr->getTradeZone()->showIconOnly() && cPlyr->getTradeZone()->isIconTargeted(gWindow))
+					{
+						if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+							cPlyr->expandTradeZone();
+						else if (sf::Mouse::isButtonPressed(sf::Mouse::Right))
+							cPlyr->makeBig();
+					}
+					// Colony Zone (Large List) is clicked and player is entitled to a production resource
+					else if (!cPlyr->getColonyZone()->isSmall() && !cPlyr->getColonyZone()->showIconOnly() && cPlyr->getColonyZone()->isZoneTargeted(gWindow, tempType))
+					{
+						if (gainProductionResource && sf::Mouse::isButtonPressed(sf::Mouse::Left))
+							if (cPlyr->getStarship()->gainResource(tempType, statusUpdate))
+							{
+								phaseComplete = true;
+								gainProductionResource = false;
+								infoString.setString("Press Enter to End Phase");
+							}
+					}
 				}
 			}
 			break;
 		case flight:
-			while (gWindow.pollEvent(event))		// the event loop
+			while (gWindow.pollEvent(event))		
 			{
 				switch (event.type) {
 				case sf::Event::Closed:
@@ -156,7 +190,7 @@ void Game::gameLoop()
 			}
 			break;
 		case trades:
-			while (gWindow.pollEvent(event))		// the event loop
+			while (gWindow.pollEvent(event))		
 			{
 				switch (event.type) {
 				case sf::Event::Closed:
@@ -172,7 +206,7 @@ void Game::gameLoop()
 			}
 			break;
 		case build:
-			while (gWindow.pollEvent(event))		// the event loop
+			while (gWindow.pollEvent(event))		
 			{
 				switch (event.type) {
 				case sf::Event::Closed:
@@ -256,23 +290,6 @@ void Game::gameLoop()
 
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
 //
-//  Initialize Speed Die
-//
-// (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
-void Game::initSDie()
-{
-	flightDie.icon = new Object(SDIEFLE, sf::Vector2u(200, 200), sf::Vector2u(0, 0), 1, "flight die");
-//	flightDie.text.setFont(font);
-	//speedDie[0] = 1;
-	//speedDie[1] = 1;
-	//speedDie[2] = 2;
-	//speedDie[3] = 2;
-	//speedDie[4] = 3;
-	//speedDie[5] = 3;
-}
-
-// (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
-//
 //  Initialize Combat Die
 //
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
@@ -294,15 +311,29 @@ void Game::initCDie()
 void Game::phaseSetup()
 {	
 	int dieRoll;
+	std::string tempString;
 	switch (cPhase)
 	{
 	case production:
 		phaseNameString.setString("Production Phase");
-		dieRoll = rollSpeedDie();
-		infoString.setString("Die roll: " + std::to_string(dieRoll));
-		cPlyr->getStarship()->calcMaxDistance(dieRoll);
 		cPlyr->makeBig();
-		cPlyr->expandColonyZone();
+		cPlyr->expandColonyZone();		
+		dieRoll = rollSpeedDie();
+		cPlyr->getStarship()->calcMaxDistance(dieRoll);
+		tempString.clear();
+
+		if (cPlyr->getColonyZone()->findColonyResource(dieRoll))
+		{
+			tempString += " Resource(s) in Colony Zone Found!.  Press Select One.";
+			gainProductionResource = true;
+			phaseComplete = false;
+		}
+		else
+		{
+			tempString += " No Resources in Colony Zone.  Press Enter to end Phase.";
+			phaseComplete = true;
+		}
+		infoString.setString(tempString);			
 		break;
 	case flight:
 		phaseNameString.setString("Flight Phase");
@@ -352,6 +383,12 @@ void Game::updateGameWindow(sf::RenderWindow &gWindow)
 	cPlyr->draw(gWindow);
 	gWindow.draw(phaseNameString);
 	gWindow.draw(infoString);
+	if (cPhase == production)
+	{
+		flightDie.icon->draw(gWindow);
+		gWindow.draw(flightDie.text);
+	}
+		
 	if (statusUpdate.length())
 		setError(statusUpdate);
 	statusUpdate.clear();
@@ -364,12 +401,22 @@ void Game::updateGameWindow(sf::RenderWindow &gWindow)
 }
 
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
-//  
 //  updates the Error String and timer with the error message
-//
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
 void Game::setError(std::string error)
 {
 	errorTimer = 255;
 	errorString.setString(error);
+}
+
+// (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
+//  rand(1-3) and updates the sprite to correct textureRect
+// (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
+int Game::rollSpeedDie()
+{
+	int num = rand() % 3;
+	flightDie.icon->setSrcPos(sf::Vector2u(num, 0));
+	flightDie.icon->updateTextRect();
+	flightDie.text.setString("Dice roll: " + std::to_string(num + 1));
+	return num + 1;
 }

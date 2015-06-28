@@ -39,10 +39,10 @@ private:
 	sf::Text infoString;				//  Info Text String
 	int errorTimer;
 	Icon flightDie;
-//	Icon combatDie;
-	//int fDie[6];
 	int combatDie[6];
-	bool phaseSetupComplete;
+	bool phaseSetupComplete;				//  Flag 
+	bool gainProductionResource;			//  Flag for enabling free colony resource
+	bool phaseComplete;					//  Flag
 
 public:
 	Game();
@@ -51,6 +51,7 @@ public:
 		delete P1;
 		delete P2;
 		delete universe;
+		delete flightDie.icon;
 	}
 	// getters and setters
 	Player* getP1() const
@@ -60,23 +61,21 @@ public:
 	Universe* getUniverse() const
 	{	return universe;	}
 
-	int rollSpeedDie()
-	{	return rand() % 3 + 1;	}
+
 	int rollCombatDie()
 	{	return combatDie[rand() % 6];	}
 	void startGame()
 	{	gameLoop();	};
 
 private:	
-
 	void gameLoop();
 	void playerSetup();	
-	void initSDie();
 	void initCDie();
 	void phaseSetup();
 	void updateGameWindow(sf::RenderWindow &gWindow);
 	void endPhase();
 	void setError(std::string error);
+	int rollSpeedDie();
 
 };
 

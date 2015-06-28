@@ -51,7 +51,7 @@ Starship::Starship(std::string fileName, sf::Vector2f pos, sf::Vector2f scale) :
 	shipHold[H1]->setRelPos(sf::Vector2f{ 160, 190 });
 	shipHold[H2] = new Object(*shipHold[L1], 1, "H2");
 	shipHold[H2]->setSrcPos({ 1, 0 });
-	shipHold[H2]->getSprite()->setTextureRect(shipHold[H2]->getIntRect());
+	shipHold[H2]->updateTextRect();
 	shipHold[H2]->setRelPos(sf::Vector2f{ 160, 250 });
 
 	maxActions = 2;
@@ -248,13 +248,13 @@ void Starship::addLaser(int pos, std::string &statusUpdate)
 		{
 			lasers[pos]->setNum(lasers[pos]->getNum() + 1);
 			lasers[pos]->setSrcPos({ 0, 0 });
-			lasers[pos]->getSprite()->setTextureRect(lasers[pos]->getIntRect());
+			lasers[pos]->updateTextRect();
 		}
 		else if(lasers[L1]->getNum() >= 1 && lasers[L2]->getNum() >= 1 && lasers[L3]->getNum() >= 1)
 		{
 			lasers[pos]->setNum(lasers[pos]->getNum() + 1);
 			lasers[pos]->setSrcPos({ 1, 0 });
-			lasers[pos]->getSprite()->setTextureRect(lasers[pos]->getIntRect());
+			lasers[pos]->updateTextRect();
 		}
 		else
 			statusUpdate = "All Lasers must be upgraded to Level 1!";
@@ -276,13 +276,13 @@ void Starship::addBooster(int pos, std::string &statusUpdate)
 		{
 			boosters[pos]->setNum(boosters[pos]->getNum() + 1);
 			boosters[pos]->setSrcPos({ 0, 0 });
-			boosters[pos]->getSprite()->setTextureRect(boosters[pos]->getIntRect());
+			boosters[pos]->updateTextRect();
 		}
 		else if(boosters[B1]->getNum() >= 1 && boosters[B2]->getNum() >= 1 && boosters[B3]->getNum() >= 1)
 		{
 			boosters[pos]->setNum(boosters[pos]->getNum() + 1);
 			boosters[pos]->setSrcPos({ 1, 0 });
-			boosters[pos]->getSprite()->setTextureRect(boosters[pos]->getIntRect());
+			boosters[pos]->updateTextRect();
 		}
 		else
 			statusUpdate = "All Boosters must be upgraded to Level 1!";
@@ -301,3 +301,30 @@ void Starship::update(Object *o, sf::Vector2f scale)
 	o->getSprite()->setScale(scale);
 	o->getSprite()->setPosition((sprite->getPosition() + sf::Vector2f(o->getRelPos().x * scale.x, o->getRelPos().y * scale.y)));
 }
+
+// (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
+//  
+//  Calls individual resource gainResource function
+//
+// (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
+bool Starship::gainResource(int type, std::string &statusUpdate)
+{ 
+	if (resources[type]->gainResource(statusUpdate))
+		return true;
+	else
+		return false;
+}
+
+// (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
+//  
+//  Calls individual resource loseResource function
+//
+// (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
+bool Starship::loseResource(int type, std::string &statusUpdate)
+{
+	if (resources[type]->loseResource(statusUpdate))
+		return true;
+	else
+		return false;
+}
+
