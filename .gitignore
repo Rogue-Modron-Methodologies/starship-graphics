@@ -43,9 +43,13 @@ Starship Game.vcxproj.filters
 Starship Game.sln
 Starship Game.v12.suo
 *.opensdf
+<<<<<<< HEAD
 *.vcxproj
 Starship Graphics.v12.suo
 *.suo
 Starship Graphics.sln
 *.filters
 x64/Debug/Starship Graphics.ilk
+=======
+Output-Build.txt
+>>>>>>> origin/master
