@@ -28,7 +28,11 @@ Game::Game()
 	P1 = new Player("Player1", 1);		// Default names for bugtesting
 	P2 = new Player("Player2", 2);		// Default names for bugtesting
 	universe = new Universe;
-	gWindow.create(sf::VideoMode(1200, 900), "Starship Game");
+	screenSize = sf::Vector2u(1200, 900);
+	gWindow.create(sf::VideoMode(screenSize.x, screenSize.y), "Starship Game");
+	visibleArea = sf::FloatRect(0.0f, 0.0f, screenSize.x, screenSize.y);
+	view.reset(visibleArea);
+	gWindow.setView(view);
 	phaseSetupComplete = false;
 	phaseComplete = false;
 	gainProductionResource = false;
@@ -38,7 +42,7 @@ Game::Game()
 	phaseNameString.setPosition({ 200, 820 });
 	errorString.setFont(font);
 	errorString.setStyle(sf::Text::Bold);
-	errorString.setPosition({ 550, 820 });
+	errorString.setPosition({ 550, 820 });   ///////////////////////////////
 	errorTimer = 255;
 	infoString.setFont(font);
 	infoString.setStyle(sf::Text::Bold);
@@ -128,22 +132,31 @@ void Game::gameLoop()
 	{
 		if (!phaseSetupComplete)
 			phaseSetup();
-		switch (cPhase)
+		while (gWindow.pollEvent(event))		// the event loop
 		{
-		case production:
-			while (gWindow.pollEvent(event))		// the event loop
-			{
-				switch (event.type) {
-				case sf::Event::Closed:
+			switch (event.type) {
+			case sf::Event::Closed:
+				gWindow.close();
+				break;
+			case sf::Event::Resized:
+				if (event.type == sf::Event::Resized){
+					screenSize = gWindow.getSize();
+					std::cout << screenSize.x << " " << screenSize.y << std::endl;
+					sf::FloatRect visibleArea(0, 0, event.size.width, event.size.height);
+					gWindow.setView(sf::View(visibleArea));
+				}
+
+				break;
+			case sf::Event::KeyPressed:
+				if (event.key.code == sf::Keyboard::Escape)
 					gWindow.close();
-					break;
-				case sf::Event::KeyPressed:
-					if (event.key.code == sf::Keyboard::Escape)
-						gWindow.close();
-					if (event.key.code == sf::Keyboard::Return && phaseComplete)
-						endPhase();
-					break;
-				case sf::Event::MouseButtonPressed:
+				if (event.key.code == sf::Keyboard::Return && phaseComplete)
+					endPhase();
+				break;
+			case sf::Event::MouseButtonPressed:
+				switch (cPhase)
+				{
+				case production:
 					// Colony Zone (Large Icon) is clicked
 					if (!cPlyr->getColonyZone()->isSmall() && cPlyr->getColonyZone()->showIconOnly() && cPlyr->getColonyZone()->isIconTargeted(gWindow))
 					{
@@ -170,68 +183,21 @@ void Game::gameLoop()
 								infoString.setString("Press Enter to End Phase");
 							}
 					}
-				}
-			}
-			break;
-		case flight:
-			while (gWindow.pollEvent(event))		
-			{
-				switch (event.type) {
-				case sf::Event::Closed:
-					gWindow.close();
 					break;
-				case sf::Event::KeyPressed:
-					if (event.key.code == sf::Keyboard::Escape)
-						gWindow.close();
-					if (event.key.code == sf::Keyboard::Return)
-						endPhase();
+				case flight:
 					break;
-				}
-			}
-			break;
-		case trades:
-			while (gWindow.pollEvent(event))		
-			{
-				switch (event.type) {
-				case sf::Event::Closed:
-					gWindow.close();
+				case trades:
 					break;
-				case sf::Event::KeyPressed:
-					if (event.key.code == sf::Keyboard::Escape)
-						gWindow.close();
-					if (event.key.code == sf::Keyboard::Return)
-						endPhase();
-					break;
-				}
-			}
-			break;
-		case build:
-			while (gWindow.pollEvent(event))		
-			{
-				switch (event.type) {
-				case sf::Event::Closed:
-					gWindow.close();
-					break;
-				case sf::Event::KeyPressed:
-					if (event.key.code == sf::Keyboard::Escape)
-						gWindow.close();
-					if (event.key.code == sf::Keyboard::Return)
-						endPhase();
-					break;
-
-				case sf::Event::MouseMoved:
-					std::cout << std::endl;
-					if (cPlyr->getStarship()->isTargeted(gWindow) && cPlyr->getStarship()->isSmall())
-					{
-						std::cout << "P1 Ship Glows" << std::endl;
-					}
-					break;
-				case sf::Event::MouseButtonPressed:
+				case build:
 					// Starship (Small) is clicked
 					if (cPlyr->getStarship()->isTargeted(gWindow) && cPlyr->getStarship()->isSmall())
 					{
-						if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
-							cPlyr->makeBig();
+						//if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+						//	cPlyr->makeBig();
+						view.setCenter(SMLPOS.x, SMLPOS.y);
+						view.move(100, 100);
+						view.zoom(0.75f);
+						gWindow.setView(view);
 					}
 					// Starship (Large) is clicked
 					else if (cPlyr->getStarship()->isTargeted(gWindow) && !cPlyr->getStarship()->isSmall())
@@ -266,7 +232,7 @@ void Game::gameLoop()
 					}
 					// Trade Zone (Large List) is clicked
 					else if (!cPlyr->getTradeZone()->isSmall() && !cPlyr->getTradeZone()->showIconOnly() && cPlyr->getTradeZone()->isZoneTargeted(gWindow, tempType))
-					{	
+					{
 						if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
 							cPlyr->getStarship()->gainResource(tempType, statusUpdate);
 						else if (sf::Mouse::isButtonPressed(sf::Mouse::Right))
@@ -277,11 +243,27 @@ void Game::gameLoop()
 					{
 						cPlyr->makeSmall();
 					}
-				}
-			}
+				}			
 			break;
+			case sf::Event::MouseMoved:
+				switch (cPhase)
+				{
+				case production:
+					break;
+				case flight:
+					break;
+				case trades:
+					break;
+				case build:
+					std::cout << std::endl;
+					if (cPlyr->getStarship()->isTargeted(gWindow) && cPlyr->getStarship()->isSmall())
+					{
+						std::cout << "P1 Ship Glows" << std::endl;
+					}
+					break;
+				}
+			}				
 		}
-
 		gWindow.clear();
 		updateGameWindow(gWindow);
 		gWindow.display();
