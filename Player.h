@@ -14,6 +14,8 @@
 #include "LinkedList.h"
 #include "ColonyCard.h"
 
+//enum Icons{player, astro, vicPt, frdPt, fmPt, science, ore, fuel, tradeGood, wheat, carbon};
+
 const std::string ICNFLE = "resources/board/icons.png";		//  Source file name for trade/colony ships
 const std::string FNTFLE = "resources/board/unique.ttf";		//  Source file name for Font
 const std::string SYM1FLE = "resources/board/symbols.png";		//  Source file for Victory/Fame/Friendship Icons
@@ -39,6 +41,7 @@ private:
 	sf::Text cZoneString;			//  Colony Zone Text String
 	LinkedList<Card>* TradeZone;		//  Trade Zone 
 	sf::Text tZoneString;			//  Trade Zone Text String
+	//Icon statistics[11];			//  Array for Below Icons  /////////////////////////   ADD THE ICONS TO THE ARRAY  - WITH AN ENUM
 	Icon player;					//  Player Icon 
 	Icon astro;					//  Astro Icon
 	Icon vicPt;					//  Victory Point Icon

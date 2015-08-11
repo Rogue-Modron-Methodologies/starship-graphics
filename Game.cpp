@@ -141,8 +141,8 @@ void Game::gameLoop()
 			case sf::Event::Resized:
 				if (event.type == sf::Event::Resized){
 					screenSize = gWindow.getSize();
-					std::cout << screenSize.x << " " << screenSize.y << std::endl;
-					sf::FloatRect visibleArea(0, 0, event.size.width, event.size.height);
+					std::cout << event.size.width << " " << event.size.height << std::endl;
+					visibleArea = sf::FloatRect(0, 0, event.size.width, event.size.height);
 					gWindow.setView(sf::View(visibleArea));
 				}
 

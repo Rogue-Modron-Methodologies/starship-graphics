@@ -13,12 +13,13 @@
 #include <SFML\Graphics.hpp>
 #include <string>
 #include <iostream>
+#include "TextureManager.h"
 
 enum direction { Down, Left, Right, Up };
 enum cTypes{ trade, colony, pirate, adventure, lost };
 enum ResourcesAvailable { Carbon, Fuel, Ore, Science, TradeGood, Wheat, Any };
 
-class Object : public sf::Drawable, public sf::Transformable
+class Object 
 {
 private: 
 	

@@ -14,7 +14,7 @@
 //  Constructor
 //
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
-Player::Player(std::string name, int num) 
+Player::Player(std::string name, int num)
 {
 	starship = new Starship();
 	ColonyZone = new LinkedList<Card>;

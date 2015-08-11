@@ -88,30 +88,20 @@ Starship::~Starship()
 void Starship::draw(sf::RenderWindow &gWindow) 
 { 
 	gWindow.draw(*sprite);					// draws the ship sprite
-	if (resources[Science]->getNum() > 0)		// only draws the resource's arrows to the screen if the cargo hold contains resources. 
-		resources[Science]->draw(gWindow);		
-	if (resources[Ore]->getNum() > 0)
-		resources[Ore]->draw(gWindow);
-	if (resources[Fuel]->getNum() > 0)
-		resources[Fuel]->draw(gWindow);
-	if (resources[TradeGood]->getNum() > 0)
-		resources[TradeGood]->draw(gWindow);
-	if (resources[Wheat]->getNum() > 0)
-		resources[Wheat]->draw(gWindow);
-	if (resources[Carbon]->getNum() > 0)
-		resources[Carbon]->draw(gWindow);
-	if (lasers[L1]->getNum() > 0)				// only draws the lasers to the screen if the lvl is above zero
-		lasers[L1]->draw(gWindow);			
-	if (lasers[L2]->getNum() > 0)
-		lasers[L2]->draw(gWindow);
-	if (lasers[L3]->getNum() > 0)
-		lasers[L3]->draw(gWindow);
-	if (boosters[B1]->getNum() > 0)			// only draws the boosters to the screen if the lvl is above zero
-		boosters[B1]->draw(gWindow);			 
-	if (boosters[B2]->getNum() > 0)
-		boosters[B2]->draw(gWindow);
-	if (boosters[B3]->getNum() > 0)
-		boosters[B3]->draw(gWindow);		
+	for (int i = 0; i < 6; i++)
+	{
+		if (resources[i]->getNum() > 0)		// only draws the resource's arrows to the screen if the cargo hold contains resources. 
+			resources[i]->draw(gWindow);
+	}
+
+	for (int i = 0; i < 3; i++)
+	{
+		if (lasers[i]->getNum() > 0)			// only draws the lasers to the screen if the lvl is above zero
+			lasers[i]->draw(gWindow);
+		if (boosters[i]->getNum() > 0)		// only draws the boosters to the screen if the lvl is above zero
+			boosters[i]->draw(gWindow);
+	}
+
 	if (shipHold[H1]->getNum() > 0)			// only draws the ship to the screen if the qty is above zero
 		shipHold[H1]->draw(gWindow);			
 	if (shipHold[H2]->getNum() > 0)
