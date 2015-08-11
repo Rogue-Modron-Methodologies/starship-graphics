@@ -24,31 +24,30 @@ class Object
 private: 
 	
 protected:
-	int num;
-	std::string string;
+	int qty;
 	sf::Sprite *sprite;
-	sf::Vector2u srcSize;
-	sf::Vector2u srcPos;
-	sf::Vector2f relPos;
+	sf::Vector2u srcSize;		// file source size
+	sf::Vector2u srcPos;		// file source position
+	sf::Vector2f relPos;		// relative position to starship Orgin   ------------------------- may be changing this
 	bool smallDisplay;
 
 public:
-	Object(std::string fileName = "EMPTY", int n = -99){ string = fileName; num = n; }
-	Object(const sf::Texture &texture, sf::Vector2u srcSize, sf::Vector2u srcPos, int num, std::string name);
-	Object(const sf::Texture &texture, sf::Vector2f pos, sf::Vector2f scale, sf::Vector2u srcSize = { 0, 0 }, sf::Vector2u srcPos = { 0, 0 }, int num = 1, std::string name = "bad");
-	~Object();
+	Object(){};
+	Object(const sf::Texture &texture, sf::Vector2f pos, int num = 1, sf::Vector2u srcSize = { 0, 0 }, sf::Vector2u srcPos = { 0, 0 });
+	~Object() { delete sprite; };
 
 	//  Getters/Setters
 	void setScale(sf::Vector2f scale) { sprite->setScale(scale); }
 	void setPosition(sf::Vector2f pos) { sprite->setPosition(pos); }
-	void setRelPos(sf::Vector2f pos) { relPos = pos; }
+//	void setRelPos(sf::Vector2f pos) { relPos = pos; }
 	void setSrcPos(sf::Vector2u source) { this->srcPos = source; }
 	void setSrcPosX(unsigned num){ this->srcPos.x = num; }	
-	void setNum(int num){ this->num = num; }	
+	void setSrcPosY(unsigned num){ this->srcPos.y = num; }
+	void setQty(int num){ this->qty = num; }
 	sf::Sprite *getSprite() const { return sprite; } 
 	sf::Vector2f getScale() const { return sprite->getScale(); }
 	sf::Vector2f getRelPos() const { return relPos; }	
-	int getNum() const { return num; }
+	int getQty() const { return qty; }
 
 	// Misc Inline Functions
 	bool isSmall() const  { return smallDisplay; }

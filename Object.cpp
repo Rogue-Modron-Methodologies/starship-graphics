@@ -12,10 +12,10 @@
 
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
 // Constructor -
-// Creates the texture and sprite for the object.  
-// Sets source size and source position.
+// Creates the sprite for the object.  
+// Sets the inital scale, source position, and screen position.
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
-Object::Object(const sf::Texture &texture, sf::Vector2f pos, sf::Vector2f scale, sf::Vector2u srcSize, sf::Vector2u srcPos, int num, std::string name)
+Object::Object(const sf::Texture &texture, sf::Vector2f pos, int num, sf::Vector2u srcSize, sf::Vector2u srcPos)
 {
 	smallDisplay = true;
 	this->srcSize = srcSize;
@@ -25,41 +25,10 @@ Object::Object(const sf::Texture &texture, sf::Vector2f pos, sf::Vector2f scale,
 	sprite->setTexture(texture);
 	if (srcSize != sf::Vector2u{ 0, 0 })
 		updateTextRect();
-	sprite->setScale(scale);
 	sprite->setPosition(pos);
-	this->num = num;
-	this->string = name;
-
+	this->qty = num;
 }
 
-// (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
-// Constructor -
-// Creates the texture and sprite for the object.  
-// Sets the inital scale, source position, and screen position.
-// (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
-Object::Object(const sf::Texture &texture, sf::Vector2u srcSize, sf::Vector2u srcPos, int num, std::string name)
-{
-	smallDisplay = true;
-	this->srcSize = srcSize;
-	this->srcPos = srcPos;
-	sprite = new sf::Sprite;
-	sprite->setTexture(texture);
-	if (srcSize != sf::Vector2u{ 0, 0 })
-		updateTextRect();
-	this->num = num;
-	this->string = name;
-}
-
-
-// (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
-//  Destructor - 
-//  
-//  
-// (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
-Object::~Object()
-{
-	delete sprite;
-}
 
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
 //
@@ -76,7 +45,6 @@ bool Object::isTargeted(sf::RenderWindow &gWindow)
 	else
 		return false;
 }
-
 
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
 // Update Funtion -

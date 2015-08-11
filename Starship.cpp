@@ -14,29 +14,30 @@
 //		
 //		
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
-Starship::Starship(TextureManager &txtMgr, sf::Vector2f pos, sf::Vector2f scale) : Object(txtMgr.getTexture(SRCFILE), pos, scale)
+Starship::Starship(TextureManager &txtMgr, sf::Vector2f pos) : Object(txtMgr.getTexture(SRCFILE), pos)
 {
+
 	resources = new Resource*[5];
-	resources[Science] = new Resource(txtMgr.getTexture(ARWFILE), sf::Vector2f{ 243, 59 }, sf::Vector2u(65, 65), 1, "ScienceResource");
-	resources[Ore] = new Resource(txtMgr.getTexture(ARWFILE), sf::Vector2f{ 555, 59 }, sf::Vector2u(65, 65), 1, "OreResource");
-	resources[Fuel] = new Resource(txtMgr.getTexture(ARWFILE), sf::Vector2f{ 713, 59 }, sf::Vector2u(65, 65), 1, "FuelResource");
-	resources[TradeGood] = new Resource(txtMgr.getTexture(ARWFILE), sf::Vector2f{ 243, 374 }, sf::Vector2u(65, 65), 1, "TradeGoodResource");
-	resources[Wheat] = new Resource(txtMgr.getTexture(ARWFILE), sf::Vector2f{ 555, 374 }, sf::Vector2u(65, 65), 1, "WheatResource");
-	resources[Carbon] = new Resource(txtMgr.getTexture(ARWFILE), sf::Vector2f{ 712, 374 }, sf::Vector2u(65, 65), 1, "CarbonResource");
+	resources[Science] = new Resource(txtMgr.getTexture(ARWFILE), sf::Vector2f{ 243, 59 }, sf::Vector2u(65, 65), 1, "Science");
+	resources[Ore] = new Resource(txtMgr.getTexture(ARWFILE), sf::Vector2f{ 555, 59 }, sf::Vector2u(65, 65), 1, "Ore");
+	resources[Fuel] = new Resource(txtMgr.getTexture(ARWFILE), sf::Vector2f{ 713, 59 }, sf::Vector2u(65, 65), 1, "Fuel");
+	resources[TradeGood] = new Resource(txtMgr.getTexture(ARWFILE), sf::Vector2f{ 243, 374 }, sf::Vector2u(65, 65), 1, "TradeGood");
+	resources[Wheat] = new Resource(txtMgr.getTexture(ARWFILE), sf::Vector2f{ 555, 374 }, sf::Vector2u(65, 65), 1, "Wheat");
+	resources[Carbon] = new Resource(txtMgr.getTexture(ARWFILE), sf::Vector2f{ 712, 374 }, sf::Vector2u(65, 65), 1, "Carbon");
 
 	boosters = new Object*[3];
-	boosters[B1] = new Object(txtMgr.getTexture(BSTFILE), sf::Vector2f{ 0, 125 }, sf::Vector2f(1, 1), sf::Vector2u(125, 75), sf::Vector2u(0, 0), 1, "B1");
-	boosters[B2] = new Object(txtMgr.getTexture(BSTFILE), sf::Vector2f{ 0, 210 }, sf::Vector2f(1, 1), sf::Vector2u(125, 75), sf::Vector2u(0, 0), 0, "B2");
-	boosters[B3] = new Object(txtMgr.getTexture(BSTFILE), sf::Vector2f{ 0, 295 }, sf::Vector2f(1, 1), sf::Vector2u(125, 75), sf::Vector2u(0, 0), 1, "B3");
+	boosters[B1] = new Object(txtMgr.getTexture(BSTFILE), sf::Vector2f{ 0, 125 }, 1, sf::Vector2u(125, 75));
+	boosters[B2] = new Object(txtMgr.getTexture(BSTFILE), sf::Vector2f{ 0, 210 }, 0, sf::Vector2u(125, 75));
+	boosters[B3] = new Object(txtMgr.getTexture(BSTFILE), sf::Vector2f{ 0, 295 }, 1, sf::Vector2u(125, 75));
 	
 	lasers = new Object*[3];
-	lasers[L1] = new Object(txtMgr.getTexture(LSRFILE), sf::Vector2f{ 908, 125 }, sf::Vector2f(1, 1), sf::Vector2u(125, 75), sf::Vector2u(0, 0), 0, "L1");
-	lasers[L2] = new Object(txtMgr.getTexture(LSRFILE), sf::Vector2f{ 908, 210 }, sf::Vector2f(1, 1), sf::Vector2u(125, 75), sf::Vector2u(0, 0), 1, "L2");
-	lasers[L3] = new Object(txtMgr.getTexture(LSRFILE), sf::Vector2f{ 908, 295 }, sf::Vector2f(1, 1), sf::Vector2u(125, 75), sf::Vector2u(0, 0), 0, "L3");
+	lasers[L1] = new Object(txtMgr.getTexture(LSRFILE), sf::Vector2f{ 908, 125 }, 0, sf::Vector2u(125, 75));
+	lasers[L2] = new Object(txtMgr.getTexture(LSRFILE), sf::Vector2f{ 908, 210 }, 1, sf::Vector2u(125, 75));
+	lasers[L3] = new Object(txtMgr.getTexture(LSRFILE), sf::Vector2f{ 908, 295 }, 0, sf::Vector2u(125, 75));
 
 	shipHold = new Object*[2];
-	shipHold[H1] = new Object(txtMgr.getTexture(SHPFILE), sf::Vector2f{ 160, 190 }, sf::Vector2f(1, 1), sf::Vector2u(100, 60), sf::Vector2u(0, 0), 1, "H1");
-	shipHold[H2] = new Object(txtMgr.getTexture(SHPFILE), sf::Vector2f{ 160, 250 }, sf::Vector2f(1, 1), sf::Vector2u(100, 60), sf::Vector2u(1, 0), 1, "H2");
+	shipHold[H1] = new Object(txtMgr.getTexture(SHPFILE), sf::Vector2f{ 160, 190 }, 1, sf::Vector2u(100, 60));
+	shipHold[H2] = new Object(txtMgr.getTexture(SHPFILE), sf::Vector2f{ 160, 250 }, 1, sf::Vector2u(100, 60), sf::Vector2u(1, 0));
 
 	maxActions = 2;
 }	
@@ -72,23 +73,23 @@ Starship::~Starship()
 void Starship::draw(sf::RenderWindow &gWindow) 
 { 
 	gWindow.draw(*sprite);					// draws the ship sprite
-	for (int i = 0; i < 6; i++)
+	for (int i = 0; i < RESNUM; i++)
 	{
-		if (resources[i]->getNum() > 0)		// only draws the resource's arrows to the screen if the cargo hold contains resources. 
+		if (resources[i]->getQty() > 0)		// only draws the resource's arrows to the screen if the cargo hold contains resources. 
 			resources[i]->draw(gWindow);
 	}
 
-	for (int i = 0; i < 3; i++)
+	for (int i = 0; i < BOOLASNUM; i++)
 	{
-		if (lasers[i]->getNum() > 0)			// only draws the lasers to the screen if the lvl is above zero
+		if (lasers[i]->getQty() > 0)			// only draws the lasers to the screen if the lvl is above zero
 			lasers[i]->draw(gWindow);
-		if (boosters[i]->getNum() > 0)		// only draws the boosters to the screen if the lvl is above zero
+		if (boosters[i]->getQty() > 0)		// only draws the boosters to the screen if the lvl is above zero
 			boosters[i]->draw(gWindow);
 	}
 
-	if (shipHold[H1]->getNum() > 0)			// only draws the ship to the screen if the qty is above zero
+	if (shipHold[H1]->getQty() > 0)			// only draws the ship to the screen if the qty is above zero
 		shipHold[H1]->draw(gWindow);			
-	if (shipHold[H2]->getNum() > 0)
+	if (shipHold[H2]->getQty() > 0)
 		shipHold[H2]->draw(gWindow);
 
 }
@@ -216,17 +217,17 @@ void Starship::bigRightClicked(sf::RenderWindow &gWindow, std::string &statusUpd
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
 void Starship::addLaser(int pos, std::string &statusUpdate)
 {
-	if (lasers[pos]->getNum() < 2)
+	if (lasers[pos]->getQty() < 2)
 	{
-		if (lasers[pos]->getNum() == 0)
+		if (lasers[pos]->getQty() == 0)
 		{
-			lasers[pos]->setNum(lasers[pos]->getNum() + 1);
+			lasers[pos]->setQty(lasers[pos]->getQty() + 1);
 			lasers[pos]->setSrcPos({ 0, 0 });
 			lasers[pos]->updateTextRect();
 		}
-		else if(lasers[L1]->getNum() >= 1 && lasers[L2]->getNum() >= 1 && lasers[L3]->getNum() >= 1)
+		else if (lasers[L1]->getQty() >= 1 && lasers[L2]->getQty() >= 1 && lasers[L3]->getQty() >= 1)
 		{
-			lasers[pos]->setNum(lasers[pos]->getNum() + 1);
+			lasers[pos]->setQty(lasers[pos]->getQty() + 1);
 			lasers[pos]->setSrcPos({ 1, 0 });
 			lasers[pos]->updateTextRect();
 		}
@@ -244,17 +245,17 @@ void Starship::addLaser(int pos, std::string &statusUpdate)
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
 void Starship::addBooster(int pos, std::string &statusUpdate)
 {
-	if (boosters[pos]->getNum() < 2)
+	if (boosters[pos]->getQty() < 2)
 	{
-		if (boosters[pos]->getNum() == 0)
+		if (boosters[pos]->getQty() == 0)
 		{
-			boosters[pos]->setNum(boosters[pos]->getNum() + 1);
+			boosters[pos]->setQty(boosters[pos]->getQty() + 1);
 			boosters[pos]->setSrcPos({ 0, 0 });
 			boosters[pos]->updateTextRect();
 		}
-		else if(boosters[B1]->getNum() >= 1 && boosters[B2]->getNum() >= 1 && boosters[B3]->getNum() >= 1)
+		else if (boosters[B1]->getQty() >= 1 && boosters[B2]->getQty() >= 1 && boosters[B3]->getQty() >= 1)
 		{
-			boosters[pos]->setNum(boosters[pos]->getNum() + 1);
+			boosters[pos]->setQty(boosters[pos]->getQty() + 1);
 			boosters[pos]->setSrcPos({ 1, 0 });
 			boosters[pos]->updateTextRect();
 		}

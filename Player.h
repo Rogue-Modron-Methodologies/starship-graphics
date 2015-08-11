@@ -61,7 +61,7 @@ public:
 	Starship* getStarship() const {  return starship;  }
 	LinkedList<Card>* getColonyZone() const {	return ColonyZone;	}
 	LinkedList<Card>* getTradeZone() const 	{	return TradeZone;	}
-	int getAstro() const  { return astro.icon->getNum(); }
+	int getAstro() const  { return astro.icon->getQty(); }
 	void update();
 	void draw(sf::RenderWindow &gWindow);
 	void drawCPlyrStats(sf::RenderWindow &gWindow);

@@ -20,42 +20,51 @@ class Card : public Object
 {
 private:
 	int type;	    // card type
+	std::string name;
 
 public:
 	Card(int num = 0, std::string name = "", int type = 0)
 	{
-		this->num = num;
-		this->string = string;
+		this->qty = num;
+		this->name = name;
 		this->type = type;
 	}
 
 
-	Card(const sf::Texture &texture, sf::Vector2f pos, sf::Vector2f scale, sf::Vector2u srcPos = { 0, 0 }, int num = 0, std::string name = "", int type = 0)
-		: Object(texture, pos, scale, CSRCSZE, srcPos, num, name)
+	Card(const sf::Texture &texture, sf::Vector2f pos, int type = 0, sf::Vector2u srcPos = { 0, 0 }, int num = 0, std::string name = "")
+		: Object(texture, pos, num, CSRCSZE, srcPos)
 	{
-		this->num = num;
-		this->string = string;
+		this->qty = num;
+		this->name = name;
 		this->type = type;
 	}
 	virtual Card* operator= (Card* right)
 	{
-		this->num = right->num;
-		this->string = right->string;
+		this->qty = right->qty;
+		this->name = right->name;
 		this->type = right->type;
 		return this;
 	}
 	~Card() {}
 	// Getters and Setters
 	void setDeckNum(int num)
-	{  this->num = num;  }
+	{
+		this->qty = num;
+	}
 	void setName(std::string name)
-	{	this->string = name;}
+	{
+		this->name = name;
+	}
 	void setType(int type)
 	{	this->type = type;	}
 	int getDeckNum() const
-	{  return num; 	}
+	{
+		return qty;
+	}
 	std::string getName() const
-	{	return string;}
+	{
+		return name;
+	}
 	int getType() const
 	{	return type;	}
 	virtual std::string getRequirement() const

@@ -17,7 +17,7 @@
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
 void Resource::update()
 {
-	srcPos.x = num - 1;
+	srcPos.x = qty - 1;
 	sprite->setTextureRect(sf::IntRect(srcPos.x * srcSize.y, srcPos.y * srcSize.y, srcSize.y , srcSize.y));
 }
 
@@ -28,13 +28,13 @@ void Resource::update()
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
 bool Resource::loseResource(std::string &statusUpdate)
 {
-	if (num > 0)		// num: current resource quantity
+	if (qty > 0)		// num: current resource quantity
 	{
-		num--;
+		qty--;
 		update();
 		return true;
 	}
-	statusUpdate = string + " hold is empty!";
+	statusUpdate = name + " hold is empty!";
 	return false;
 }
 
@@ -45,12 +45,12 @@ bool Resource::loseResource(std::string &statusUpdate)
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
 bool Resource::gainResource(std::string &statusUpdate)
 {
-	if (num < rCap)	// num: current resource quantity
+	if (qty < rCap)	// num: current resource quantity
 	{
-		num++;
+		qty++;
 		update();
 		return true;
 	}
-	statusUpdate = string + " hold is full!";
+	statusUpdate = name + " hold is full!";
 	return false;
 }

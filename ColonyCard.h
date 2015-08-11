@@ -30,9 +30,8 @@ public:
 		this->vicPts = vicPts;
 	}
 
-
-	ColonyCard(int num, std::string name, int type, int resource, int actNum, int vicPts, const sf::Texture &texture, sf::Vector2f pos, sf::Vector2f scale, sf::Vector2u srcPos = { 0, 0 })
-		: Card(texture, pos, scale, srcPos, num, name, type)
+	ColonyCard(int num, std::string name, int type, int resource, int actNum, int vicPts, const sf::Texture &texture, sf::Vector2f pos, sf::Vector2u srcPos = { 0, 0 })
+		: Card(texture, pos, type, srcPos, num, name)
 	{
 		this->resource = resource;
 		this->actNum = actNum;

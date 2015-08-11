@@ -17,10 +17,15 @@ class Resource : public Object
 {
 private:
 	int rCap;
+	std::string name;
 	
 public:
 	Resource(const sf::Texture &texture, sf::Vector2f pos, sf::Vector2u srcSize, int num, std::string name, sf::Vector2u srcPos = sf::Vector2u{ 0, 0 })
-		: Object(texture, pos, sf::Vector2f{ 4, 4 }, srcSize, srcPos, num, name)	{	rCap = 4;	}	///////////////////////  SB 2 except for science which should be 4.
+		: Object(texture, pos, num, srcSize, srcPos)	
+	{
+		rCap = 4;			///////////////////////  SB 2 except for science which should be 4.
+		this->name = name;
+	}	
 	int getRCap() const  { return rCap; }
 	void update();
 	void update(sf::Vector2f pos, sf::Vector2f scale);

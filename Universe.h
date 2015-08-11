@@ -32,7 +32,8 @@ private:
 public:
 	Universe(TextureManager &txtMgr)
 	{
-		board = new Object (txtMgr.getTexture("resources/board/starrynight.png"), sf::Vector2f(0, 0), sf::Vector2f(3.1f, 3.6f));
+		board = new Object (txtMgr.getTexture("resources/board/starrynight.png"), sf::Vector2f(0, 0));
+		board->setScale({ 3.1f, 3.6f });
 		universeSetup();
 		adventureDeckSetup();
 		ExtraDeckPtr = 0;

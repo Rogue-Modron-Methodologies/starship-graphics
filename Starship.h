@@ -31,6 +31,8 @@ const std::string ARWFILE = "resources/board/arrows.png";		//  Source File name 
 const std::string BSTFILE = "resources/board/boosters.png";		//  Source file name for boosters
 const std::string LSRFILE = "resources/board/lasers.png";		//  Source file name for lasers
 const std::string SHPFILE = "resources/board/ships.png";		//  Source file name for trade/colony
+const int RESNUM = 6;									//  Number of resources in the game
+const int BOOLASNUM = 3;									//  Number of boosters and lasers in the game
 
 
 class Starship : public Object
@@ -45,7 +47,7 @@ private:
 
 
 public:
-	Starship(TextureManager &txtMgr, sf::Vector2f pos = SMLPOS, sf::Vector2f scale = SMLSCL);
+	Starship(TextureManager &txtMgr, sf::Vector2f pos = SMLPOS);
 	~Starship();
 
 	//  Getters/Setters
@@ -53,7 +55,7 @@ public:
 
 	//  Misc Inline Functions
 	void calcMaxDistance(int dieRoll)  { maxMovement = (dieRoll + totalBoosters()); }	
-	int totalBoosters()  { return boosters[B1]->getNum() + boosters[B2]->getNum() + boosters[B3]->getNum(); }			// called by calcMaxDistance and events	
+	int totalBoosters()  { return boosters[B1]->getQty() + boosters[B2]->getQty() + boosters[B3]->getQty(); }			// called by calcMaxDistance and events	
 
 	//  Prototypes
 	void draw(sf::RenderWindow &window);
