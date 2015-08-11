@@ -30,10 +30,8 @@ class Game{
 private:
 	Player *P1, *P2, *cPlyr;
 	Universe *universe;
-	sf::View view;
 	sf::RenderWindow gWindow;
 	sf::Vector2u screenSize;
-	sf::FloatRect visibleArea;
 	ResourceManager<sf::Texture> txtMgr;
 	sf::Font font;
 	int cPhase;						//  Current Phase Num

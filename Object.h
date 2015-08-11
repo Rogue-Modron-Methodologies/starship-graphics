@@ -39,7 +39,6 @@ public:
 	//  Getters/Setters
 	void setScale(sf::Vector2f scale) { sprite->setScale(scale); }
 	void setPosition(sf::Vector2f pos) { sprite->setPosition(pos); }
-//	void setRelPos(sf::Vector2f pos) { relPos = pos; }
 	void setSrcPos(sf::Vector2u source) { this->srcPos = source; }
 	void setSrcPosX(unsigned num){ this->srcPos.x = num; }	
 	void setSrcPosY(unsigned num){ this->srcPos.y = num; }

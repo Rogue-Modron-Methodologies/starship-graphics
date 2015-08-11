@@ -30,9 +30,6 @@ Game::Game()
 	universe = new Universe(txtMgr);
 	screenSize = sf::Vector2u(1200, 900);
 	gWindow.create(sf::VideoMode(screenSize.x, screenSize.y), "Starship Game");
-	visibleArea = sf::FloatRect(0.0f, 0.0f, (float)screenSize.x, (float)screenSize.y);
-	view.reset(visibleArea);
-	gWindow.setView(view);
 	phaseSetupComplete = false;
 	phaseComplete = false;
 	gainProductionResource = false;
@@ -149,8 +146,6 @@ void Game::gameLoop()
 				if (event.type == sf::Event::Resized){
 					screenSize = gWindow.getSize();
 					std::cout << event.size.width << " " << event.size.height << std::endl;
-					visibleArea = sf::FloatRect(0, 0, (float)event.size.width, (float)event.size.height);
-					gWindow.setView(sf::View(visibleArea));
 				}
 
 				break;
@@ -199,12 +194,9 @@ void Game::gameLoop()
 					// Starship (Small) is clicked
 					if (cPlyr->getStarship()->isTargeted(gWindow) && cPlyr->getStarship()->isSmall())
 					{
-						//if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
-						//	cPlyr->makeBig();
-						view.setCenter(SMLPOS.x, SMLPOS.y);
-						view.move(100, 100);
-						view.zoom(0.75f);
-						gWindow.setView(view);
+						if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+							cPlyr->makeBig();
+
 					}
 					// Starship (Large) is clicked
 					else if (cPlyr->getStarship()->isTargeted(gWindow) && !cPlyr->getStarship()->isSmall())
