@@ -20,7 +20,7 @@ Game::Game()
 		std::cout << "Font not Loaded" << std::endl;
 	}
 
-	flightDie.icon = new Object(txtMgr.getTexture(SDIEFLE), sf::Vector2f{ 350, 525 }, 1, sf::Vector2u(200, 200));
+	flightDie.icon = new Object(txtMgr.getResource(SDIEFLE), sf::Vector2f{ 350, 525 }, 1, sf::Vector2u(200, 200));
 	flightDie.icon->setScale({ .4f, .4f });
 	flightDie.text.setFont(font);
 	flightDie.text.setStyle(sf::Text::Bold);
@@ -72,34 +72,34 @@ void Game::playerSetup()
 	Card* tempCard;
 
 	//M		colony	Carbon	1	N/A	0	1	Colony: Alioth VIII
-	tempCard = new ColonyCard(-1, "Colony: Alioth VIII", colony, Carbon, 1, 1, txtMgr.getTexture(STRFILE), CLPOS);
+	tempCard = new ColonyCard(-1, "Colony: Alioth VIII", colony, Carbon, 1, 1, txtMgr.getResource(STRFILE), CLPOS);
 	tempCard->setScale(CRDSSCL);
 //	tempCard->setSrcPos({ 1, 0 });
 	tempCard->updateTextRect();
 	P1->getColonyZone()->insertNode(tempCard);
 
 	///////////////////////   BEGIN TEST STUFF
-	tempCard = new ColonyCard(-1, "Colony: Alioth VIII", colony, Carbon, 1, 1, txtMgr.getTexture(STRFILE), { 400, 690 });
+	tempCard = new ColonyCard(-1, "Colony: Alioth VIII", colony, Carbon, 1, 1, txtMgr.getResource(STRFILE), { 400, 690 });
 	tempCard->setScale({ .35f, .35f });
 	tempCard->updateTextRect();
 	P1->getColonyZone()->insertNode(tempCard);
 
-	tempCard = new ColonyCard(-1, "Colony: Alioth VIII", colony, Carbon, 1, 1, txtMgr.getTexture(STRFILE), { 400, 690 });
+	tempCard = new ColonyCard(-1, "Colony: Alioth VIII", colony, Carbon, 1, 1, txtMgr.getResource(STRFILE), { 400, 690 });
 	tempCard->setScale({ .35f, .35f });
 	tempCard->updateTextRect();
 	P1->getColonyZone()->insertNode(tempCard);
 
-	tempCard = new ColonyCard(-1, "Colony: Alioth VIII", colony, Carbon, 1, 1, txtMgr.getTexture(STRFILE), { 400, 690 });
+	tempCard = new ColonyCard(-1, "Colony: Alioth VIII", colony, Carbon, 1, 1, txtMgr.getResource(STRFILE), { 400, 690 });
 	tempCard->setScale({ .35f, .35f });
 	tempCard->updateTextRect();
 	P1->getColonyZone()->insertNode(tempCard);
 
-	tempCard = new ColonyCard(-1, "Colony: Alioth VIII", colony, Carbon, 1, 1, txtMgr.getTexture(STRFILE), { 400, 690 });
+	tempCard = new ColonyCard(-1, "Colony: Alioth VIII", colony, Carbon, 1, 1, txtMgr.getResource(STRFILE), { 400, 690 });
 	tempCard->setScale({ .35f, .35f });
 	tempCard->updateTextRect();
 	P1->getTradeZone()->insertNode(tempCard);
 
-	tempCard = new ColonyCard(-1, "Colony: Alioth VIII", colony, Carbon, 1, 1, txtMgr.getTexture(STRFILE), { 400, 690 });
+	tempCard = new ColonyCard(-1, "Colony: Alioth VIII", colony, Carbon, 1, 1, txtMgr.getResource(STRFILE), { 400, 690 });
 	tempCard->setScale({ .35f, .35f });
 	tempCard->updateTextRect();
 	P1->getTradeZone()->insertNode(tempCard);
@@ -108,7 +108,7 @@ void Game::playerSetup()
 
 
 	//S		colony	Fuel		1	N/A	0	1	Colony: Megrez VII
-	tempCard = new ColonyCard(-1, "Colony: Megrez VII", colony, Fuel, 1, 1, txtMgr.getTexture(STRFILE), CLPOS);
+	tempCard = new ColonyCard(-1, "Colony: Megrez VII", colony, Fuel, 1, 1, txtMgr.getResource(STRFILE), CLPOS);
 	tempCard->setScale(CRDSSCL);
 	tempCard->setSrcPos({ 1, 0 });
 	tempCard->updateTextRect();

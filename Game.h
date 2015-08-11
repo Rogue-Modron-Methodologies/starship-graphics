@@ -34,7 +34,7 @@ private:
 	sf::RenderWindow gWindow;
 	sf::Vector2u screenSize;
 	sf::FloatRect visibleArea;
-	TextureManager txtMgr;
+	ResourceManager<sf::Texture> txtMgr;
 	sf::Font font;
 	int cPhase;						//  Current Phase Num
 	sf::Text phaseNameString;			//  Phase Name Text String

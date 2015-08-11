@@ -55,7 +55,7 @@ private:
 	Icon carbon;					//  Carbon Resource Icon
 
 public:
-	Player(TextureManager &txtMgr, std::string name = "EMPTY", int num = -99);
+	Player(ResourceManager<sf::Texture> &txtMgr, std::string name = "EMPTY", int num = -99);
 	~Player();
 	// getters and setters
 	Starship* getStarship() const {  return starship;  }

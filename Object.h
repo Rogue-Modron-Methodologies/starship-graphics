@@ -13,7 +13,7 @@
 #include <SFML\Graphics.hpp>
 #include <string>
 #include <iostream>
-#include "TextureManager.h"
+#include "ResourceManager.h"
 
 enum direction { Down, Left, Right, Up };
 enum cTypes{ trade, colony, pirate, adventure, lost };

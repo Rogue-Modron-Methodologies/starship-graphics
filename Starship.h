@@ -47,7 +47,7 @@ private:
 
 
 public:
-	Starship(TextureManager &txtMgr, sf::Vector2f pos = SMLPOS);
+	Starship(ResourceManager<sf::Texture> &txtMgr, sf::Vector2f pos = SMLPOS);
 	~Starship();
 
 	//  Getters/Setters

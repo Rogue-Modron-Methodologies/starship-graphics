@@ -14,30 +14,30 @@
 //		
 //		
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
-Starship::Starship(TextureManager &txtMgr, sf::Vector2f pos) : Object(txtMgr.getTexture(SRCFILE), pos)
+Starship::Starship(ResourceManager<sf::Texture> &txtMgr, sf::Vector2f pos) : Object(txtMgr.getResource(SRCFILE), pos)
 {
 
 	resources = new Resource*[5];
-	resources[Science] = new Resource(txtMgr.getTexture(ARWFILE), sf::Vector2f{ 243, 59 }, sf::Vector2u(65, 65), 1, "Science");
-	resources[Ore] = new Resource(txtMgr.getTexture(ARWFILE), sf::Vector2f{ 555, 59 }, sf::Vector2u(65, 65), 1, "Ore");
-	resources[Fuel] = new Resource(txtMgr.getTexture(ARWFILE), sf::Vector2f{ 713, 59 }, sf::Vector2u(65, 65), 1, "Fuel");
-	resources[TradeGood] = new Resource(txtMgr.getTexture(ARWFILE), sf::Vector2f{ 243, 374 }, sf::Vector2u(65, 65), 1, "TradeGood");
-	resources[Wheat] = new Resource(txtMgr.getTexture(ARWFILE), sf::Vector2f{ 555, 374 }, sf::Vector2u(65, 65), 1, "Wheat");
-	resources[Carbon] = new Resource(txtMgr.getTexture(ARWFILE), sf::Vector2f{ 712, 374 }, sf::Vector2u(65, 65), 1, "Carbon");
+	resources[Science] = new Resource(txtMgr.getResource(ARWFILE), sf::Vector2f{ 243, 59 }, sf::Vector2u(65, 65), 1, "Science");
+	resources[Ore] = new Resource(txtMgr.getResource(ARWFILE), sf::Vector2f{ 555, 59 }, sf::Vector2u(65, 65), 1, "Ore");
+	resources[Fuel] = new Resource(txtMgr.getResource(ARWFILE), sf::Vector2f{ 713, 59 }, sf::Vector2u(65, 65), 1, "Fuel");
+	resources[TradeGood] = new Resource(txtMgr.getResource(ARWFILE), sf::Vector2f{ 243, 374 }, sf::Vector2u(65, 65), 1, "TradeGood");
+	resources[Wheat] = new Resource(txtMgr.getResource(ARWFILE), sf::Vector2f{ 555, 374 }, sf::Vector2u(65, 65), 1, "Wheat");
+	resources[Carbon] = new Resource(txtMgr.getResource(ARWFILE), sf::Vector2f{ 712, 374 }, sf::Vector2u(65, 65), 1, "Carbon");
 
 	boosters = new Object*[3];
-	boosters[B1] = new Object(txtMgr.getTexture(BSTFILE), sf::Vector2f{ 0, 125 }, 1, sf::Vector2u(125, 75));
-	boosters[B2] = new Object(txtMgr.getTexture(BSTFILE), sf::Vector2f{ 0, 210 }, 0, sf::Vector2u(125, 75));
-	boosters[B3] = new Object(txtMgr.getTexture(BSTFILE), sf::Vector2f{ 0, 295 }, 1, sf::Vector2u(125, 75));
+	boosters[B1] = new Object(txtMgr.getResource(BSTFILE), sf::Vector2f{ 0, 125 }, 1, sf::Vector2u(125, 75));
+	boosters[B2] = new Object(txtMgr.getResource(BSTFILE), sf::Vector2f{ 0, 210 }, 0, sf::Vector2u(125, 75));
+	boosters[B3] = new Object(txtMgr.getResource(BSTFILE), sf::Vector2f{ 0, 295 }, 1, sf::Vector2u(125, 75));
 	
 	lasers = new Object*[3];
-	lasers[L1] = new Object(txtMgr.getTexture(LSRFILE), sf::Vector2f{ 908, 125 }, 0, sf::Vector2u(125, 75));
-	lasers[L2] = new Object(txtMgr.getTexture(LSRFILE), sf::Vector2f{ 908, 210 }, 1, sf::Vector2u(125, 75));
-	lasers[L3] = new Object(txtMgr.getTexture(LSRFILE), sf::Vector2f{ 908, 295 }, 0, sf::Vector2u(125, 75));
+	lasers[L1] = new Object(txtMgr.getResource(LSRFILE), sf::Vector2f{ 908, 125 }, 0, sf::Vector2u(125, 75));
+	lasers[L2] = new Object(txtMgr.getResource(LSRFILE), sf::Vector2f{ 908, 210 }, 1, sf::Vector2u(125, 75));
+	lasers[L3] = new Object(txtMgr.getResource(LSRFILE), sf::Vector2f{ 908, 295 }, 0, sf::Vector2u(125, 75));
 
 	shipHold = new Object*[2];
-	shipHold[H1] = new Object(txtMgr.getTexture(SHPFILE), sf::Vector2f{ 160, 190 }, 1, sf::Vector2u(100, 60));
-	shipHold[H2] = new Object(txtMgr.getTexture(SHPFILE), sf::Vector2f{ 160, 250 }, 1, sf::Vector2u(100, 60), sf::Vector2u(1, 0));
+	shipHold[H1] = new Object(txtMgr.getResource(SHPFILE), sf::Vector2f{ 160, 190 }, 1, sf::Vector2u(100, 60));
+	shipHold[H2] = new Object(txtMgr.getResource(SHPFILE), sf::Vector2f{ 160, 250 }, 1, sf::Vector2u(100, 60), sf::Vector2u(1, 0));
 
 	maxActions = 2;
 }	

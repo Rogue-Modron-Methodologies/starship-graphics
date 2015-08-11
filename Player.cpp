@@ -14,7 +14,7 @@
 //  Constructor
 //
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
-Player::Player(TextureManager &txtMgr, std::string name, int num)
+Player::Player(ResourceManager<sf::Texture> &txtMgr, std::string name, int num)
 {
 	starship = new Starship(txtMgr);
 	ColonyZone = new LinkedList<Card>;
@@ -30,67 +30,67 @@ Player::Player(TextureManager &txtMgr, std::string name, int num)
 	tZoneString.setString("Trade");
 	tZoneString.setPosition({ 130, 515 });
 
-	player.icon = new Object(txtMgr.getTexture(ICNFLE), { 10, 820 }, num, { 100, 100 }, { 0, 0 });
+	player.icon = new Object(txtMgr.getResource(ICNFLE), { 10, 820 }, num, { 100, 100 }, { 0, 0 });
 	player.icon->setScale({ .75f, .75f });
 	player.text.setFont(font);
 	player.text.setString(name);
 	player.text.setPosition({ 90, 820 });
 
-	vicPt.icon = new Object(txtMgr.getTexture(SYM1FLE), { 180, 860 }, 1, { 100, 100 }, { 0, 0 });		// sb 1
+	vicPt.icon = new Object(txtMgr.getResource(SYM1FLE), { 180, 860 }, 1, { 100, 100 }, { 0, 0 });		// sb 1
 	vicPt.icon->setScale({ .35f, .35f });
 	vicPt.text.setFont(font);
 	vicPt.text.setString(std::to_string(vicPt.icon->getQty()));
 	vicPt.text.setPosition({ 220, 855 });
 
-	frdPt.icon = new Object(txtMgr.getTexture(SYM1FLE), { 260, 860 }, 1, { 100, 100 }, { 1, 0 });			// sb 0
+	frdPt.icon = new Object(txtMgr.getResource(SYM1FLE), { 260, 860 }, 1, { 100, 100 }, { 1, 0 });			// sb 0
 	frdPt.icon->setScale({ .35f, .35f });
 	frdPt.text.setFont(font);
 	frdPt.text.setString(std::to_string(frdPt.icon->getQty()));
 	frdPt.text.setPosition({ 300, 855 });
 
-	fmPt.icon = new Object(txtMgr.getTexture(SYM1FLE), { 340, 860 }, 1, { 100, 100 }, { 2, 0 });			// sb 0
+	fmPt.icon = new Object(txtMgr.getResource(SYM1FLE), { 340, 860 }, 1, { 100, 100 }, { 2, 0 });			// sb 0
 	fmPt.icon->setScale({ .35f, .35f });
 	fmPt.text.setFont(font);
 	fmPt.text.setString(std::to_string(fmPt.icon->getQty()));
 	fmPt.text.setPosition({ 380, 855 });
 
-	astro.icon = new Object(txtMgr.getTexture(SYM1FLE), { 90, 860 }, 25, { 100, 100 }, { 3, 0 });			// sb 25
+	astro.icon = new Object(txtMgr.getResource(SYM1FLE), { 90, 860 }, 25, { 100, 100 }, { 3, 0 });			// sb 25
 	astro.icon->setScale({ .35f, .35f });
 	astro.text.setFont(font);
 	astro.text.setString(std::to_string(astro.icon->getQty()));
 	astro.text.setPosition({ 130, 855 });
 
-	science.icon = new Object(txtMgr.getTexture(RICNFLE), { 420, 860 }, 1, { 100, 100 }, { 0, 0 });
+	science.icon = new Object(txtMgr.getResource(RICNFLE), { 420, 860 }, 1, { 100, 100 }, { 0, 0 });
 	science.icon->setScale({ .35f, .35f });
 	science.text.setFont(font);
 	science.text.setString(std::to_string(science.icon->getQty()));
 	science.text.setPosition({ 460, 855 });
 
-	ore.icon = new Object(txtMgr.getTexture(RICNFLE), { 500, 860 }, 1, { 100, 100 }, { 5, 0 });
+	ore.icon = new Object(txtMgr.getResource(RICNFLE), { 500, 860 }, 1, { 100, 100 }, { 5, 0 });
 	ore.icon->setScale({ .35f, .35f });
 	ore.text.setFont(font);
 	ore.text.setString(std::to_string(ore.icon->getQty()));
 	ore.text.setPosition({ 540, 855 });
 
-	fuel.icon = new Object(txtMgr.getTexture(RICNFLE), { 580, 860 }, 1, { 100, 100 }, { 1, 0 });
+	fuel.icon = new Object(txtMgr.getResource(RICNFLE), { 580, 860 }, 1, { 100, 100 }, { 1, 0 });
 	fuel.icon->setScale({ .35f, .35f });
 	fuel.text.setFont(font);
 	fuel.text.setString(std::to_string(fuel.icon->getQty()));
 	fuel.text.setPosition({ 620, 855 });
 
-	tradeGood.icon = new Object(txtMgr.getTexture(RICNFLE), { 660, 860 }, 1, { 100, 100 }, { 4, 0 });
+	tradeGood.icon = new Object(txtMgr.getResource(RICNFLE), { 660, 860 }, 1, { 100, 100 }, { 4, 0 });
 	tradeGood.icon->setScale({ .35f, .35f });
 	tradeGood.text.setFont(font);
 	tradeGood.text.setString(std::to_string(tradeGood.icon->getQty()));
 	tradeGood.text.setPosition({ 700, 855 });
 
-	wheat.icon = new Object(txtMgr.getTexture(RICNFLE), { 740, 860 }, 1, { 100, 100 }, { 2, 0 });
+	wheat.icon = new Object(txtMgr.getResource(RICNFLE), { 740, 860 }, 1, { 100, 100 }, { 2, 0 });
 	wheat.icon->setScale({ .35f, .35f });
 	wheat.text.setFont(font);
 	wheat.text.setString(std::to_string(wheat.icon->getQty()));
 	wheat.text.setPosition({ 780, 855 });
 
-	carbon.icon = new Object(txtMgr.getTexture(RICNFLE), { 820, 860 }, 1, { 100, 100 }, { 3, 0 });
+	carbon.icon = new Object(txtMgr.getResource(RICNFLE), { 820, 860 }, 1, { 100, 100 }, { 3, 0 });
 	carbon.icon->setScale({ .35f, .35f });
 	carbon.text.setFont(font);
 	carbon.text.setString(std::to_string(carbon.icon->getQty()));
