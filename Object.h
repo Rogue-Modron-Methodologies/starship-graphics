@@ -27,7 +27,6 @@ protected:
 	int num;
 	std::string string;
 	sf::Sprite *sprite;
-	sf::Texture texture;
 	sf::Vector2u srcSize;
 	sf::Vector2u srcPos;
 	sf::Vector2f relPos;
@@ -35,13 +34,11 @@ protected:
 
 public:
 	Object(std::string fileName = "EMPTY", int n = -99){ string = fileName; num = n; }
-	Object(std::string fileName, sf::Vector2u srcSize, sf::Vector2u srcPos, int num, std::string name);
-	Object(std::string fileName, sf::Vector2f pos, sf::Vector2f scale, sf::Vector2u srcSize = { 0, 0 }, sf::Vector2u srcPos = { 0, 0 }, int num = 1, std::string name = "bad");
-	Object(Object &right, int num, std::string name);
+	Object(const sf::Texture &texture, sf::Vector2u srcSize, sf::Vector2u srcPos, int num, std::string name);
+	Object(const sf::Texture &texture, sf::Vector2f pos, sf::Vector2f scale, sf::Vector2u srcSize = { 0, 0 }, sf::Vector2u srcPos = { 0, 0 }, int num = 1, std::string name = "bad");
 	~Object();
 
 	//  Getters/Setters
-	void setTexture(sf::Texture texture) { this->texture = texture; }
 	void setScale(sf::Vector2f scale) { sprite->setScale(scale); }
 	void setPosition(sf::Vector2f pos) { sprite->setPosition(pos); }
 	void setRelPos(sf::Vector2f pos) { relPos = pos; }
@@ -49,7 +46,6 @@ public:
 	void setSrcPosX(unsigned num){ this->srcPos.x = num; }	
 	void setNum(int num){ this->num = num; }	
 	sf::Sprite *getSprite() const { return sprite; } 
-	sf::Texture getTexture() const { return texture; }
 	sf::Vector2f getScale() const { return sprite->getScale(); }
 	sf::Vector2f getRelPos() const { return relPos; }	
 	int getNum() const { return num; }
@@ -60,7 +56,6 @@ public:
 	// Prototypes
 	virtual void updateTextRect();
 	virtual void draw(sf::RenderWindow &window) { window.draw(*sprite); }
-	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 	bool isTargeted(sf::RenderWindow &gWindow);
 };
 

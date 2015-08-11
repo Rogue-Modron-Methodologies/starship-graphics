@@ -19,18 +19,18 @@ Game::Game()
 	if (!font.loadFromFile(FNTFLE)){
 		std::cout << "Font not Loaded" << std::endl;
 	}
-	flightDie.icon = new Object(SDIEFLE, sf::Vector2u(200, 200), sf::Vector2u(0, 0), 1, "flight die");
+	flightDie.icon = new Object(txtMgr.getTexture(SDIEFLE), sf::Vector2u(200, 200), sf::Vector2u(0, 0), 1, "flight die");
 	flightDie.icon->setScale({.4f, .4f});
-	flightDie.icon->setPosition({ 350, 525 });
+	flightDie.icon->setPosition({ 350, 525 });		///////////////////////////////   needs to be a relative position rather than fixed   ????????????????
 	flightDie.text.setFont(font);
 	flightDie.text.setStyle(sf::Text::Bold);
-	flightDie.text.setPosition({ 440, 545 });
-	P1 = new Player("Player1", 1);		// Default names for bugtesting
-	P2 = new Player("Player2", 2);		// Default names for bugtesting
-	universe = new Universe;
+	flightDie.text.setPosition({ 440, 545 });		///////////////////////////////   needs to be a relative position rather than fixed
+	P1 = new Player(txtMgr, "Player1", 1);		// Default names for bugtesting
+	P2 = new Player(txtMgr, "Player2", 2);		// Default names for bugtesting
+	universe = new Universe(txtMgr);
 	screenSize = sf::Vector2u(1200, 900);
 	gWindow.create(sf::VideoMode(screenSize.x, screenSize.y), "Starship Game");
-	visibleArea = sf::FloatRect(0.0f, 0.0f, screenSize.x, screenSize.y);
+	visibleArea = sf::FloatRect(0.0f, 0.0f, (float)screenSize.x, (float)screenSize.y);
 	view.reset(visibleArea);
 	gWindow.setView(view);
 	phaseSetupComplete = false;
@@ -39,14 +39,14 @@ Game::Game()
 	cPhase = production;
 	phaseNameString.setFont(font);
 	phaseNameString.setString("Production Phase");
-	phaseNameString.setPosition({ 200, 820 });
+	phaseNameString.setPosition({ 200, 820 });		 ///////////////////////////////   needs to be a relative position rather than fixed
 	errorString.setFont(font);
 	errorString.setStyle(sf::Text::Bold);
-	errorString.setPosition({ 550, 820 });   ///////////////////////////////
+	errorString.setPosition({ 550, 820 });   ///////////////////////////////   needs to be a relative position rather than fixed
 	errorTimer = 255;
 	infoString.setFont(font);
 	infoString.setStyle(sf::Text::Bold);
-	infoString.setPosition({ 40, 30 });
+	infoString.setPosition({ 40, 30 });		 ///////////////////////////////   needs to be a relative position rather than fixed
 	cPlyr = P2;
 	playerSetup();
 	initCDie();
@@ -72,29 +72,29 @@ void Game::playerSetup()
 	Card* tempCard;
 
 	//M		colony	Carbon	1	N/A	0	1	Colony: Alioth VIII
-	tempCard = new ColonyCard(-1, "Colony: Alioth VIII", colony, Carbon, 1, 1, STRFILE, CLPOS, CRDSSCL);
+	tempCard = new ColonyCard(-1, "Colony: Alioth VIII", colony, Carbon, 1, 1, txtMgr.getTexture(STRFILE), CLPOS, CRDSSCL);
 //	tempCard->setSrcPos({ 1, 0 });
 	tempCard->updateTextRect();
 	P1->getColonyZone()->insertNode(tempCard);
 
 	///////////////////////   BEGIN TEST STUFF
-	tempCard = new ColonyCard(-1, "Colony: Alioth VIII", colony, Carbon, 1, 1, STRFILE, { 400, 690 }, { .35f, .35f });
+	tempCard = new ColonyCard(-1, "Colony: Alioth VIII", colony, Carbon, 1, 1, txtMgr.getTexture(STRFILE), { 400, 690 }, { .35f, .35f });
 	tempCard->updateTextRect();
 	P1->getColonyZone()->insertNode(tempCard);
 
-	tempCard = new ColonyCard(-1, "Colony: Alioth VIII", colony, Carbon, 1, 1, STRFILE, { 400, 690 }, { .35f, .35f });
+	tempCard = new ColonyCard(-1, "Colony: Alioth VIII", colony, Carbon, 1, 1, txtMgr.getTexture(STRFILE), { 400, 690 }, { .35f, .35f });
 	tempCard->updateTextRect();
 	P1->getColonyZone()->insertNode(tempCard);
 
-	tempCard = new ColonyCard(-1, "Colony: Alioth VIII", colony, Carbon, 1, 1, STRFILE, { 400, 690 }, { .35f, .35f });
+	tempCard = new ColonyCard(-1, "Colony: Alioth VIII", colony, Carbon, 1, 1, txtMgr.getTexture(STRFILE), { 400, 690 }, { .35f, .35f });
 	tempCard->updateTextRect();
 	P1->getColonyZone()->insertNode(tempCard);
 
-	tempCard = new ColonyCard(-1, "Colony: Alioth VIII", colony, Carbon, 1, 1, STRFILE, { 400, 690 }, { .35f, .35f });
+	tempCard = new ColonyCard(-1, "Colony: Alioth VIII", colony, Carbon, 1, 1, txtMgr.getTexture(STRFILE), { 400, 690 }, { .35f, .35f });
 	tempCard->updateTextRect();
 	P1->getTradeZone()->insertNode(tempCard);
 
-	tempCard = new ColonyCard(-1, "Colony: Alioth VIII", colony, Carbon, 1, 1, STRFILE, { 400, 690 }, { .35f, .35f });
+	tempCard = new ColonyCard(-1, "Colony: Alioth VIII", colony, Carbon, 1, 1, txtMgr.getTexture(STRFILE), { 400, 690 }, { .35f, .35f });
 	tempCard->updateTextRect();
 	P1->getTradeZone()->insertNode(tempCard);
 
@@ -102,7 +102,7 @@ void Game::playerSetup()
 
 
 	//S		colony	Fuel		1	N/A	0	1	Colony: Megrez VII
-	tempCard = new ColonyCard(-1, "Colony: Megrez VII", colony, Fuel, 1, 1, STRFILE, CLPOS, CRDSSCL);
+	tempCard = new ColonyCard(-1, "Colony: Megrez VII", colony, Fuel, 1, 1, txtMgr.getTexture(STRFILE), CLPOS, CRDSSCL);
 	tempCard->setSrcPos({ 1, 0 });
 	tempCard->updateTextRect();
 	P2->getColonyZone()->insertNode(tempCard);
@@ -142,7 +142,7 @@ void Game::gameLoop()
 				if (event.type == sf::Event::Resized){
 					screenSize = gWindow.getSize();
 					std::cout << event.size.width << " " << event.size.height << std::endl;
-					visibleArea = sf::FloatRect(0, 0, event.size.width, event.size.height);
+					visibleArea = sf::FloatRect(0, 0, (float)event.size.width, (float)event.size.height);
 					gWindow.setView(sf::View(visibleArea));
 				}
 

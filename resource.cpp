@@ -9,23 +9,6 @@
 
 #include "Resource.h"	
 
-// (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
-//  
-//  Copy Constructor
-//
-// (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
-Resource::Resource(Resource &right, int num, std::string name)
-{
-	this->string = name;
-	this->num = num;
-	this->srcSize = right.srcSize;
-	this->srcPos = right.srcPos;
-	this->texture = right.texture;
-	this->sprite = new sf::Sprite;
-	sprite->setTexture(texture);
-	sprite->setTextureRect(sf::IntRect(srcPos.x * srcSize.y, srcPos.y * srcSize.y, srcSize.y, srcSize.y));
-	rCap = 4;			///////////////////////  SB 2  (science is always 4)
-}
 
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
 //  

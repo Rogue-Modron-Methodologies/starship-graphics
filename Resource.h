@@ -16,14 +16,11 @@
 class Resource : public Object
 {
 private:
-	//std::string name;
 	int rCap;
 	
 public:
-	Resource(std::string fileName, sf::Vector2u srcSize, int num, std::string name = "Science", 
-		sf::Vector2u srcPos = sf::Vector2u{ 0, 0 }) : Object(fileName, srcSize, srcPos, num, name)
-	{	rCap = 4;	}		///////////////////////  SB 2
-	Resource(Resource &right, int num, std::string name);
+	Resource(const sf::Texture &texture, sf::Vector2f pos, sf::Vector2u srcSize, int num, std::string name, sf::Vector2u srcPos = sf::Vector2u{ 0, 0 })
+		: Object(texture, pos, sf::Vector2f{ 4, 4 }, srcSize, srcPos, num, name)	{	rCap = 4;	}	///////////////////////  SB 2 except for science which should be 4.
 	int getRCap() const  { return rCap; }
 	void update();
 	void update(sf::Vector2f pos, sf::Vector2f scale);
@@ -33,3 +30,4 @@ public:
 };
 
 #endif // RESOURCE_H
+

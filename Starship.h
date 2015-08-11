@@ -45,7 +45,7 @@ private:
 
 
 public:
-	Starship(std::string fileName = SRCFILE, sf::Vector2f pos = SMLPOS, sf::Vector2f scale = SMLSCL);
+	Starship(TextureManager &txtMgr, sf::Vector2f pos = SMLPOS, sf::Vector2f scale = SMLSCL);
 	~Starship();
 
 	//  Getters/Setters

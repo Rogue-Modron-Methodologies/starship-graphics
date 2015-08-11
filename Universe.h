@@ -30,9 +30,9 @@ private:
 	int advPtr;
 
 public:
-	Universe()
+	Universe(TextureManager &txtMgr)
 	{
-		board = new Object ("resources/board/starrynight.png", sf::Vector2f(0, 0), sf::Vector2f(3.1f, 3.6f));
+		board = new Object (txtMgr.getTexture("resources/board/starrynight.png"), sf::Vector2f(0, 0), sf::Vector2f(3.1f, 3.6f));
 		universeSetup();
 		adventureDeckSetup();
 		ExtraDeckPtr = 0;

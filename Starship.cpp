@@ -14,45 +14,29 @@
 //		
 //		
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
-Starship::Starship(std::string fileName, sf::Vector2f pos, sf::Vector2f scale) : Object(fileName, pos, scale)
+Starship::Starship(TextureManager &txtMgr, sf::Vector2f pos, sf::Vector2f scale) : Object(txtMgr.getTexture(SRCFILE), pos, scale)
 {
 	resources = new Resource*[5];
-	resources[Science] = new Resource(ARWFILE, sf::Vector2u(65, 65), 1);
-	resources[Science]->setRelPos(sf::Vector2f{ 243, 59 });
-	resources[Ore] = new Resource(*resources[Science], 1, "Ore");
-	resources[Ore]->setRelPos(sf::Vector2f{ 555, 59 });
-	resources[Fuel] = new Resource(*resources[Science], 1, "Fuel");
-	resources[Fuel]->setRelPos(sf::Vector2f{ 713, 59 });
-	resources[TradeGood] = new Resource(*resources[Science], 1, "TradeGood");
-	resources[TradeGood]->setRelPos(sf::Vector2f{ 243, 374 });
-	resources[Wheat] = new Resource(*resources[Science], 1, "Wheat");
-	resources[Wheat]->setRelPos(sf::Vector2f{ 555, 374 });
-	resources[Carbon] = new Resource(*resources[Science], 1, "Carbon");
-	resources[Carbon]->setRelPos(sf::Vector2f{ 712, 374 });
+	resources[Science] = new Resource(txtMgr.getTexture(ARWFILE), sf::Vector2f{ 243, 59 }, sf::Vector2u(65, 65), 1, "ScienceResource");
+	resources[Ore] = new Resource(txtMgr.getTexture(ARWFILE), sf::Vector2f{ 555, 59 }, sf::Vector2u(65, 65), 1, "OreResource");
+	resources[Fuel] = new Resource(txtMgr.getTexture(ARWFILE), sf::Vector2f{ 713, 59 }, sf::Vector2u(65, 65), 1, "FuelResource");
+	resources[TradeGood] = new Resource(txtMgr.getTexture(ARWFILE), sf::Vector2f{ 243, 374 }, sf::Vector2u(65, 65), 1, "TradeGoodResource");
+	resources[Wheat] = new Resource(txtMgr.getTexture(ARWFILE), sf::Vector2f{ 555, 374 }, sf::Vector2u(65, 65), 1, "WheatResource");
+	resources[Carbon] = new Resource(txtMgr.getTexture(ARWFILE), sf::Vector2f{ 712, 374 }, sf::Vector2u(65, 65), 1, "CarbonResource");
 
 	boosters = new Object*[3];
-	boosters[B1] = new Object(BSTFILE, sf::Vector2u(125, 75), sf::Vector2u(0, 0), 1, "B1");
-	boosters[B1]->setRelPos(sf::Vector2f{ 0, 125});
-	boosters[B2] = new Object(*boosters[L1], 0, "B2");
-	boosters[B2]->setRelPos(sf::Vector2f{ 0, 210 });
-	boosters[B3] = new Object(*boosters[L1], 1, "B3");
-	boosters[B3]->setRelPos(sf::Vector2f{ 0, 295 });
+	boosters[B1] = new Object(txtMgr.getTexture(BSTFILE), sf::Vector2f{ 0, 125 }, sf::Vector2f(1, 1), sf::Vector2u(125, 75), sf::Vector2u(0, 0), 1, "B1");
+	boosters[B2] = new Object(txtMgr.getTexture(BSTFILE), sf::Vector2f{ 0, 210 }, sf::Vector2f(1, 1), sf::Vector2u(125, 75), sf::Vector2u(0, 0), 0, "B2");
+	boosters[B3] = new Object(txtMgr.getTexture(BSTFILE), sf::Vector2f{ 0, 295 }, sf::Vector2f(1, 1), sf::Vector2u(125, 75), sf::Vector2u(0, 0), 1, "B3");
 	
 	lasers = new Object*[3];
-	lasers[L1] = new Object(LSRFILE, sf::Vector2u(125, 75), sf::Vector2u(0, 0), 0, "L1");
-	lasers[L1]->setRelPos(sf::Vector2f{ 908, 125 });
-	lasers[L2] = new Object(*lasers[L1], 1, "L2");
-	lasers[L2]->setRelPos(sf::Vector2f{ 908, 210 });
-	lasers[L3] = new Object(*lasers[L1], 0, "L3");
-	lasers[L3]->setRelPos(sf::Vector2f{ 908, 295 });
+	lasers[L1] = new Object(txtMgr.getTexture(LSRFILE), sf::Vector2f{ 908, 125 }, sf::Vector2f(1, 1), sf::Vector2u(125, 75), sf::Vector2u(0, 0), 0, "L1");
+	lasers[L2] = new Object(txtMgr.getTexture(LSRFILE), sf::Vector2f{ 908, 210 }, sf::Vector2f(1, 1), sf::Vector2u(125, 75), sf::Vector2u(0, 0), 1, "L2");
+	lasers[L3] = new Object(txtMgr.getTexture(LSRFILE), sf::Vector2f{ 908, 295 }, sf::Vector2f(1, 1), sf::Vector2u(125, 75), sf::Vector2u(0, 0), 0, "L3");
 
 	shipHold = new Object*[2];
-	shipHold[H1] = new Object(SHPFILE, sf::Vector2u(100, 60), sf::Vector2u(0, 0), 1, "H1");
-	shipHold[H1]->setRelPos(sf::Vector2f{ 160, 190 });
-	shipHold[H2] = new Object(*shipHold[L1], 1, "H2");
-	shipHold[H2]->setSrcPos({ 1, 0 });
-	shipHold[H2]->updateTextRect();
-	shipHold[H2]->setRelPos(sf::Vector2f{ 160, 250 });
+	shipHold[H1] = new Object(txtMgr.getTexture(SHPFILE), sf::Vector2f{ 160, 190 }, sf::Vector2f(1, 1), sf::Vector2u(100, 60), sf::Vector2u(0, 0), 1, "H1");
+	shipHold[H2] = new Object(txtMgr.getTexture(SHPFILE), sf::Vector2f{ 160, 250 }, sf::Vector2f(1, 1), sf::Vector2u(100, 60), sf::Vector2u(1, 0), 1, "H2");
 
 	maxActions = 2;
 }	

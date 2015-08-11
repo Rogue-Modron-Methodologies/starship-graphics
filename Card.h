@@ -29,8 +29,9 @@ public:
 		this->type = type;
 	}
 
-	Card(std::string fileName, sf::Vector2f pos, sf::Vector2f scale, sf::Vector2u srcPos = { 0, 0 }, int num = 0, std::string name = "", int type = 0)
-		: Object(fileName, pos, scale, CSRCSZE, srcPos, num, name)
+
+	Card(const sf::Texture &texture, sf::Vector2f pos, sf::Vector2f scale, sf::Vector2u srcPos = { 0, 0 }, int num = 0, std::string name = "", int type = 0)
+		: Object(texture, pos, scale, CSRCSZE, srcPos, num, name)
 	{
 		this->num = num;
 		this->string = string;
