@@ -50,6 +50,7 @@ public:
 
 	// Misc Inline Functions
 	bool isSmall() const  { return smallDisplay; }
+	sf::Vector2f convertCoord(sf::RenderWindow &gWindow);
 
 	// Prototypes
 	virtual void updateTextRect();

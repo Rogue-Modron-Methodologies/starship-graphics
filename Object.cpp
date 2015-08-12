@@ -30,20 +30,29 @@ Object::Object(const sf::Texture &texture, sf::Vector2f pos, int num, sf::Vector
 	this->qty = num;
 }
 
+// (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
+//  Converts Coordinates to current view
+// (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
+sf::Vector2f Object::convertCoord(sf::RenderWindow &gWindow)
+{
+	sf::Vector2i pixelPos = sf::Mouse::getPosition(gWindow);
+	sf::Vector2f worldPos = gWindow.mapPixelToCoords(pixelPos);
+	return worldPos;
+}
 
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
-//
 //  Check if Mouse Position is within bounds of Starship
-//
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
 bool Object::isTargeted(sf::RenderWindow &gWindow)
 {
-	if (sf::Mouse::getPosition(gWindow).x <sprite->getPosition().x + sprite->getGlobalBounds().width
-		&& sf::Mouse::getPosition(gWindow).y > sprite->getPosition().y
-		&& sf::Mouse::getPosition(gWindow).x > sprite->getPosition().x
-		&& sf::Mouse::getPosition(gWindow).y < sprite->getPosition().y + sprite->getGlobalBounds().height)
+	sf::Vector2f temp = convertCoord(gWindow);
+	if (temp.x <sprite->getPosition().x + sprite->getGlobalBounds().width
+		&& temp.y > sprite->getPosition().y
+		&& temp.x > sprite->getPosition().x
+		&& temp.y < sprite->getPosition().y + sprite->getGlobalBounds().height)
 	{
-		std::cout << sprite->getPosition().x << " " << sprite->getPosition().y << std::endl;
+
+		std::cout << temp.x << " " << temp.y << std::endl;
 		return true;
 	}
 		
