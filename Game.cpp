@@ -144,8 +144,8 @@ void Game::gameLoop()
 				break;
 			case sf::Event::Resized:
 				if (event.type == sf::Event::Resized){
-					screenSize = gWindow.getSize();
 					std::cout << event.size.width << " " << event.size.height << std::endl;
+					
 				}
 
 				break;

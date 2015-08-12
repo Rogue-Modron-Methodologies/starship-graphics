@@ -10,6 +10,7 @@
 #include "Object.h"
 
 
+
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
 // Constructor -
 // Creates the sprite for the object.  
@@ -41,7 +42,11 @@ bool Object::isTargeted(sf::RenderWindow &gWindow)
 		&& sf::Mouse::getPosition(gWindow).y > sprite->getPosition().y
 		&& sf::Mouse::getPosition(gWindow).x > sprite->getPosition().x
 		&& sf::Mouse::getPosition(gWindow).y < sprite->getPosition().y + sprite->getGlobalBounds().height)
+	{
+		std::cout << sprite->getPosition().x << " " << sprite->getPosition().y << std::endl;
 		return true;
+	}
+		
 	else
 		return false;
 }
