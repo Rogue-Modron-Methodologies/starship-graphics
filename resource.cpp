@@ -12,26 +12,15 @@
 
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
 //  
-//  Sets Arrow to position indicated by number of resources
-//
-// (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
-void Resource::update()
-{
-	srcPos.x = qty - 1;
-	sprite->setTextureRect(sf::IntRect(srcPos.x * srcSize.y, srcPos.y * srcSize.y, srcSize.y , srcSize.y));
-}
-
-// (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
-//  
 //  Attemps to use a resource
 //
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
-bool Resource::loseResource(std::string &statusUpdate)
+bool Resource::loseItem(std::string &statusUpdate)
 {
 	if (qty > 0)		// num: current resource quantity
 	{
 		qty--;
-		update();
+		updateTextRect();
 		return true;
 	}
 	statusUpdate = name + " hold is empty!";
@@ -43,12 +32,12 @@ bool Resource::loseResource(std::string &statusUpdate)
 //  Attemps to gain a resource
 //
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
-bool Resource::gainResource(std::string &statusUpdate)
+bool Resource::gainItem(std::string &statusUpdate)
 {
 	if (qty < rCap)	// num: current resource quantity
 	{
 		qty++;
-		update();
+		updateTextRect();
 		return true;
 	}
 	statusUpdate = name + " hold is full!";

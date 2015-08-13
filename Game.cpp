@@ -178,7 +178,7 @@ void Game::gameLoop()
 					else if (!cPlyr->getColonyZone()->isSmall() && !cPlyr->getColonyZone()->showIconOnly() && cPlyr->getColonyZone()->isZoneTargeted(gWindow, tempType))
 					{
 						if (gainProductionResource && sf::Mouse::isButtonPressed(sf::Mouse::Left))
-							if (cPlyr->getStarship()->gainResource(tempType, statusUpdate))
+							if (cPlyr->getStarship()->gainItem(tempType, statusUpdate))
 							{
 								phaseComplete = true;
 								gainProductionResource = false;
@@ -225,17 +225,17 @@ void Game::gameLoop()
 					else if (!cPlyr->getColonyZone()->isSmall() && !cPlyr->getColonyZone()->showIconOnly() && cPlyr->getColonyZone()->isZoneTargeted(gWindow, tempType))
 					{
 						if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
-							cPlyr->getStarship()->gainResource(tempType, statusUpdate);
+							cPlyr->getStarship()->gainItem(tempType, statusUpdate);
 						else if (sf::Mouse::isButtonPressed(sf::Mouse::Right))
-							cPlyr->getStarship()->loseResource(tempType, statusUpdate);
+							cPlyr->getStarship()->loseItem(tempType, statusUpdate);
 					}
 					// Trade Zone (Large List) is clicked
 					else if (!cPlyr->getTradeZone()->isSmall() && !cPlyr->getTradeZone()->showIconOnly() && cPlyr->getTradeZone()->isZoneTargeted(gWindow, tempType))
 					{
 						if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
-							cPlyr->getStarship()->gainResource(tempType, statusUpdate);
+							cPlyr->getStarship()->gainItem(tempType, statusUpdate);
 						else if (sf::Mouse::isButtonPressed(sf::Mouse::Right))
-							cPlyr->getStarship()->loseResource(tempType, statusUpdate);
+							cPlyr->getStarship()->loseItem(tempType, statusUpdate);
 					}
 					//  Starship (Large) && Empty Space is clicked
 					else if (!cPlyr->getStarship()->isTargeted(gWindow) && !cPlyr->getStarship()->isSmall())

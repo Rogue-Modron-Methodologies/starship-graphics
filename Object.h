@@ -17,7 +17,7 @@
 
 enum direction { Down, Left, Right, Up };
 enum cTypes{ trade, colony, pirate, adventure, lost };
-enum ResourcesAvailable { Carbon, Fuel, Ore, Science, TradeGood, Wheat, Any };
+
 
 class Object 
 {
@@ -28,7 +28,6 @@ protected:
 	sf::Sprite *sprite;
 	sf::Vector2u srcSize;		// file source size
 	sf::Vector2u srcPos;		// file source position
-	sf::Vector2f relPos;		// relative position to starship Orgin   ------------------------- may be changing this
 	bool smallDisplay;
 
 public:
@@ -43,19 +42,16 @@ public:
 	void setSrcPosX(unsigned num){ this->srcPos.x = num; }	
 	void setSrcPosY(unsigned num){ this->srcPos.y = num; }
 	void setQty(int num){ this->qty = num; }
-	sf::Sprite *getSprite() const { return sprite; } 
-	sf::Vector2f getScale() const { return sprite->getScale(); }
-	sf::Vector2f getRelPos() const { return relPos; }	
 	int getQty() const { return qty; }
 
 	// Misc Inline Functions
 	bool isSmall() const  { return smallDisplay; }
-	sf::Vector2f convertCoord(sf::RenderWindow &gWindow);
 
 	// Prototypes
 	virtual void updateTextRect();
 	virtual void draw(sf::RenderWindow &window) { window.draw(*sprite); }
-	bool isTargeted(sf::RenderWindow &gWindow);
+	bool isTargeted(sf::RenderWindow &gWindow);	
+	sf::Vector2f convertCoord(sf::RenderWindow &gWindow);
 };
 
 #endif  // OBJECT_H

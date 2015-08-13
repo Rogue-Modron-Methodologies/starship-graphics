@@ -11,26 +11,24 @@
 #define RESOURCE_H
 
 #include <string>
-#include "Object.h"
+#include "ShipObject.h"
 
-class Resource : public Object
+class Resource : public ShipObject
 {
 private:
 	int rCap;
 	std::string name;
-	
+
 public:
 	Resource(const sf::Texture &texture, sf::Vector2f pos, sf::Vector2u srcSize, int num, std::string name, sf::Vector2u srcPos = sf::Vector2u{ 0, 0 })
-		: Object(texture, pos, num, srcSize, srcPos)	
+		: ShipObject(texture, pos, num, srcSize, srcPos)	
 	{
 		rCap = 4;			///////////////////////  SB 2 except for science which should be 4.
 		this->name = name;
 	}	
 	int getRCap() const  { return rCap; }
-	void update();
-	void update(sf::Vector2f pos, sf::Vector2f scale);
-	bool loseResource(std::string &error);
-	bool gainResource(std::string &error);
+	bool loseItem(std::string &error);
+	bool gainItem(std::string &error);
 	
 };
 

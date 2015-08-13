@@ -21,7 +21,6 @@ Object::Object(const sf::Texture &texture, sf::Vector2f pos, int num, sf::Vector
 	smallDisplay = true;
 	this->srcSize = srcSize;
 	this->srcPos = srcPos;
-	this->relPos = pos;
 	sprite = new sf::Sprite;
 	sprite->setTexture(texture);
 	if (srcSize != sf::Vector2u{ 0, 0 })

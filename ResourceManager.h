@@ -1,4 +1,11 @@
-//  ResourceManager.h header file for handling textures
+//  Copyright 2015 Jamie Johnson.
+//  This work is for educational purposes only.
+//  No commercial use, duplication, or distribution is allowed.
+//  All artwork belongs to Mayfair Games Inc.
+//  www.mayfairgames.com
+//  Used without permission for educational purposes only.
+//
+//  The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 #ifndef RESOURCEMANAGER_H
 #define RESOURCEMANAGER_H

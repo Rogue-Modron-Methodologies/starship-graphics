@@ -13,35 +13,23 @@
 #include <iostream>
 #include <iomanip>
 #include <string>
-#include "Object.h"
 #include "Resource.h"
+#include "BoosterLaser.h"
 #include "Module.h"
 #include "Card.h"
 
-enum Booster {B1, B2, B3};
-enum Laser {L1, L2, L3};
-enum ShipHold {H1, H2};
-enum Ships {empty, tradeShip, colonyShip};
 const sf::Vector2f SMLPOS = sf::Vector2f(20, 700);		//  Screen Position for Standard Scale Starship
 const sf::Vector2f SMLSCL = sf::Vector2f(.25f, .25f);		//  Standard Scale for Starship;
 const sf::Vector2f LRGPOS = sf::Vector2f(40, 100);		//  Screen Position for Large Scale Starship
-const sf::Vector2f LRGSCL = sf::Vector2f(.85f, .85f);		//  Large Scale for Starship
+const sf::Vector2f LRGSCL = sf::Vector2f(1.0f, 1.0f);		//  Large Scale for Starship
 const std::string SRCFILE = "resources/board/ship.png";		//  Source File name for StarShip
-const std::string ARWFILE = "resources/board/arrows.png";		//  Source File name for resource arrows
-const std::string BSTFILE = "resources/board/boosters.png";		//  Source file name for boosters
-const std::string LSRFILE = "resources/board/lasers.png";		//  Source file name for lasers
-const std::string SHPFILE = "resources/board/ships.png";		//  Source file name for trade/colony
-const int RESNUM = 6;									//  Number of resources in the game
-const int BOOLASNUM = 3;									//  Number of boosters and lasers in the game
+const int CLKNUM = 14;									//  Number of clickable objects on the starship
 
 
 class Starship : public Object
 {
 private:
-	Resource **resources;			//  Array of the 5 resources in the game
-	Object **lasers;				//  Pointer to array of three lasers
-	Object **boosters;				//  Pointer to array of three lasers
-	Object **shipHold;				//  Pointer to array of two ships (Trade/Colony)
+	ShipObject** shipObjects;		//  Array of all clickable ship objects
 	int maxActions;				//  Max actions in the flight phase
 	int maxMovement;				//  Max movement in the flight phase
 
@@ -55,22 +43,18 @@ public:
 
 	//  Misc Inline Functions
 	void calcMaxDistance(int dieRoll)  { maxMovement = (dieRoll + totalBoosters()); }	
-	int totalBoosters()  { return boosters[B1]->getQty() + boosters[B2]->getQty() + boosters[B3]->getQty(); }			// called by calcMaxDistance and events	
+	int totalLasers() { return shipObjects[L1]->getQty() + shipObjects[L2]->getQty() + shipObjects[L3]->getQty(); }			// used in combat
+	int totalBoosters()  { return shipObjects[B1]->getQty() + shipObjects[B2]->getQty() + shipObjects[B3]->getQty(); }			// called by calcMaxDistance and events	
 
 	//  Prototypes
 	void draw(sf::RenderWindow &window);
-	void addLaser(int pos, std::string &statusUpdate);
-	void addBooster(int pos, std::string &statusUpdate);
-	bool modAstro(int num);
-	std::string getResName(int type);
-	bool modResource(int num, int type, int cost = 0);
 	void makeSmall();
 	void makeBig();
 	void bigLeftClicked(sf::RenderWindow &window, std::string &statusUpdate);
 	void bigRightClicked(sf::RenderWindow &window, std::string &statusUpdate); 
-	void update(Object *o, sf::Vector2f scale);
-	bool gainResource(int type, std::string &statusUpdate);
-	bool loseResource(int type, std::string &statusUpdate);
+	void update(ShipObject *o, sf::Vector2f scale = { 1, 1 });	
+	bool gainItem(int type, std::string &statusUpdate);
+	bool loseItem(int type, std::string &statusUpdate);
 };
 
 #endif // STARSHIP_H

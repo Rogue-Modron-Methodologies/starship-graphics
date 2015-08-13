@@ -10,36 +10,33 @@
 #include "Starship.h"
 
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
-//  Constructor: Calls the Object Constructor
-//		
+//  
+//	Constructor: Calls the Object Constructor	
 //		
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
 Starship::Starship(ResourceManager<sf::Texture> &txtMgr, sf::Vector2f pos) : Object(txtMgr.getResource(SRCFILE), pos)
 {
+	shipObjects = new ShipObject*[CLKNUM];			// will be higher once modules are included
 
-	resources = new Resource*[5];
-	resources[Science] = new Resource(txtMgr.getResource(ARWFILE), sf::Vector2f{ 243, 59 }, sf::Vector2u(65, 65), 1, "Science");
-	resources[Ore] = new Resource(txtMgr.getResource(ARWFILE), sf::Vector2f{ 555, 59 }, sf::Vector2u(65, 65), 1, "Ore");
-	resources[Fuel] = new Resource(txtMgr.getResource(ARWFILE), sf::Vector2f{ 713, 59 }, sf::Vector2u(65, 65), 1, "Fuel");
-	resources[TradeGood] = new Resource(txtMgr.getResource(ARWFILE), sf::Vector2f{ 243, 374 }, sf::Vector2u(65, 65), 1, "TradeGood");
-	resources[Wheat] = new Resource(txtMgr.getResource(ARWFILE), sf::Vector2f{ 555, 374 }, sf::Vector2u(65, 65), 1, "Wheat");
-	resources[Carbon] = new Resource(txtMgr.getResource(ARWFILE), sf::Vector2f{ 712, 374 }, sf::Vector2u(65, 65), 1, "Carbon");
+	shipObjects[Science] = new Resource(txtMgr.getResource(ARWFILE), sf::Vector2f{ 207, 51 }, sf::Vector2u(55, 55), 1, "Science");
+	shipObjects[Ore] = new Resource(txtMgr.getResource(ARWFILE), sf::Vector2f{ 472, 51 }, sf::Vector2u(55, 55), 1, "Ore");
+	shipObjects[Fuel] = new Resource(txtMgr.getResource(ARWFILE), sf::Vector2f{ 606, 51 }, sf::Vector2u(55, 55), 1, "Fuel");
+	shipObjects[TradeGood] = new Resource(txtMgr.getResource(ARWFILE), sf::Vector2f{ 207, 318 }, sf::Vector2u(55, 55), 1, "TradeGood");
+	shipObjects[Wheat] = new Resource(txtMgr.getResource(ARWFILE), sf::Vector2f{ 472, 318 }, sf::Vector2u(55, 55), 1, "Wheat");
+	shipObjects[Carbon] = new Resource(txtMgr.getResource(ARWFILE), sf::Vector2f{ 606, 318 }, sf::Vector2u(55, 55), 1, "Carbon");
 
-	boosters = new Object*[3];
-	boosters[B1] = new Object(txtMgr.getResource(BSTFILE), sf::Vector2f{ 0, 125 }, 1, sf::Vector2u(125, 75));
-	boosters[B2] = new Object(txtMgr.getResource(BSTFILE), sf::Vector2f{ 0, 210 }, 0, sf::Vector2u(125, 75));
-	boosters[B3] = new Object(txtMgr.getResource(BSTFILE), sf::Vector2f{ 0, 295 }, 1, sf::Vector2u(125, 75));
+	shipObjects[B1] = new BoosterLaser(txtMgr.getResource(BSTFILE), sf::Vector2f{ 0, 110 }, 1, sf::Vector2u(105, 63));
+	shipObjects[B2] = new BoosterLaser(txtMgr.getResource(BSTFILE), sf::Vector2f{ 0, 180 }, 0, sf::Vector2u(105, 63));
+	shipObjects[B3] = new BoosterLaser(txtMgr.getResource(BSTFILE), sf::Vector2f{ 0, 250 }, 1, sf::Vector2u(105, 63));
+
+	shipObjects[L1] = new BoosterLaser(txtMgr.getResource(LSRFILE), sf::Vector2f{ 770, 110 }, 0, sf::Vector2u(105, 63));
+	shipObjects[L2] = new BoosterLaser(txtMgr.getResource(LSRFILE), sf::Vector2f{ 770, 180 }, 1, sf::Vector2u(105, 63));
+	shipObjects[L3] = new BoosterLaser(txtMgr.getResource(LSRFILE), sf::Vector2f{ 770, 250 }, 0, sf::Vector2u(105, 63));
+
+	shipObjects[H1] = new ShipObject(txtMgr.getResource(SHPFILE), sf::Vector2f{ 131, 161 }, 1, sf::Vector2u(85, 50));
+	shipObjects[H2] = new ShipObject(txtMgr.getResource(SHPFILE), sf::Vector2f{ 131, 212 }, 1, sf::Vector2u(85, 50), sf::Vector2u(1, 0));
 	
-	lasers = new Object*[3];
-	lasers[L1] = new Object(txtMgr.getResource(LSRFILE), sf::Vector2f{ 908, 125 }, 0, sf::Vector2u(125, 75));
-	lasers[L2] = new Object(txtMgr.getResource(LSRFILE), sf::Vector2f{ 908, 210 }, 1, sf::Vector2u(125, 75));
-	lasers[L3] = new Object(txtMgr.getResource(LSRFILE), sf::Vector2f{ 908, 295 }, 0, sf::Vector2u(125, 75));
-
-	shipHold = new Object*[2];
-	shipHold[H1] = new Object(txtMgr.getResource(SHPFILE), sf::Vector2f{ 160, 190 }, 1, sf::Vector2u(100, 60));
-	shipHold[H2] = new Object(txtMgr.getResource(SHPFILE), sf::Vector2f{ 160, 250 }, 1, sf::Vector2u(100, 60), sf::Vector2u(1, 0));
-
-	maxActions = 2;
+	maxActions = 2;		
 }	
 
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
@@ -49,20 +46,9 @@ Starship::Starship(ResourceManager<sf::Texture> &txtMgr, sf::Vector2f pos) : Obj
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
 Starship::~Starship()
 {
-	delete resources[Carbon];
-	delete resources[Fuel];
-	delete resources[Ore];
-	delete resources[Science];
-	delete resources[TradeGood];
-	delete resources[Wheat];
-//	delete [] resources;
-	delete boosters[B1];
-	delete boosters[B2];
-	delete boosters[B3];
-//	delete [] boosters;
-	delete shipHold[H1];
-	delete shipHold[H2];
-//	delete [] shiphold;
+	for (int i = 0; i < CLKNUM; i++)
+		delete shipObjects[i];
+	delete shipObjects;
 }
 
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
@@ -73,25 +59,11 @@ Starship::~Starship()
 void Starship::draw(sf::RenderWindow &gWindow) 
 { 
 	gWindow.draw(*sprite);					// draws the ship sprite
-	for (int i = 0; i < RESNUM; i++)
+	for (int i = 0; i < CLKNUM; i++)
 	{
-		if (resources[i]->getQty() > 0)		// only draws the resource's arrows to the screen if the cargo hold contains resources. 
-			resources[i]->draw(gWindow);
+		if (shipObjects[i]->getQty() > 0)		// only draws the object to the screen if qty is above 0. 
+			shipObjects[i]->draw(gWindow);
 	}
-
-	for (int i = 0; i < BOOLASNUM; i++)
-	{
-		if (lasers[i]->getQty() > 0)			// only draws the lasers to the screen if the lvl is above zero
-			lasers[i]->draw(gWindow);
-		if (boosters[i]->getQty() > 0)		// only draws the boosters to the screen if the lvl is above zero
-			boosters[i]->draw(gWindow);
-	}
-
-	if (shipHold[H1]->getQty() > 0)			// only draws the ship to the screen if the qty is above zero
-		shipHold[H1]->draw(gWindow);			
-	if (shipHold[H2]->getQty() > 0)
-		shipHold[H2]->draw(gWindow);
-
 }
 
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
@@ -104,21 +76,8 @@ void Starship::makeBig()
 	smallDisplay = false;
 	sprite->setScale(LRGSCL);
 	sprite->setPosition(LRGPOS);
-	update(resources[Science], LRGSCL);
-	update(resources[Ore], LRGSCL);
-	update(resources[Fuel], LRGSCL);
-	update(resources[TradeGood], LRGSCL);
-	update(resources[Wheat], LRGSCL);
-	update(resources[Ore], LRGSCL);
-	update(resources[Carbon], LRGSCL);
-	update(lasers[L1], LRGSCL);
-	update(lasers[L2], LRGSCL);
-	update(lasers[L3], LRGSCL);
-	update(boosters[B1], LRGSCL);
-	update(boosters[B2], LRGSCL);
-	update(boosters[B3], LRGSCL);
-	update(shipHold[H1], LRGSCL);
-	update(shipHold[H2], LRGSCL);
+	for (int i = 0; i < CLKNUM; i++)
+		update(shipObjects[i]);
 }
 
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
@@ -131,20 +90,8 @@ void Starship::makeSmall()
 	smallDisplay = true;
 	sprite->setScale(SMLSCL);
 	sprite->setPosition(SMLPOS);
-	update(resources[Science], SMLSCL);
-	update(resources[Ore], SMLSCL);
-	update(resources[Fuel], SMLSCL);
-	update(resources[TradeGood], SMLSCL);
-	update(resources[Wheat], SMLSCL);
-	update(resources[Carbon], SMLSCL);
-	update(lasers[L1], SMLSCL);
-	update(lasers[L2], SMLSCL);
-	update(lasers[L3], SMLSCL);
-	update(boosters[B1], SMLSCL);
-	update(boosters[B2], SMLSCL);
-	update(boosters[B3], SMLSCL);
-	update(shipHold[H1], SMLSCL);
-	update(shipHold[H2], SMLSCL);
+	for (int i = 0; i < CLKNUM; i++)
+		update(shipObjects[i], SMLSCL);
 }
 
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
@@ -154,34 +101,11 @@ void Starship::makeSmall()
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
 void Starship::bigLeftClicked(sf::RenderWindow &gWindow, std::string &statusUpdate)
 {
-	if (resources[Science]->isTargeted(gWindow))
-		resources[Science]->gainResource(statusUpdate);
-	else if (resources[Ore]->isTargeted(gWindow))
-		resources[Ore]->gainResource(statusUpdate);
-	else if (resources[Fuel]->isTargeted(gWindow))
-		resources[Fuel]->gainResource(statusUpdate);
-	else if (resources[TradeGood]->isTargeted(gWindow))
-		resources[TradeGood]->gainResource(statusUpdate);
-	else if (resources[Wheat]->isTargeted(gWindow))
-		resources[Wheat]->gainResource(statusUpdate);
-	else if (resources[Carbon]->isTargeted(gWindow))
-		resources[Carbon]->gainResource(statusUpdate);
-	else if (boosters[B1]->isTargeted(gWindow))
-		addBooster(B1, statusUpdate);
-	else if (boosters[B2]->isTargeted(gWindow))
-		addBooster(B2, statusUpdate);
-	else if (boosters[B3]->isTargeted(gWindow))
-		addBooster(B3, statusUpdate);
-	else if (lasers[L1]->isTargeted(gWindow))
-		addLaser(L1, statusUpdate);
-	else if (lasers[L2]->isTargeted(gWindow))
-		addLaser(L2, statusUpdate);
-	else if (lasers[L3]->isTargeted(gWindow))
-		addLaser(L3, statusUpdate);
-	else if (shipHold[H1]->isTargeted(gWindow)) ////////////////////////////////////////////////////
-		std::cout << H1;
-	else if (shipHold[H2]->isTargeted(gWindow)) //////////////////////////////////////////////////// 
-		std::cout << H2;
+	for (int i = 0; i < CLKNUM; i++)
+	{
+		if (shipObjects[i]->isTargeted(gWindow))
+			gainItem(i, statusUpdate);
+	}		
 }
 
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
@@ -191,79 +115,11 @@ void Starship::bigLeftClicked(sf::RenderWindow &gWindow, std::string &statusUpda
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
 void Starship::bigRightClicked(sf::RenderWindow &gWindow, std::string &statusUpdate)
 {
-	if (resources[Science]->isTargeted(gWindow))
-		resources[Science]->loseResource(statusUpdate);
-	else if (resources[Ore]->isTargeted(gWindow))
-		resources[Ore]->loseResource(statusUpdate);
-	else if (resources[Fuel]->isTargeted(gWindow))
-		resources[Fuel]->loseResource(statusUpdate);
-	else if (resources[TradeGood]->isTargeted(gWindow))
-		resources[TradeGood]->loseResource(statusUpdate);
-	else if (resources[Wheat]->isTargeted(gWindow))
-		resources[Wheat]->loseResource(statusUpdate);
-	else if (resources[Carbon]->isTargeted(gWindow))
-		resources[Carbon]->loseResource(statusUpdate);
-	else if (shipHold[H1]->isTargeted(gWindow)) ////////////////////////////////////////////////////
-		std::cout << H1;
-	else if (shipHold[H2]->isTargeted(gWindow)) ////////////////////////////////////////////////////
-		std::cout << H2;
-
-}
-
-// (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
-//  
-//  Adds or upgrades a laser if allowed
-//
-// (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
-void Starship::addLaser(int pos, std::string &statusUpdate)
-{
-	if (lasers[pos]->getQty() < 2)
+	for (int i = 0; i < CLKNUM; i++)
 	{
-		if (lasers[pos]->getQty() == 0)
-		{
-			lasers[pos]->setQty(lasers[pos]->getQty() + 1);
-			lasers[pos]->setSrcPos({ 0, 0 });
-			lasers[pos]->updateTextRect();
-		}
-		else if (lasers[L1]->getQty() >= 1 && lasers[L2]->getQty() >= 1 && lasers[L3]->getQty() >= 1)
-		{
-			lasers[pos]->setQty(lasers[pos]->getQty() + 1);
-			lasers[pos]->setSrcPos({ 1, 0 });
-			lasers[pos]->updateTextRect();
-		}
-		else
-			statusUpdate = "All Lasers must be upgraded to Level 1!";
+		if (shipObjects[i]->isTargeted(gWindow))
+			loseItem(i, statusUpdate);
 	}
-	else
-		statusUpdate = "Laser is already at maximum!";
-}
-
-// (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
-//  
-//  Adds or upgrades a booster if allowed
-//
-// (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
-void Starship::addBooster(int pos, std::string &statusUpdate)
-{
-	if (boosters[pos]->getQty() < 2)
-	{
-		if (boosters[pos]->getQty() == 0)
-		{
-			boosters[pos]->setQty(boosters[pos]->getQty() + 1);
-			boosters[pos]->setSrcPos({ 0, 0 });
-			boosters[pos]->updateTextRect();
-		}
-		else if (boosters[B1]->getQty() >= 1 && boosters[B2]->getQty() >= 1 && boosters[B3]->getQty() >= 1)
-		{
-			boosters[pos]->setQty(boosters[pos]->getQty() + 1);
-			boosters[pos]->setSrcPos({ 1, 0 });
-			boosters[pos]->updateTextRect();
-		}
-		else
-			statusUpdate = "All Boosters must be upgraded to Level 1!";
-	}
-	else
-		statusUpdate = "Booster is already at maximum!";
 }
 
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
@@ -271,10 +127,10 @@ void Starship::addBooster(int pos, std::string &statusUpdate)
 //  Updates position and scale of objects relative to the ship
 //
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
-void Starship::update(Object *o, sf::Vector2f scale)
+void Starship::update(ShipObject *o, sf::Vector2f scale)
 {
-	o->getSprite()->setScale(scale);
-	o->getSprite()->setPosition((sprite->getPosition() + sf::Vector2f(o->getRelPos().x * scale.x, o->getRelPos().y * scale.y)));
+	o->setScale(scale);
+	o->setPosition((sprite->getPosition() + sf::Vector2f(o->getRelPos().x * scale.x, o->getRelPos().y * scale.y))); //////////////////////////////////////
 }
 
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
@@ -282,12 +138,76 @@ void Starship::update(Object *o, sf::Vector2f scale)
 //  Calls individual resource gainResource function
 //
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
-bool Starship::gainResource(int type, std::string &statusUpdate)
+bool Starship::gainItem(int pos, std::string &statusUpdate)
 { 
-	if (resources[type]->gainResource(statusUpdate))
-		return true;
-	else
+	switch (pos)
+	{
+	case Carbon:
+	case Fuel:
+	case Ore:
+	case Science:
+	case TradeGood:
+	case Wheat:
+		if (shipObjects[pos]->gainItem(statusUpdate))
+			return true;
+		else
+			return false;
+		break;
+	case B1:
+	case B2:
+	case B3:
+		if (shipObjects[pos]->getQty() < 2)
+		{
+			if (shipObjects[pos]->getQty() == 0)
+			{
+				shipObjects[pos]->gainItem(statusUpdate);
+				return true;
+			}
+			else if (shipObjects[B1]->getQty() >= 1 && shipObjects[B2]->getQty() >= 1 && shipObjects[B3]->getQty() >= 1)
+			{
+				shipObjects[pos]->gainItem(statusUpdate);
+				return true;
+			}
+			else{
+				statusUpdate = "All boosters must be upgraded to Level 1!";
+				return false;
+			}
+		}
+		statusUpdate = "Booster already at maximum!";
 		return false;
+		break;
+	case L1:
+	case L2:
+	case L3:
+		std::cout << "Qty: " << shipObjects[pos]->getQty() << std::endl;
+		if (shipObjects[pos]->getQty() < 2)
+		{
+			if (shipObjects[pos]->getQty() == 0)
+			{
+				shipObjects[pos]->gainItem(statusUpdate);
+				return true;
+			}
+			else if (shipObjects[L1]->getQty() >= 1 && shipObjects[L2]->getQty() >= 1 && shipObjects[L3]->getQty() >= 1)
+			{
+				shipObjects[pos]->gainItem(statusUpdate);
+				return true;
+			}
+			else{
+				statusUpdate = "All Lasers must be upgraded to Level 1!";
+				return false;
+			}
+		}
+		statusUpdate = "Laser already at maximum!";
+		return false;
+		break;
+	case H1:
+	case H2:
+		return true;
+		break;
+	default:
+		return false;
+
+	};
 }
 
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
@@ -295,11 +215,50 @@ bool Starship::gainResource(int type, std::string &statusUpdate)
 //  Calls individual resource loseResource function
 //
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
-bool Starship::loseResource(int type, std::string &statusUpdate)
+bool Starship::loseItem(int pos, std::string &statusUpdate)
 {
-	if (resources[type]->loseResource(statusUpdate))
-		return true;
-	else
+	switch (pos)
+	{
+	case Carbon:
+	case Fuel:
+	case Ore:
+	case Science:
+	case TradeGood:
+	case Wheat:
+		std::cout << "Resource Clicked:" << std::endl;
+		if (shipObjects[pos]->loseItem(statusUpdate))
+			return true;
+		else
+			return false;
+		break;
+	case B1:
+	case B2:
+	case B3:
+		if (shipObjects[pos]->getQty() > 0)
+		{
+			shipObjects[pos]->loseItem(statusUpdate);
+			return true;
+		}
+		statusUpdate = "No Booster to Lose!";
 		return false;
+		break;
+	case L1:
+	case L2:
+	case L3:
+		if (shipObjects[pos]->getQty() > 0)
+		{
+			shipObjects[pos]->loseItem(statusUpdate);
+			return true;
+		}
+		statusUpdate = "No Laser to Lose!";
+		return false;
+		break;
+	case H1:
+	case H2:
+		return true;
+		break;
+	default:
+		return false;
+	}
 }
 
