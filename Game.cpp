@@ -142,13 +142,6 @@ void Game::gameLoop()
 			case sf::Event::Closed:
 				gWindow.close();
 				break;
-			case sf::Event::Resized:
-				if (event.type == sf::Event::Resized){
-					std::cout << event.size.width << " " << event.size.height << std::endl;
-					
-				}
-
-				break;
 			case sf::Event::KeyPressed:
 				if (event.key.code == sf::Keyboard::Escape)
 					gWindow.close();
@@ -196,7 +189,6 @@ void Game::gameLoop()
 					{
 						if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
 							cPlyr->makeBig();
-
 					}
 					// Starship (Large) is clicked
 					else if (cPlyr->getStarship()->isTargeted(gWindow) && !cPlyr->getStarship()->isSmall())

@@ -12,9 +12,6 @@
 
 #include "Object.h"
 enum ShipComponents { Carbon, Fuel, Ore, Science, TradeGood, Wheat, B1, B2, B3, L1, L2, L3, H1, H2 };
-//enum Booster { B1, B2, B3 };
-//enum Laser { L1, L2, L3 };
-//enum ShipHold { H1, H2 };
 enum Ships { empty, tradeShip, colonyShip };
 const std::string ARWFILE = "resources/board/arrows.png";		//  Source File name for resource arrows
 const std::string BSTFILE = "resources/board/boosters.png";		//  Source file name for boosters
@@ -38,7 +35,6 @@ public:
 	virtual bool gainItem(std::string &error){ error = "shipObject gainItem Function Called"; return false; }
 	virtual void updateTextRect()
 	{
-		std::cout << "shipObjectTextRect\n";
 		srcPos.x = qty - 1;
 		sprite->setTextureRect(sf::IntRect(srcPos.x * srcSize.x, srcPos.y * srcSize.y, srcSize.x, srcSize.y));
 	}

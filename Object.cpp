@@ -48,13 +48,9 @@ bool Object::isTargeted(sf::RenderWindow &gWindow)
 	if (temp.x <sprite->getPosition().x + sprite->getGlobalBounds().width
 		&& temp.y > sprite->getPosition().y
 		&& temp.x > sprite->getPosition().x
-		&& temp.y < sprite->getPosition().y + sprite->getGlobalBounds().height)
-	{
-
-		std::cout << temp.x << " " << temp.y << std::endl;
+		&& temp.y < sprite->getPosition().y + sprite->getGlobalBounds().height){
 		return true;
-	}
-		
+	}	
 	else
 		return false;
 }

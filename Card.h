@@ -13,9 +13,9 @@
 #include "Object.h"
 
 const sf::Vector2f CRDSIZE = { 500, 500 };
-const sf::Vector2u CSRCSZE = { 250, 385 };
-const sf::Vector2f CRDSSCL = sf::Vector2f(.35f, .35f);		//  Card Small Scale
-const sf::Vector2f CRDLSCL = sf::Vector2f(.5f, .5f);		//  Card Large Scale
+const sf::Vector2u CSRCSZE = { 125, 193 };
+const sf::Vector2f CRDSSCL = sf::Vector2f(.75f, .75f);		//  Card Small Scale
+const sf::Vector2f CRDLSCL = sf::Vector2f(1.0f, 1.0f);		//  Card Large Scale
 class Card : public Object
 {
 private:

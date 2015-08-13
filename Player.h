@@ -14,8 +14,8 @@
 #include "LinkedList.h"
 #include "ColonyCard.h"
 
-//enum Icons{player, astro, vicPt, frdPt, fmPt, science, ore, fuel, tradeGood, wheat, carbon};
-
+enum Icons{player, astro, vicPt, frdPt, fmPt, science, ore, fuel, tradeGood, wheat, carbon};
+const int ICNNUM = 11;
 const std::string ICNFLE = "resources/board/icons.png";		//  Source file name for trade/colony ships
 const std::string FNTFLE = "resources/board/unique.ttf";		//  Source file name for Font
 const std::string SYM1FLE = "resources/board/symbols.png";		//  Source file for Victory/Fame/Friendship Icons
@@ -25,6 +25,7 @@ const sf::Vector2f CSPOS = sf::Vector2f(30, 550);				//  Screen Position for Sma
 const sf::Vector2f TSPOS = sf::Vector2f(130, 550);			//  Screen Position for Small Scale Trade Icon
 const sf::Vector2f CLPOS = sf::Vector2f(30, 610);				//  Screen Position for Large Scale Colony Icon
 const sf::Vector2f TLPOS = sf::Vector2f(180, 610);			//  Screen Position for Large Scale Trade Icon
+
 
 struct Icon						// For When an object needs to be paired with displayable text
 {
@@ -41,18 +42,7 @@ private:
 	sf::Text cZoneString;			//  Colony Zone Text String
 	LinkedList<Card>* TradeZone;		//  Trade Zone 
 	sf::Text tZoneString;			//  Trade Zone Text String
-	//Icon statistics[11];			//  Array for Below Icons  /////////////////////////   ADD THE ICONS TO THE ARRAY  - WITH AN ENUM
-	Icon player;					//  Player Icon 
-	Icon astro;					//  Astro Icon
-	Icon vicPt;					//  Victory Point Icon
-	Icon frdPt;					//  Friend Point Icon (for friend of the people)
-	Icon fmPt;					//  Fame Point Icon (for hero of the people)
-	Icon science;					//  Science Resource Icon
-	Icon ore;						//  Ore Resource Icon
-	Icon fuel;					//  Fuel Resource Icon
-	Icon tradeGood;				//  TradeGood Resource Icon
-	Icon wheat;					//  Wheat Resource Icon
-	Icon carbon;					//  Carbon Resource Icon
+	Icon statistics[ICNNUM];			//  Array for the statistic Icons
 
 public:
 	Player(ResourceManager<sf::Texture> &txtMgr, std::string name = "EMPTY", int num = -99);
@@ -61,7 +51,7 @@ public:
 	Starship* getStarship() const {  return starship;  }
 	LinkedList<Card>* getColonyZone() const {	return ColonyZone;	}
 	LinkedList<Card>* getTradeZone() const 	{	return TradeZone;	}
-	int getAstro() const  { return astro.icon->getQty(); }
+	int getAstro() const  { return statistics[astro].icon->getQty(); }
 	void update();
 	void draw(sf::RenderWindow &gWindow);
 	void drawCPlyrStats(sf::RenderWindow &gWindow);

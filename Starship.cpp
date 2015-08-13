@@ -179,7 +179,6 @@ bool Starship::gainItem(int pos, std::string &statusUpdate)
 	case L1:
 	case L2:
 	case L3:
-		std::cout << "Qty: " << shipObjects[pos]->getQty() << std::endl;
 		if (shipObjects[pos]->getQty() < 2)
 		{
 			if (shipObjects[pos]->getQty() == 0)
@@ -225,7 +224,6 @@ bool Starship::loseItem(int pos, std::string &statusUpdate)
 	case Science:
 	case TradeGood:
 	case Wheat:
-		std::cout << "Resource Clicked:" << std::endl;
 		if (shipObjects[pos]->loseItem(statusUpdate))
 			return true;
 		else
