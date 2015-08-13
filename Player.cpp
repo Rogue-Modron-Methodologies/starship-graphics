@@ -55,15 +55,15 @@ Player::Player(ResourceManager<sf::Texture> &txtMgr, std::string name, int num)
 	statistics[astro].text.setString(std::to_string(statistics[astro].icon->getQty()));
 	statistics[astro].text.setPosition({ 130, 855 });
 
-	statistics[science].icon = new Object(txtMgr.getResource(RICNFLE), { 420, 860 }, 1, { 35, 35 });
+	statistics[science].icon = new Object(txtMgr.getResource(RICNFLE), { 500, 860 }, 1, { 35, 35 });
 	statistics[science].text.setFont(font);
 	statistics[science].text.setString(std::to_string(statistics[science].icon->getQty()));
-	statistics[science].text.setPosition({ 460, 855 });
-
-	statistics[ore].icon = new Object(txtMgr.getResource(RICNFLE), { 500, 860 }, 1, { 35, 35 }, { 5, 0 });
+	statistics[science].text.setPosition({ 540, 855 });
+	
+	statistics[ore].icon = new Object(txtMgr.getResource(RICNFLE), { 420, 860 }, 1, { 35, 35 }, { 5, 0 });
 	statistics[ore].text.setFont(font);
 	statistics[ore].text.setString(std::to_string(statistics[ore].icon->getQty()));
-	statistics[ore].text.setPosition({ 540, 855 });
+	statistics[ore].text.setPosition({ 460, 855 });
 
 	statistics[fuel].icon = new Object(txtMgr.getResource(RICNFLE), { 580, 860 }, 1, { 35, 35 }, { 1, 0 });
 	statistics[fuel].text.setFont(font);
@@ -110,6 +110,23 @@ void Player::update()
 	statistics[player].icon->setSrcPosX(statistics[player].icon->getQty() - 1);
 	statistics[player].icon->updateTextRect();
 }
+
+// (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
+//  
+//  Updates an Icons Qty
+//
+// (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
+void Player::updateIcon(int type)
+{
+	if (type < 6)
+	{
+		int tempNum = starship->getShipObjectQty(type);
+		statistics[type].icon->setQty(tempNum); 
+		statistics[type].text.setString(std::to_string(tempNum));
+	}
+
+}
+
 
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
 //  

@@ -173,6 +173,7 @@ void Game::gameLoop()
 						if (gainProductionResource && sf::Mouse::isButtonPressed(sf::Mouse::Left))
 							if (cPlyr->getStarship()->gainItem(tempType, statusUpdate))
 							{
+								cPlyr->updateIcon(tempType);
 								phaseComplete = true;
 								gainProductionResource = false;
 								infoString.setString("Press Enter to End Phase");
@@ -194,9 +195,15 @@ void Game::gameLoop()
 					else if (cPlyr->getStarship()->isTargeted(gWindow) && !cPlyr->getStarship()->isSmall())
 					{
 						if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
-							cPlyr->getStarship()->bigLeftClicked(gWindow, statusUpdate);
+						{
+							if (cPlyr->getStarship()->bigLeftClicked(gWindow, statusUpdate, tempType))
+								cPlyr->updateIcon(tempType);
+						}
 						else if (sf::Mouse::isButtonPressed(sf::Mouse::Right))
-							cPlyr->getStarship()->bigRightClicked(gWindow, statusUpdate);
+						{
+							if (cPlyr->getStarship()->bigRightClicked(gWindow, statusUpdate, tempType))
+								cPlyr->updateIcon(tempType);
+						}
 					}
 					// Colony Zone (Large Icon) is clicked
 					else if (!cPlyr->getColonyZone()->isSmall() && cPlyr->getColonyZone()->showIconOnly() && cPlyr->getColonyZone()->isIconTargeted(gWindow))
@@ -225,9 +232,15 @@ void Game::gameLoop()
 					else if (!cPlyr->getTradeZone()->isSmall() && !cPlyr->getTradeZone()->showIconOnly() && cPlyr->getTradeZone()->isZoneTargeted(gWindow, tempType))
 					{
 						if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
-							cPlyr->getStarship()->gainItem(tempType, statusUpdate);
+						{
+							if(cPlyr->getStarship()->gainItem(tempType, statusUpdate))
+								cPlyr->updateIcon(tempType);
+						}	
 						else if (sf::Mouse::isButtonPressed(sf::Mouse::Right))
-							cPlyr->getStarship()->loseItem(tempType, statusUpdate);
+						{
+							if(cPlyr->getStarship()->loseItem(tempType, statusUpdate))
+								cPlyr->updateIcon(tempType);
+						}
 					}
 					//  Starship (Large) && Empty Space is clicked
 					else if (!cPlyr->getStarship()->isTargeted(gWindow) && !cPlyr->getStarship()->isSmall())
@@ -368,7 +381,7 @@ void Game::updateGameWindow(sf::RenderWindow &gWindow)
 	if (errorTimer)
 	{
 		gWindow.draw(errorString);
-		errorString.setColor(sf::Color(255, 0, 0, errorTimer));
+		errorString.setColor(sf::Color(255, 0, 0, errorTimer / 4));
 		errorTimer--;
 	}
 }
@@ -378,7 +391,7 @@ void Game::updateGameWindow(sf::RenderWindow &gWindow)
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
 void Game::setError(std::string error)
 {
-	errorTimer = 255;
+	errorTimer = 1020;
 	errorString.setString(error);
 }
 

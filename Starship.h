@@ -50,11 +50,13 @@ public:
 	void draw(sf::RenderWindow &window);
 	void makeSmall();
 	void makeBig();
-	void bigLeftClicked(sf::RenderWindow &window, std::string &statusUpdate);
-	void bigRightClicked(sf::RenderWindow &window, std::string &statusUpdate); 
+	bool bigLeftClicked(sf::RenderWindow &window, std::string &statusUpdate, int &tempNum);
+	bool bigRightClicked(sf::RenderWindow &window, std::string &statusUpdate, int &tempNum);
 	void update(ShipObject *o, sf::Vector2f scale = { 1, 1 });	
 	bool gainItem(int type, std::string &statusUpdate);
 	bool loseItem(int type, std::string &statusUpdate);
+	int getShipObjectQty(int type){ return shipObjects[type]->getQty(); }
+	
 };
 
 #endif // STARSHIP_H

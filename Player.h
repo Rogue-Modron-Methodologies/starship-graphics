@@ -14,7 +14,7 @@
 #include "LinkedList.h"
 #include "ColonyCard.h"
 
-enum Icons{player, astro, vicPt, frdPt, fmPt, science, ore, fuel, tradeGood, wheat, carbon};
+enum Icons{ carbon, fuel, ore, science, tradeGood, wheat, player, astro, vicPt, frdPt, fmPt };
 const int ICNNUM = 11;
 const std::string ICNFLE = "resources/board/icons.png";		//  Source file name for trade/colony ships
 const std::string FNTFLE = "resources/board/unique.ttf";		//  Source file name for Font
@@ -55,6 +55,7 @@ public:
 	void update();
 	void draw(sf::RenderWindow &gWindow);
 	void drawCPlyrStats(sf::RenderWindow &gWindow);
+	void updateIcon(int type);
 	void expandColonyZone();
 	void expandTradeZone();
 	void makeBig();

@@ -99,13 +99,19 @@ void Starship::makeSmall()
 //  Checks all ship objects for mouse selection
 //
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
-void Starship::bigLeftClicked(sf::RenderWindow &gWindow, std::string &statusUpdate)
+bool Starship::bigLeftClicked(sf::RenderWindow &gWindow, std::string &statusUpdate, int &tempNum)
 {
 	for (int i = 0; i < CLKNUM; i++)
 	{
 		if (shipObjects[i]->isTargeted(gWindow))
-			gainItem(i, statusUpdate);
-	}		
+		{
+			if (gainItem(i, statusUpdate)){
+				tempNum = i;
+				return true;
+			}
+		}		
+	}	
+	return false;
 }
 
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
@@ -113,13 +119,20 @@ void Starship::bigLeftClicked(sf::RenderWindow &gWindow, std::string &statusUpda
 //  Checks all ship objects for mouse selection
 //
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
-void Starship::bigRightClicked(sf::RenderWindow &gWindow, std::string &statusUpdate)
+bool Starship::bigRightClicked(sf::RenderWindow &gWindow, std::string &statusUpdate, int &tempNum)
 {
 	for (int i = 0; i < CLKNUM; i++)
 	{
 		if (shipObjects[i]->isTargeted(gWindow))
-			loseItem(i, statusUpdate);
+		{
+			if (loseItem(i, statusUpdate))
+			{
+				tempNum = i;
+				return true;
+			}			
+		}
 	}
+	return false;
 }
 
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 

@@ -26,6 +26,7 @@ public:
 		rCap = 4;			///////////////////////  SB 2 except for science which should be 4.
 		this->name = name;
 	}	
+	int getQty(){ return qty; }
 	int getRCap() const  { return rCap; }
 	bool loseItem(std::string &error);
 	bool gainItem(std::string &error);

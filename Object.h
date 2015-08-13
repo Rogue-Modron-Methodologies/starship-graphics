@@ -18,7 +18,6 @@
 enum direction { Down, Left, Right, Up };
 enum cTypes{ trade, colony, pirate, adventure, lost };
 
-
 class Object 
 {
 private: 
