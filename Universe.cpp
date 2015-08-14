@@ -10,6 +10,128 @@
 #include "Universe.h"
 #include "Game.h"
 
+
+// (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
+//
+//  Constructor
+//
+// (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
+Universe::Universe(ResourceManager<sf::Texture> &txtMgr)
+{
+	board = new Object(txtMgr.getResource("resources/board/starrynight.png"), sf::Vector2f(0, 0));
+	board->setScale({ 3.1f, 3.6f });
+
+	if (!font.loadFromFile(FNTFLE)){
+		std::cout << "Font not Loaded" << std::endl;
+	}
+
+	flightSector[0].icon = new Object(txtMgr.getResource("resources/cards/CardBackground.png"), sf::Vector2f(100, 150), 10, sf::Vector2u(200, 300));
+	flightSector[0].text.setFont(font);
+	flightSector[0].text.Bold;
+	flightSector[0].text.setScale(sf::Vector2f(5, 5));
+	flightSector[0].text.setString("1");
+	flightSector[0].text.setPosition({ 175, 200 });
+
+	flightSector[1].icon = new Object(txtMgr.getResource("resources/cards/CardBackground.png"), sf::Vector2f(300, 150), 10, sf::Vector2u(200, 300));
+	flightSector[1].text.setFont(font);
+	flightSector[1].text.Bold;
+	flightSector[1].text.setScale(sf::Vector2f(5, 5));
+	flightSector[1].text.setString("2");
+	flightSector[1].text.setPosition({ 360, 200 });
+
+	flightSector[2].icon = new Object(txtMgr.getResource("resources/cards/CardBackground.png"), sf::Vector2f(500, 150), 10, sf::Vector2u(200, 300));
+	flightSector[2].text.setFont(font);
+	flightSector[2].text.Bold;
+	flightSector[2].text.setScale(sf::Vector2f(5, 5));
+	flightSector[2].text.setString("3");
+	flightSector[2].text.setPosition({ 560, 200 });
+
+	flightSector[3].icon = new Object(txtMgr.getResource("resources/cards/CardBackground.png"), sf::Vector2f(700, 150), 10, sf::Vector2u(200, 300));
+	flightSector[3].text.setFont(font);
+	flightSector[3].text.Bold;
+	flightSector[3].text.setScale(sf::Vector2f(5, 5));
+	flightSector[3].text.setString("4");
+	flightSector[3].text.setPosition({ 760, 200 });
+
+	S1 = new Card*[10];
+	S2 = new Card*[10];
+	S3 = new Card*[10];
+	S4 = new Card*[10];
+	SE = new Card*[28];
+	AD = new Card*[9];
+	cAdv = new Card*[3];
+	universeSetup();
+	adventureDeckSetup();
+	ExtraDeckPtr = 0;
+	advPtr = 0;
+}
+
+// (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
+//
+//  Adds a Card to the Sector and increments the Pointer
+//
+// (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
+Universe::~Universe()
+{
+	for (int i = 0; i < 4; i++)
+		delete flightSector[i].icon;
+	for (int i = 0; i < 10; i++)
+		delete S1[i];
+	for (int i = 0; i < 10; i++)
+		delete S2[i];
+	for (int i = 0; i < 10; i++)
+		delete S3[i];
+	for (int i = 0; i < 10; i++)
+		delete S4[i];
+	for (int i = 0; i < 28; i++)
+		delete SE[i];
+	for (int i = 0; i < 9; i++)
+		delete AD[i];
+	for (int i = 0; i < 3; i++)
+		delete cAdv[i];
+	delete[] S1;
+	delete[] S2;
+	delete[] S3;
+	delete[] S4;
+	delete[] SE;
+	delete[] AD;
+	delete[] cAdv;
+	delete board;	
+}
+
+// (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
+//
+//  Draws the Sector Icons to the Screen
+//
+// (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
+void Universe::drawSectors(sf::RenderWindow &gWindow)
+{
+	for (int i = 0; i < 4; i++)
+	{
+		flightSector[i].icon->draw(gWindow);
+		gWindow.draw(flightSector[i].text);
+	}
+
+}
+
+// (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
+//
+//  Checks to see if any of the sectors are clicked
+//
+// (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
+bool Universe::sectorsTargeted(sf::RenderWindow &gWindow, int &num)
+{
+	for (int i = 0; i < 4; i++)
+	{
+		if (flightSector[i].icon->isTargeted(gWindow))
+		{
+			num = i;
+			return true;
+		}
+	}
+	return false;
+}
+
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
 //
 //  Adds a Card to the Sector and increments the Pointer
@@ -245,19 +367,19 @@ void Universe::universeSetup()
 				list0[ctr0] = tempCard;
 				ctr0++;
 				break;
-			case 1:							// 7 cards will eventually be in deck 0 (Starter cards)
+			case 1:							// 7 cards will eventually be in deck 1 (Reserve Deck 1 cards)
 				list1[ctr1] = tempCard;
 				ctr1++;
 				break;
-			case 2:							// 7 cards will eventually be in deck 0 (Starter cards)
+			case 2:							// 7 cards will eventually be in deck 2 (Reserve Deck 2 cards)
 				list2[ctr2] = tempCard;
 				ctr2++;
 				break;
-			case 3:							// 7 cards will eventually be in deck 0 (Starter cards)
+			case 3:							// 7 cards will eventually be in deck 3 (Reserve Deck 3 cards)
 				list3[ctr3] = tempCard;
 				ctr3++;
 				break;
-			case 4:							// 7 cards will eventually be in deck 0 (Starter cards)
+			case 4:							// 7 cards will eventually be in deck 4 (Reserve Deck 4 cards)
 				list4[ctr4] = tempCard;
 				ctr4++;
 				break;
@@ -271,7 +393,7 @@ void Universe::universeSetup()
 //	shuffleDeck(list4, ctr4);
 	int count = 0;
 
-	for (int j = 0; j < 10; j++)			// Sectors 1-4 are populated into 4 stacks of 10 cards from deck 0 
+	for (int j = 0; j < 10; j++)				// Sectors 1-4 are populated into 4 stacks of 10 cards from deck 0 
 	{ 
 		setSector(list0[count], 1, j);
 		count++;
@@ -285,7 +407,7 @@ void Universe::universeSetup()
 
 	count = 0;
 
-	for (int i = 0; i < ctr1; i++, count++)	// the extra stack of cards is created from cards in decks 1 - 4.
+	for (int i = 0; i < ctr1; i++, count++)		// the extra stack of cards is created from cards in decks 1 - 4.
 		setSector(list1[i], 5, count);
 
 	for (int i = 0; i < ctr2; i++, count++)

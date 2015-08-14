@@ -242,7 +242,7 @@ void updateList(sf::Vector2f pos, sf::Vector2f scale)
 		walker = walker->getNext();
 		cardCnt++;
 	}
-	if (scale == CRDLSCL)
+	if (scale == CRDZNSCL)
 		smallDisplay = false;
 	else
 		smallDisplay = true;

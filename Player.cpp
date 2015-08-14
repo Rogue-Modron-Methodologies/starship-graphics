@@ -124,9 +124,7 @@ void Player::updateIcon(int type)
 		statistics[type].icon->setQty(tempNum); 
 		statistics[type].text.setString(std::to_string(tempNum));
 	}
-
 }
-
 
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
 //  
@@ -160,10 +158,10 @@ void Player::makeBig()
 	starship->makeBig();
 	cZoneString.setPosition(CLPOS - sf::Vector2f(0, 35));
 	ColonyZone->setIconOnly(true);
-	ColonyZone->updateList(CLPOS, CRDLSCL);
+	ColonyZone->updateList(CLPOS, CRDZNSCL);
 	tZoneString.setPosition(TLPOS - sf::Vector2f(0, 35));
 	TradeZone->setIconOnly(true);
-	TradeZone->updateList(TLPOS, CRDLSCL);
+	TradeZone->updateList(TLPOS, CRDZNSCL);
 }
 
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
@@ -190,10 +188,10 @@ void Player::makeSmall()
 void Player::expandColonyZone()
 {
 	cZoneString.setPosition(CLPOS - sf::Vector2f(0, 35));
-	ColonyZone->updateList(CLPOS, CRDLSCL);
+	ColonyZone->updateList(CLPOS, CRDZNSCL);
 	ColonyZone->setIconOnly(false);
 	tZoneString.setPosition(sf::Vector2f(1050, 575));
-	TradeZone->updateList(sf::Vector2f(1050,610), CRDLSCL);
+	TradeZone->updateList(sf::Vector2f(1050, 610), CRDZNSCL);
 	TradeZone->setIconOnly(true);
 }
 
@@ -205,10 +203,10 @@ void Player::expandColonyZone()
 void Player::expandTradeZone()
 {
 	tZoneString.setPosition(CLPOS - sf::Vector2f(0, 35));
-	TradeZone->updateList(CLPOS, CRDLSCL);
+	TradeZone->updateList(CLPOS, CRDZNSCL);
 	TradeZone->setIconOnly(false);
 	cZoneString.setPosition(sf::Vector2f(1050, 575));
-	ColonyZone->updateList(sf::Vector2f(1050, 610), CRDLSCL);
+	ColonyZone->updateList(sf::Vector2f(1050, 610), CRDZNSCL);
 	ColonyZone->setIconOnly(true);
 }
 
@@ -226,5 +224,4 @@ void Player::drawCPlyrStats(sf::RenderWindow &gWindow)
 	}
 	gWindow.draw(cZoneString);
 	gWindow.draw(tZoneString);
-
 }

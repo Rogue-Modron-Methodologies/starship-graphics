@@ -14,42 +14,41 @@
 #include "ColonyCard.h"		
 #include "Pirate.h"
 #include "AdventureCard.h"
-#include "Object.h"
+
+const int CARDLISTSIZE = 71;					//  number of cards in the deck
+const std::string CARDLIST = "starship.csv";
+const std::string ADVENTURELIST = "starship2.csv";
 
 class Universe{
 private:
+	sf::Font font;
 	Object *board;
-	Card* S1[10];
-	Card* S2[10];
-	Card* S3[10];
-	Card* S4[10];
-	Card* SE[28];
-	Card* AD[9];
-	Card* cAdv[3];
+	Icon flightSector[4];
+	Card **S1;				//  Sector 1
+	Card **S2;				//  Sector 2
+	Card **S3;				//  Sector 3
+	Card **S4;				//  Sector 4
+	Card **SE;				//  ????
+	Card **AD;				//  ??
+	Card **cAdv;				//  ???
 	int ExtraDeckPtr;
 	int advPtr;
 
 public:
-	Universe(ResourceManager<sf::Texture> &txtMgr)
-	{
-		board = new Object (txtMgr.getResource("resources/board/starrynight.png"), sf::Vector2f(0, 0));
-		board->setScale({ 3.1f, 3.6f });
-		universeSetup();
-		adventureDeckSetup();
-		ExtraDeckPtr = 0;
-		advPtr = 0;
-	}
-	~Universe() 
-	{	delete board;	}
+	Universe(ResourceManager<sf::Texture> &txtMgr);
+	~Universe();
 	// Getters and Setters
 	Card** getSector(int num);
 	Card* getAdvCard(int i);
 	Object *getBoard() const { return board; }
+	Icon getFlightSector() const { return flightSector[0]; }
 	void setSector(Card* nCard, int sNum, int cNum);
 	void shuffleDeck(Card* list[], int size);
 	void addCardtoSector(int secNum, int i);
 	void addCardtoAdvDeck(int i);
 	void printCurrentAdventure(sf::RenderWindow &gWindow);
+	void drawSectors(sf::RenderWindow &gWindow);
+	bool sectorsTargeted(sf::RenderWindow &gWindow, int &num);
 
 private:
 	void universeSetup();

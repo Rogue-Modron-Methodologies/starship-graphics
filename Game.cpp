@@ -70,34 +70,34 @@ void Game::playerSetup()
 
 	//M		colony	Carbon	1	N/A	0	1	Colony: Alioth VIII
 	tempCard = new ColonyCard(-1, "Colony: Alioth VIII", colony, Carbon, 1, 1, txtMgr.getResource(STRFILE), CLPOS);
-	tempCard->setScale(CRDSSCL);
+	tempCard->setScale(CRDZNSCL);
 //	tempCard->setSrcPos({ 1, 0 });
 	tempCard->updateTextRect();
 	P1->getColonyZone()->insertNode(tempCard);
 
 	///////////////////////   BEGIN TEST STUFF
-	tempCard = new ColonyCard(-1, "Colony: Alioth VIII", colony, Carbon, 1, 1, txtMgr.getResource(STRFILE), { 400, 690 });
-	tempCard->setScale({ .35f, .35f });
+	tempCard = new ColonyCard(-1, "Colony: Alioth VIII", colony, Carbon, 1, 1, txtMgr.getResource(STRFILE), { 200, 300 });
+	tempCard->setScale(CRDZNSCL);
 	tempCard->updateTextRect();
 	P1->getColonyZone()->insertNode(tempCard);
 
-	tempCard = new ColonyCard(-1, "Colony: Alioth VIII", colony, Carbon, 1, 1, txtMgr.getResource(STRFILE), { 400, 690 });
-	tempCard->setScale({ .35f, .35f });
+	tempCard = new ColonyCard(-1, "Colony: Alioth VIII", colony, Carbon, 1, 1, txtMgr.getResource(STRFILE), { 200, 300 });
+	tempCard->setScale(CRDZNSCL);
 	tempCard->updateTextRect();
 	P1->getColonyZone()->insertNode(tempCard);
 
-	tempCard = new ColonyCard(-1, "Colony: Alioth VIII", colony, Carbon, 1, 1, txtMgr.getResource(STRFILE), { 400, 690 });
-	tempCard->setScale({ .35f, .35f });
+	tempCard = new ColonyCard(-1, "Colony: Alioth VIII", colony, Carbon, 1, 1, txtMgr.getResource(STRFILE), { 200, 300 });
+	tempCard->setScale(CRDZNSCL);
 	tempCard->updateTextRect();
 	P1->getColonyZone()->insertNode(tempCard);
 
-	tempCard = new ColonyCard(-1, "Colony: Alioth VIII", colony, Carbon, 1, 1, txtMgr.getResource(STRFILE), { 400, 690 });
-	tempCard->setScale({ .35f, .35f });
+	tempCard = new ColonyCard(-1, "Colony: Alioth VIII", colony, Carbon, 1, 1, txtMgr.getResource(STRFILE), { 200, 300 });
+	tempCard->setScale(CRDZNSCL);
 	tempCard->updateTextRect();
 	P1->getTradeZone()->insertNode(tempCard);
 
-	tempCard = new ColonyCard(-1, "Colony: Alioth VIII", colony, Carbon, 1, 1, txtMgr.getResource(STRFILE), { 400, 690 });
-	tempCard->setScale({ .35f, .35f });
+	tempCard = new ColonyCard(-1, "Colony: Alioth VIII", colony, Carbon, 1, 1, txtMgr.getResource(STRFILE), { 200, 300 });
+	tempCard->setScale(CRDZNSCL);
 	tempCard->updateTextRect();
 	P1->getTradeZone()->insertNode(tempCard);
 
@@ -106,7 +106,7 @@ void Game::playerSetup()
 
 	//S		colony	Fuel		1	N/A	0	1	Colony: Megrez VII
 	tempCard = new ColonyCard(-1, "Colony: Megrez VII", colony, Fuel, 1, 1, txtMgr.getResource(STRFILE), CLPOS);
-	tempCard->setScale(CRDSSCL);
+	tempCard->setScale(CRDZNSCL);
 	tempCard->setSrcPos({ 1, 0 });
 	tempCard->updateTextRect();
 	P2->getColonyZone()->insertNode(tempCard);
@@ -130,8 +130,8 @@ void Game::gameLoop()
 //		cout << "Q to Toggle Win Condition\n";
 //		cin >> choice;
 //	}
+	int tempNum;
 	sf::Event event;
-	int tempType;
 	while (gWindow.isOpen())
 	{
 		if (!phaseSetupComplete)
@@ -151,119 +151,35 @@ void Game::gameLoop()
 			case sf::Event::MouseButtonPressed:
 				switch (cPhase)
 				{
-				case production:
-					// Colony Zone (Large Icon) is clicked
-					if (!cPlyr->getColonyZone()->isSmall() && cPlyr->getColonyZone()->showIconOnly() && cPlyr->getColonyZone()->isIconTargeted(gWindow))
-					{
-						if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
-							cPlyr->expandColonyZone();
-						else if (sf::Mouse::isButtonPressed(sf::Mouse::Right))
-							cPlyr->makeBig();
-					}
-					else if (!cPlyr->getTradeZone()->isSmall() && cPlyr->getTradeZone()->showIconOnly() && cPlyr->getTradeZone()->isIconTargeted(gWindow))
-					{
-						if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
-							cPlyr->expandTradeZone();
-						else if (sf::Mouse::isButtonPressed(sf::Mouse::Right))
-							cPlyr->makeBig();
-					}
-					// Colony Zone (Large List) is clicked and player is entitled to a production resource
-					else if (!cPlyr->getColonyZone()->isSmall() && !cPlyr->getColonyZone()->showIconOnly() && cPlyr->getColonyZone()->isZoneTargeted(gWindow, tempType))
-					{
-						if (gainProductionResource && sf::Mouse::isButtonPressed(sf::Mouse::Left))
-							if (cPlyr->getStarship()->gainItem(tempType, statusUpdate))
-							{
-								cPlyr->updateIcon(tempType);
-								phaseComplete = true;
-								gainProductionResource = false;
-								infoString.setString("Press Enter to End Phase");
-							}
-					}
+				case production: 
+					productionPhaseListener(gWindow);
 					break;
-				case flight:
+				case flight:	
+					flightPhaseListener(gWindow);
 					break;
-				case trades:
+				case trades:	
+					tradePhaseListener(gWindow);
 					break;
-				case build:
-					// Starship (Small) is clicked
-					if (cPlyr->getStarship()->isTargeted(gWindow) && cPlyr->getStarship()->isSmall())
-					{
-						if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
-							cPlyr->makeBig();
-					}
-					// Starship (Large) is clicked
-					else if (cPlyr->getStarship()->isTargeted(gWindow) && !cPlyr->getStarship()->isSmall())
-					{
-						if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
-						{
-							if (cPlyr->getStarship()->bigLeftClicked(gWindow, statusUpdate, tempType))
-								cPlyr->updateIcon(tempType);
-						}
-						else if (sf::Mouse::isButtonPressed(sf::Mouse::Right))
-						{
-							if (cPlyr->getStarship()->bigRightClicked(gWindow, statusUpdate, tempType))
-								cPlyr->updateIcon(tempType);
-						}
-					}
-					// Colony Zone (Large Icon) is clicked
-					else if (!cPlyr->getColonyZone()->isSmall() && cPlyr->getColonyZone()->showIconOnly() && cPlyr->getColonyZone()->isIconTargeted(gWindow))
-					{
-						if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
-							cPlyr->expandColonyZone();
-						else if (sf::Mouse::isButtonPressed(sf::Mouse::Right))
-							cPlyr->makeBig();
-					}
-					else if (!cPlyr->getTradeZone()->isSmall() && cPlyr->getTradeZone()->showIconOnly() && cPlyr->getTradeZone()->isIconTargeted(gWindow))
-					{
-						if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
-							cPlyr->expandTradeZone();
-						else if (sf::Mouse::isButtonPressed(sf::Mouse::Right))
-							cPlyr->makeBig();
-					}
-					// Colony Zone (Large List) is clicked
-					else if (!cPlyr->getColonyZone()->isSmall() && !cPlyr->getColonyZone()->showIconOnly() && cPlyr->getColonyZone()->isZoneTargeted(gWindow, tempType))
-					{
-						if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
-							cPlyr->getStarship()->gainItem(tempType, statusUpdate);
-						else if (sf::Mouse::isButtonPressed(sf::Mouse::Right))
-							cPlyr->getStarship()->loseItem(tempType, statusUpdate);
-					}
-					// Trade Zone (Large List) is clicked
-					else if (!cPlyr->getTradeZone()->isSmall() && !cPlyr->getTradeZone()->showIconOnly() && cPlyr->getTradeZone()->isZoneTargeted(gWindow, tempType))
-					{
-						if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
-						{
-							if(cPlyr->getStarship()->gainItem(tempType, statusUpdate))
-								cPlyr->updateIcon(tempType);
-						}	
-						else if (sf::Mouse::isButtonPressed(sf::Mouse::Right))
-						{
-							if(cPlyr->getStarship()->loseItem(tempType, statusUpdate))
-								cPlyr->updateIcon(tempType);
-						}
-					}
-					//  Starship (Large) && Empty Space is clicked
-					else if (!cPlyr->getStarship()->isTargeted(gWindow) && !cPlyr->getStarship()->isSmall())
-					{
-						cPlyr->makeSmall();
-					}
+				case build:	
+					buildPhaseListener(gWindow);
+					break;
 				}			
-			break;
 			case sf::Event::MouseMoved:
 				switch (cPhase)
 				{
 				case production:
 					break;
 				case flight:
+					std::cout << std::endl;
+					if (universe->sectorsTargeted(gWindow, tempNum) && cPlyr->getStarship()->isSmall())
+						std::cout << "Sector " << tempNum + 1 << " Glows" << std::endl;
 					break;
 				case trades:
 					break;
 				case build:
 					std::cout << std::endl;
 					if (cPlyr->getStarship()->isTargeted(gWindow) && cPlyr->getStarship()->isSmall())
-					{
 						std::cout << "P1 Ship Glows" << std::endl;
-					}
 					break;
 				}
 			}				
@@ -324,7 +240,8 @@ void Game::phaseSetup()
 	case flight:
 		phaseNameString.setString("Flight Phase");
 		cPlyr->makeSmall();
-		infoString.setString("Max Flight: " + std::to_string(cPlyr->getStarship()->getMaxDistance()));
+		infoString.setString("Max Flight: " + std::to_string(cPlyr->getStarship()->getMaxDistance()) + "\nMax Actions: 2" +
+			"\n\t\t\t\t\t\t\t\t\tChoose a sector");
 		break;
 	case trades:
 		phaseNameString.setString("Trade Phase");
@@ -366,22 +283,28 @@ void Game::endPhase()
 void Game::updateGameWindow(sf::RenderWindow &gWindow)
 {
 	universe->getBoard()->draw(gWindow);
-	cPlyr->draw(gWindow);
-	gWindow.draw(phaseNameString);
-	gWindow.draw(infoString);
-	if (cPhase == production)
+		switch (cPhase)
 	{
+	case production:
 		flightDie.icon->draw(gWindow);
 		gWindow.draw(flightDie.text);
+		break;
+	case flight:
+		universe->drawSectors(gWindow);
+		break;
+	default:
+		break;
 	}
-		
+	gWindow.draw(phaseNameString);
+	gWindow.draw(infoString);	
+	cPlyr->draw(gWindow);		
 	if (statusUpdate.length())
 		setError(statusUpdate);
 	statusUpdate.clear();
 	if (errorTimer)
 	{
 		gWindow.draw(errorString);
-		errorString.setColor(sf::Color(255, 0, 0, errorTimer / 4));
+		errorString.setColor(sf::Color(255, 0, 0, errorTimer / 10));
 		errorTimer--;
 	}
 }
@@ -391,7 +314,7 @@ void Game::updateGameWindow(sf::RenderWindow &gWindow)
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
 void Game::setError(std::string error)
 {
-	errorTimer = 1020;
+	errorTimer = 2550;
 	errorString.setString(error);
 }
 
@@ -405,4 +328,204 @@ int Game::rollSpeedDie()
 	flightDie.icon->updateTextRect();
 	flightDie.text.setString("Dice roll: " + std::to_string(num + 1));
 	return num + 1;
+}
+
+// (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
+//  Deals with Mouse Click actions in the Production Phase
+// (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
+void Game::productionPhaseListener(sf::RenderWindow &gWindow)
+{
+	int tempType;
+	// Colony Zone (Large Icon) is clicked
+	if (!cPlyr->getColonyZone()->isSmall() && cPlyr->getColonyZone()->showIconOnly() && cPlyr->getColonyZone()->isIconTargeted(gWindow))
+	{
+		if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+			cPlyr->expandColonyZone();
+		else if (sf::Mouse::isButtonPressed(sf::Mouse::Right))
+			cPlyr->makeBig();
+	}
+	else if (!cPlyr->getTradeZone()->isSmall() && cPlyr->getTradeZone()->showIconOnly() && cPlyr->getTradeZone()->isIconTargeted(gWindow))
+	{
+		if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+			cPlyr->expandTradeZone();
+		else if (sf::Mouse::isButtonPressed(sf::Mouse::Right))
+			cPlyr->makeBig();
+	}
+	// Colony Zone (Large List) is clicked and player is entitled to a production resource
+	else if (!cPlyr->getColonyZone()->isSmall() && !cPlyr->getColonyZone()->showIconOnly() && cPlyr->getColonyZone()->isZoneTargeted(gWindow, tempType))
+	{
+		if (gainProductionResource && sf::Mouse::isButtonPressed(sf::Mouse::Left))
+			if (cPlyr->getStarship()->gainItem(tempType, statusUpdate))
+			{
+				cPlyr->updateIcon(tempType);
+				phaseComplete = true;
+				gainProductionResource = false;
+				infoString.setString("Press Enter to End Phase");
+			}
+	}
+}
+
+// (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
+//  Deals with Mouse Click actions in the Flight Phase
+// (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
+void Game::flightPhaseListener(sf::RenderWindow &gWindow)
+{
+	int tempType;
+	// Starship (Small) is clicked
+	if (cPlyr->getStarship()->isTargeted(gWindow) && cPlyr->getStarship()->isSmall())
+	{
+		if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+			cPlyr->makeBig();
+	}
+	// Starship (Large) is clicked
+	else if (cPlyr->getStarship()->isTargeted(gWindow) && !cPlyr->getStarship()->isSmall()){}	// Do Nothing this Phase
+	// Colony Zone (Large Icon) is clicked
+	else if (!cPlyr->getColonyZone()->isSmall() && cPlyr->getColonyZone()->showIconOnly() && cPlyr->getColonyZone()->isIconTargeted(gWindow))
+	{
+		if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+			cPlyr->expandColonyZone();
+		else if (sf::Mouse::isButtonPressed(sf::Mouse::Right))
+			cPlyr->makeBig();
+	}
+	// Trade Zone (Large Icon) is clicked
+	else if (!cPlyr->getTradeZone()->isSmall() && cPlyr->getTradeZone()->showIconOnly() && cPlyr->getTradeZone()->isIconTargeted(gWindow))
+	{
+		if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+			cPlyr->expandTradeZone();
+		else if (sf::Mouse::isButtonPressed(sf::Mouse::Right))
+			cPlyr->makeBig();
+	}
+	// Colony Zone (Large List) is clicked
+	else if (!cPlyr->getColonyZone()->isSmall() && !cPlyr->getColonyZone()->showIconOnly() && cPlyr->getColonyZone()->isZoneTargeted(gWindow, tempType)){}	// Do Nothing this Phase
+	// Trade Zone (Large List) is clicked
+	else if (!cPlyr->getTradeZone()->isSmall() && !cPlyr->getTradeZone()->showIconOnly() && cPlyr->getTradeZone()->isZoneTargeted(gWindow, tempType)){}		// Do Nothing this Phase
+	//  Starship (Large) && Empty Space is clicked
+	else if (!cPlyr->getStarship()->isTargeted(gWindow) && !cPlyr->getStarship()->isSmall())
+		cPlyr->makeSmall();
+	//  Starship (Large) && Empty Space is clicked
+	else if (!cPlyr->getStarship()->isTargeted(gWindow) && !cPlyr->getStarship()->isSmall())
+		cPlyr->makeSmall();
+
+}
+
+// (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
+//  Deals with Mouse Click actions in the Trade Phase
+// (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
+void Game::tradePhaseListener(sf::RenderWindow &gWindow)
+{
+	int tempType;
+	// Starship (Small) is clicked
+	if (cPlyr->getStarship()->isTargeted(gWindow) && cPlyr->getStarship()->isSmall())
+	{
+		if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+			cPlyr->makeBig();
+	}
+	// Starship (Large) is clicked
+	else if (cPlyr->getStarship()->isTargeted(gWindow) && !cPlyr->getStarship()->isSmall()){}	// Do Nothing this Phase
+	// Colony Zone (Large Icon) is clicked
+	else if (!cPlyr->getColonyZone()->isSmall() && cPlyr->getColonyZone()->showIconOnly() && cPlyr->getColonyZone()->isIconTargeted(gWindow))
+	{
+		if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+			cPlyr->expandColonyZone();
+		else if (sf::Mouse::isButtonPressed(sf::Mouse::Right))
+			cPlyr->makeBig();
+	}
+	// Trade Zone (Large Icon) is clicked
+	else if (!cPlyr->getTradeZone()->isSmall() && cPlyr->getTradeZone()->showIconOnly() && cPlyr->getTradeZone()->isIconTargeted(gWindow))
+	{
+		if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+			cPlyr->expandTradeZone();
+		else if (sf::Mouse::isButtonPressed(sf::Mouse::Right))
+			cPlyr->makeBig();
+	}
+	// Colony Zone (Large List) is clicked
+	else if (!cPlyr->getColonyZone()->isSmall() && !cPlyr->getColonyZone()->showIconOnly() && cPlyr->getColonyZone()->isZoneTargeted(gWindow, tempType)){}	// Do Nothing this Phase
+	// Trade Zone (Large List) is clicked
+	else if (!cPlyr->getTradeZone()->isSmall() && !cPlyr->getTradeZone()->showIconOnly() && cPlyr->getTradeZone()->isZoneTargeted(gWindow, tempType)){}		// Do Nothing this Phase
+	//  Starship (Large) && Empty Space is clicked
+	else if (!cPlyr->getStarship()->isTargeted(gWindow) && !cPlyr->getStarship()->isSmall())
+		cPlyr->makeSmall();
+	//  Starship (Large) && Empty Space is clicked
+	else if (!cPlyr->getStarship()->isTargeted(gWindow) && !cPlyr->getStarship()->isSmall())
+		cPlyr->makeSmall();
+
+}
+
+// (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
+//  Deals with Mouse Click actions in the Build Phase
+// (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
+void Game::buildPhaseListener(sf::RenderWindow &gWindow)
+{
+	int tempType;
+	// Starship (Small) is clicked
+	if (cPlyr->getStarship()->isTargeted(gWindow) && cPlyr->getStarship()->isSmall())
+	{
+		if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+			cPlyr->makeBig();
+	}
+	// Starship (Large) is clicked
+	else if (cPlyr->getStarship()->isTargeted(gWindow) && !cPlyr->getStarship()->isSmall())
+	{
+		if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+		{
+			if (cPlyr->getStarship()->bigLeftClicked(gWindow, statusUpdate, tempType))
+				cPlyr->updateIcon(tempType);
+		}
+		else if (sf::Mouse::isButtonPressed(sf::Mouse::Right))
+		{
+			if (cPlyr->getStarship()->bigRightClicked(gWindow, statusUpdate, tempType))
+				cPlyr->updateIcon(tempType);
+		}
+	}
+	// Colony Zone (Large Icon) is clicked
+	else if (!cPlyr->getColonyZone()->isSmall() && cPlyr->getColonyZone()->showIconOnly() && cPlyr->getColonyZone()->isIconTargeted(gWindow))
+	{
+		if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+			cPlyr->expandColonyZone();
+		else if (sf::Mouse::isButtonPressed(sf::Mouse::Right))
+			cPlyr->makeBig();
+	}
+	// Trade Zone (Large Icon) is clicked
+	else if (!cPlyr->getTradeZone()->isSmall() && cPlyr->getTradeZone()->showIconOnly() && cPlyr->getTradeZone()->isIconTargeted(gWindow))
+	{
+		if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+			cPlyr->expandTradeZone();
+		else if (sf::Mouse::isButtonPressed(sf::Mouse::Right))
+			cPlyr->makeBig();
+	}
+	// Colony Zone (Large List) is clicked
+	else if (!cPlyr->getColonyZone()->isSmall() && !cPlyr->getColonyZone()->showIconOnly() && cPlyr->getColonyZone()->isZoneTargeted(gWindow, tempType))
+	{
+		if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+		{
+			if (cPlyr->getStarship()->gainItem(tempType, statusUpdate))
+				cPlyr->updateIcon(tempType);
+		}
+		else if (sf::Mouse::isButtonPressed(sf::Mouse::Right))
+		{
+			if (cPlyr->getStarship()->loseItem(tempType, statusUpdate))
+				cPlyr->updateIcon(tempType);
+		}
+
+	}
+	// Trade Zone (Large List) is clicked
+	else if (!cPlyr->getTradeZone()->isSmall() && !cPlyr->getTradeZone()->showIconOnly() && cPlyr->getTradeZone()->isZoneTargeted(gWindow, tempType))
+	{
+		if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+		{
+			if (cPlyr->getStarship()->gainItem(tempType, statusUpdate))
+				cPlyr->updateIcon(tempType);
+		}
+		else if (sf::Mouse::isButtonPressed(sf::Mouse::Right))
+		{
+			if (cPlyr->getStarship()->loseItem(tempType, statusUpdate))
+				cPlyr->updateIcon(tempType);
+		}
+	}
+	//  Starship (Large) && Empty Space is clicked
+	else if (!cPlyr->getStarship()->isTargeted(gWindow) && !cPlyr->getStarship()->isSmall())
+	{
+		cPlyr->makeSmall();
+	}
+
 }

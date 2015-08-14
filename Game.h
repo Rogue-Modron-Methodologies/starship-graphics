@@ -18,10 +18,6 @@
 #include <sstream>
 #include "SFML/Graphics.hpp"
 
-
-const int CARDLISTSIZE = 71;					//  number of cards in the deck
-const std::string CARDLIST = "starship.csv";
-const std::string ADVENTURELIST = "starship2.csv";
 const std::string SDIEFLE = "resources/board/flightdie.png";
 
 enum Phases{ production, flight, trades, build };
@@ -78,6 +74,10 @@ private:
 	void endPhase();
 	void setError(std::string error);
 	int rollSpeedDie();
+	void productionPhaseListener(sf::RenderWindow &gWindow);
+	void flightPhaseListener(sf::RenderWindow &gWindow);
+	void tradePhaseListener(sf::RenderWindow &gWindow);
+	void buildPhaseListener(sf::RenderWindow &gWindow);
 
 };
 

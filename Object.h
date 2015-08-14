@@ -17,6 +17,7 @@
 
 enum direction { Down, Left, Right, Up };
 enum cTypes{ trade, colony, pirate, adventure, lost };
+const std::string FNTFLE = "resources/board/unique.ttf";		//  Source file name for Font
 
 class Object 
 {
@@ -53,4 +54,9 @@ public:
 	sf::Vector2f convertCoord(sf::RenderWindow &gWindow);
 };
 
+struct Icon						// For When an object needs to be paired with displayable text
+{
+	sf::Text text;					//  Text String
+	Object *icon;					//  Icon 
+};
 #endif  // OBJECT_H

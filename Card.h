@@ -12,10 +12,11 @@
 
 #include "Object.h"
 
-const sf::Vector2f CRDSIZE = { 500, 500 };
-const sf::Vector2u CSRCSZE = { 125, 193 };
-const sf::Vector2f CRDSSCL = sf::Vector2f(.75f, .75f);		//  Card Small Scale
-const sf::Vector2f CRDLSCL = sf::Vector2f(1.0f, 1.0f);		//  Card Large Scale
+//const sf::Vector2f CRDSIZE = { 500, 500 };
+const sf::Vector2u CSRCSZE = { 200, 300 };
+const sf::Vector2f CRDSSCL = sf::Vector2f(.45f, .45f);		//  Card Small Scale for Icons
+const sf::Vector2f CRDZNSCL = sf::Vector2f(.70f, .70f);	//  Card Scale for when in Colony or Trade Zone
+const sf::Vector2f CRDLSCL = sf::Vector2f(1.0f, 1.0f);		//  Card Large Scale for when in the Universe
 class Card : public Object
 {
 private:
