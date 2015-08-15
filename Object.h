@@ -27,10 +27,11 @@ protected:
 	int qty;
 	sf::Sprite *sprite;
 	sf::Vector2u srcSize;		// file source size
-	sf::Vector2u srcPos;		// file source position
+
 	bool smallDisplay;
 
-public:
+public:	
+	sf::Vector2u srcPos;		// file source position
 	Object(){};
 	Object(const sf::Texture &texture, sf::Vector2f pos, int num = 1, sf::Vector2u srcSize = { 0, 0 }, sf::Vector2u srcPos = { 0, 0 });
 	~Object() { delete sprite; };

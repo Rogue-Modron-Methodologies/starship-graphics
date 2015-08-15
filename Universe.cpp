@@ -24,7 +24,6 @@ Universe::Universe(ResourceManager<sf::Texture> &txtMgr)
 	if (!font.loadFromFile(FNTFLE)){
 		std::cout << "Font not Loaded" << std::endl;
 	}
-
 	flightSector[0].icon = new Object(txtMgr.getResource("resources/cards/CardBackground.png"), sf::Vector2f(100, 150), 10, sf::Vector2u(200, 300));
 	flightSector[0].text.setFont(font);
 	flightSector[0].text.Bold;
@@ -60,7 +59,7 @@ Universe::Universe(ResourceManager<sf::Texture> &txtMgr)
 	SE = new Card*[28];
 	AD = new Card*[9];
 	cAdv = new Card*[3];
-	universeSetup();
+	universeSetup(txtMgr);
 	adventureDeckSetup();
 	ExtraDeckPtr = 0;
 	advPtr = 0;
@@ -111,8 +110,40 @@ void Universe::drawSectors(sf::RenderWindow &gWindow)
 		flightSector[i].icon->draw(gWindow);
 		gWindow.draw(flightSector[i].text);
 	}
-
 }
+
+// (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
+//
+//  Intializes the current flight path
+//
+// (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
+void Universe::initializeFlightPath(int tempType)
+{
+	sectorNum = tempType + 1;
+	currentMove = 10;												///  debugging only
+	//flightPath.push_back(getSector(sectorNum)[0]);
+}
+
+// (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
+//
+//  Draws the Flight Path
+//
+// (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
+void Universe::drawFlightPath(sf::RenderWindow &gWindow)
+{
+	float xPos = 100;
+	float yPos = 150;
+	//std::cout << "Sector Num: " << sectorNum << std::endl;
+	for (int i = 0; i < currentMove; i++)
+	{
+		getSector(sectorNum)[i]->setScale(CRDSSCL);
+		getSector(sectorNum)[i]->setPosition({ xPos + i * 100, yPos });
+		getSector(sectorNum)[i]->displayCard(gWindow);
+		//std::cout << getSector(sectorNum)[i]->getName() << "\t" << getSector(sectorNum)[i]->srcPos.x << " " << getSector(sectorNum)[i]->srcPos.y << std::endl;
+	}
+	//cin.get();
+}
+
 
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
 //
@@ -266,7 +297,7 @@ void Universe::adventureDeckSetup()
 		/*H*/	getline(ss, temp, ',');
 		vicPts = stoi(temp);
 		ss.clear();
-		
+
 		tempCard = new AdventureCard(deckNum, name, -1, mission, requirement, resourceNum, astro, fame, vicPts);
 		switch (deckNum)
 		{
@@ -315,14 +346,15 @@ void Universe::adventureDeckSetup()
 //  Setting up the Flight Zone
 //
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
-void Universe::universeSetup()
+void Universe::universeSetup(ResourceManager<sf::Texture> &txtMgr)
 {
 	std::stringstream ss;
 	std::string name, buffer, transaction, temp;
-	int deckNum, value, pts, resource, limit, type;
+	int deckNum, value, pts, resource, limit, type, srcX, srcY;
 	int ctr0 = 0, ctr1 = 0, ctr2 = 0, ctr3 = 0, ctr4 = 0;
 	Card* list0[40]; Card* list1[7]; Card* list2[7]; Card* list3[7]; Card* list4[7];
 	Card* tempCard = 0;
+	sf::Vector2u srcPos;
 
 	std::ifstream inputFile(CARDLIST.c_str());
 	if (!inputFile)
@@ -350,16 +382,21 @@ void Universe::universeSetup()
 /*G*/	getline(ss, temp, ',');
 		pts = stoi(temp);
 /*H*/	getline(ss, name, ',');
+/*I*/	getline(ss, temp, ',');
+		srcX = stoi(temp);
+/*I*/	getline(ss, temp, ',');
+		srcY = stoi(temp);
+		srcPos = sf::Vector2u(srcX, srcY);
 		ss.clear();
 
 		if (type == 0)
-			tempCard = new TradeCard(deckNum, name, type, resource, value, transaction, limit, pts);
+			tempCard = new TradeCard(txtMgr.getResource(CARDIMAGES), srcPos, deckNum, name, type, resource, value, transaction, limit, pts);
 		else if (type == 1)
-			tempCard = new ColonyCard(deckNum, name, type, resource, value, pts);
+			tempCard = new ColonyCard(txtMgr.getResource(CARDIMAGES), srcPos, deckNum, name, type, resource, value, pts);
 		else if (type == 2)
-			tempCard = new Pirate(deckNum, name, type, resource, value, transaction, pts);
+			tempCard = new Pirate(txtMgr.getResource(CARDIMAGES), srcPos, deckNum, name, type, resource, value, transaction, pts);
 		else
-			tempCard = new Card(deckNum, name, type);
+			tempCard = new Card(txtMgr.getResource(CARDIMAGES), srcPos, type, deckNum, name);
 
 		switch (deckNum)
 		{
@@ -367,7 +404,7 @@ void Universe::universeSetup()
 				list0[ctr0] = tempCard;
 				ctr0++;
 				break;
-			case 1:							// 7 cards will eventually be in deck 1 (Reserve Deck 1 cards)
+			case 1:							// 7 cards will eventually be in deck 1 (Reserve Deck 1 cards)				
 				list1[ctr1] = tempCard;
 				ctr1++;
 				break;
@@ -404,6 +441,13 @@ void Universe::universeSetup()
 		setSector(list0[count], 4, j);
 		count++;
 	}
+
+	//for (int i = 0; i < 10; i++)
+	//{
+	//	std::cout << S1[i]->getName() << std::endl;
+	//	std::cout << S1[i]->srcPos.x << " " << S1[i]->srcPos.y << std::endl;
+	//}
+		
 
 	count = 0;
 

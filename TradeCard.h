@@ -23,8 +23,8 @@ private:
 	int pts;
 
 public:
-	TradeCard(int num, std::string name, int type, int resource,
-		int cost, std::string transaction, int limit, int pts) : Card(num, name, type)
+
+	TradeCard(const sf::Texture &texture, sf::Vector2u srcPos, int num, std::string name, int type, int resource, int cost, std::string transaction, int limit, int pts) : Card(texture, srcPos, type, num, name)
 	{
 		this->resource = resource;
 		this->cost = cost;

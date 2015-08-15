@@ -40,6 +40,8 @@ private:
 	int combatDie[6];
 	bool phaseSetupComplete;				//  Flag 
 	bool gainProductionResource;			//  Flag for enabling free colony resource
+	bool displaySectors;				//  Flag for displaying Sectors
+	bool sectorSelected;				//  Flag for whether a sector has been chosen this turn
 	bool phaseComplete;					//  Flag
 
 public:
@@ -75,7 +77,8 @@ private:
 	void setError(std::string error);
 	int rollSpeedDie();
 	void productionPhaseListener(sf::RenderWindow &gWindow);
-	void flightPhaseListener(sf::RenderWindow &gWindow);
+	void flightPhaseListener(sf::RenderWindow &gWindow, int tempType);
+	void flightPhaseSectorSelectionListener(sf::RenderWindow &gWindow, int &tempType);
 	void tradePhaseListener(sf::RenderWindow &gWindow);
 	void buildPhaseListener(sf::RenderWindow &gWindow);
 

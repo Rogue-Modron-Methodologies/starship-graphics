@@ -40,6 +40,7 @@ public:
 
 	//  Getters/Setters
 	int getMaxDistance() const  { return maxMovement;	}
+	int getMaxActions() const  { return maxActions; }
 
 	//  Misc Inline Functions
 	void calcMaxDistance(int dieRoll)  { maxMovement = (dieRoll + totalBoosters()); }	

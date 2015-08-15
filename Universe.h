@@ -17,6 +17,7 @@
 
 const int CARDLISTSIZE = 71;					//  number of cards in the deck
 const std::string CARDLIST = "starship.csv";
+const std::string CARDIMAGES = "resources/cards/universeCards.png";
 const std::string ADVENTURELIST = "starship2.csv";
 
 class Universe{
@@ -28,9 +29,12 @@ private:
 	Card **S2;				//  Sector 2
 	Card **S3;				//  Sector 3
 	Card **S4;				//  Sector 4
-	Card **SE;				//  ????
-	Card **AD;				//  ??
-	Card **cAdv;				//  ???
+	Card **SE;				//  Extra Cards waiting to be put into Sectors
+	Card **AD;				//  Adventure Deck
+	Card **cAdv;				//  Current Adventure????
+	std::vector<Icon> flightPath;
+	int currentMove;
+	int sectorNum;
 	int ExtraDeckPtr;
 	int advPtr;
 
@@ -48,10 +52,12 @@ public:
 	void addCardtoAdvDeck(int i);
 	void printCurrentAdventure(sf::RenderWindow &gWindow);
 	void drawSectors(sf::RenderWindow &gWindow);
+	void drawFlightPath(sf::RenderWindow &gWindow);
 	bool sectorsTargeted(sf::RenderWindow &gWindow, int &num);
+	void initializeFlightPath(int tempType);
 
 private:
-	void universeSetup();
+	void universeSetup(ResourceManager<sf::Texture> &txtMgr);
 	void adventureDeckSetup();
 	
 };

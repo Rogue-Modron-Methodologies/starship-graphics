@@ -30,10 +30,7 @@ public:
 		this->name = name;
 		this->type = type;
 	}
-
-
-	Card(const sf::Texture &texture, sf::Vector2f pos, int type = 0, sf::Vector2u srcPos = { 0, 0 }, int num = 0, std::string name = "")
-		: Object(texture, pos, num, CSRCSZE, srcPos)
+	Card(const sf::Texture &texture, sf::Vector2u srcPos, int type = 0, int num = 0, std::string name = "", sf::Vector2f pos= { 0, 0 }) : Object(texture, pos, num, CSRCSZE, srcPos)
 	{
 		this->qty = num;
 		this->name = name;

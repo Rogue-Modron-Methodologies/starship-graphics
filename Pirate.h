@@ -22,7 +22,7 @@ private:
 	int pts;					// num of hero points
 
 public:
-	Pirate(int num, std::string name, int type, int cost, int cannons, std::string result, int pts) : Card(num, name, type)
+	Pirate(const sf::Texture &texture, sf::Vector2u srcPos, int num, std::string name, int type, int cost, int cannons, std::string result, int pts) : Card(texture, srcPos, type, num, name)
 	{
 		this->cost = cost;
 		this->cannons = cannons;
