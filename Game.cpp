@@ -153,7 +153,7 @@ void Game::gameLoop()
 				case production: 
 					productionPhaseListener(gWindow);
 					break;
-				case flight:	
+				case flight:
 					if (!sectorSelected)
 						flightPhaseSectorSelectionListener(gWindow, tempNum);
 					if (sectorSelected)
@@ -219,7 +219,8 @@ void Game::phaseSetup()
 {	
 	int dieRoll;
 	std::string tempString;
-	switch (cPhase)
+		phaseComplete = false;	
+		switch (cPhase)
 	{
 	case production:
 		phaseNameString.setString("Production Phase");
@@ -228,39 +229,37 @@ void Game::phaseSetup()
 		dieRoll = rollSpeedDie();
 		cPlyr->getStarship()->calcMaxDistance(dieRoll);
 		tempString.clear();
-
+		
 		if (cPlyr->getColonyZone()->findColonyResource(dieRoll))
 		{
 			tempString += " Resource(s) in Colony Zone Found!.  Press Select One.";
 			gainProductionResource = true;
-			phaseComplete = true; //sb false????
 		}
 		else
-		{
 			tempString += " No Resources in Colony Zone.  Press Enter to end Phase.";
-			phaseComplete = true;
-		}
+		phaseComplete = true;
 		infoString.setString(tempString);			
 		break;
 	case flight:
 		phaseNameString.setString("Flight Phase");
 		cPlyr->makeSmall();
-		infoString.setString("Flight: 1 / " + std::to_string(cPlyr->getStarship()->getMaxDistance()) + "\nMax Actions: 0 / 2" +
-			"\n\t\t\t\t\t\t\t\t\tChoose a sector");
+		infoString.setString("Flight: 1 / " + std::to_string(cPlyr->getStarship()->getMaxDistance()) + "\nMax Actions: 0 / " + 
+			std::to_string(cPlyr->getStarship()->getMaxActions()) + "\n\t\t\t\t\t\t\t\t\t\tChoose a sector");
 		displaySectors = true;
 		sectorSelected = false;
-		phaseComplete = false;
 		break;
 	case trades:
 		phaseNameString.setString("Trade Phase");
-		infoString.setString("Max Trades: 2");
+		infoString.setString("Max Trades: 2\n\t\t\t\t\t\t\t\t\t\tPress Enter to end Phase");
 		cPlyr->makeBig();
 		cPlyr->expandTradeZone();
+		phaseComplete = true;		//  Only until there is an actual trade phase coded
 		break;
 	case build:
 		phaseNameString.setString("Build Phase");
-		infoString.setString("Max Builds: N/A");
+		infoString.setString("Max Builds: N/A\n\t\t\t\t\t\t\t\t\t\tPress Enter to end Phase");
 		cPlyr->makeBig();
+		phaseComplete = true;		//  Only until there is an actual build phase coded
 		break;
 	}
 	phaseSetupComplete = true;
@@ -465,9 +464,46 @@ void Game::flightPhaseListener(sf::RenderWindow &gWindow, int tempType)
 	else if (!cPlyr->getColonyZone()->isSmall() && !cPlyr->getColonyZone()->showIconOnly() && cPlyr->getColonyZone()->isZoneTargeted(gWindow, tempType)){}	// Do Nothing this Phase
 	// Trade Zone (Large List) is clicked
 	else if (!cPlyr->getTradeZone()->isSmall() && !cPlyr->getTradeZone()->showIconOnly() && cPlyr->getTradeZone()->isZoneTargeted(gWindow, tempType)){}		// Do Nothing this Phase
+	// Objects in the FlightPath are clicked but not the current planet
+	else if (universe->flightPathTargeted(gWindow, tempType) && tempType != universe->getCurrentMove() - 1 && cPlyr->getStarship()->isSmall())
+	{
+		std::cout << "Flight Path Object " << tempType << " Clicked" << std::endl;
+	}
+	// Current Planet in the FlightPath is clicked
+	else if (universe->flightPathTargeted(gWindow, tempType) && tempType == universe->getCurrentMove() - 1 && cPlyr->getStarship()->isSmall())
+	{
+		std::cout << "Current Planet Clicked" << std::endl;
+	}
+	// Current Planet's Menu in the FlightPath is clicked
+	else if (universe->menuOptionTargeted(gWindow, tempType)  && cPlyr->getStarship()->isSmall()) // && tempType == universe->getCurrentMove() - 1
+	{
+		std::cout << "Current Planet Option " << tempType << " Clicked" << std::endl;
+		switch (tempType + 1)
+		{
+		case 1:
+			break;
+		case 2:
+			break;
+		case 3:
+			universe->continueFlight();
+			break;
+		case 4:
+			endPhase();
+			break;
+		}
+	}
 	//  Starship (Large) && Empty Space is clicked
 	else if (!cPlyr->getStarship()->isTargeted(gWindow) && !cPlyr->getStarship()->isSmall())
 		cPlyr->makeSmall();
+
+}
+
+// (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
+//  Deals with Mouse Click actions in the Flight Phase
+// (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
+void Game::tradeMenu(sf::RenderWindow &gWindow, int tempType)
+{
+	std::cout << "TradeMenu" << std::endl;
 
 }
 

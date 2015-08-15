@@ -30,6 +30,7 @@ private:
 	sf::Vector2u screenSize;
 	ResourceManager<sf::Texture> txtMgr;
 	sf::Font font;
+	int actionNum;
 	int cPhase;						//  Current Phase Num
 	sf::Text phaseNameString;			//  Phase Name Text String
 	sf::Text errorString;				//  Error Text String
@@ -81,6 +82,7 @@ private:
 	void flightPhaseSectorSelectionListener(sf::RenderWindow &gWindow, int &tempType);
 	void tradePhaseListener(sf::RenderWindow &gWindow);
 	void buildPhaseListener(sf::RenderWindow &gWindow);
+	void tradeMenu(sf::RenderWindow &gWindow, int tempType);
 
 };
 

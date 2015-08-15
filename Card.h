@@ -12,7 +12,6 @@
 
 #include "Object.h"
 
-//const sf::Vector2f CRDSIZE = { 500, 500 };
 const sf::Vector2u CSRCSZE = { 200, 300 };
 const sf::Vector2f CRDSSCL = sf::Vector2f(.45f, .45f);		//  Card Small Scale for Icons
 const sf::Vector2f CRDZNSCL = sf::Vector2f(.70f, .70f);	//  Card Scale for when in Colony or Trade Zone
@@ -119,8 +118,6 @@ public:
 	{	return -100;	}
 	virtual int getVicPts() const
 	{	return -100;	}
-	void displayCard(sf::RenderWindow &gWindow){
-		draw(gWindow);
-	}
+
 };
 #endif // CARD_H

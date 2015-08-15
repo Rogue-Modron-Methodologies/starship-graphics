@@ -52,6 +52,31 @@ Universe::Universe(ResourceManager<sf::Texture> &txtMgr)
 	flightSector[3].text.setString("4");
 	flightSector[3].text.setPosition({ 760, 200 });
 
+	cPlanet.setFont(font);
+	cPlanet.setString("Current Planet");
+	cPlanet.setPosition(835, 480);
+
+	menu[trdW].icon = new Object(txtMgr.getResource("resources/board/iconTemp.png"), sf::Vector2f(760, 610), 0);
+	menu[trdW].text.setFont(font);
+	menu[trdW].text.setString("Trade With Planet");
+	menu[trdW].text.setPosition({ 520, 610 });
+
+	menu[colIt].icon = new Object(txtMgr.getResource("resources/board/iconTemp.png"), sf::Vector2f(760, 660), 0);
+	menu[colIt].text.setFont(font);
+	menu[colIt].text.setString("Colonize the Planet");
+	menu[colIt].text.setPosition({ 500, 660 });
+
+	menu[conFly].icon = new Object(txtMgr.getResource("resources/board/iconTemp.png"), sf::Vector2f(760, 710), 0);
+	menu[conFly].text.setFont(font);
+	menu[conFly].text.setString("Continue Flying");
+	menu[conFly].text.setPosition({ 550, 710 });
+
+	menu[endFl].icon = new Object(txtMgr.getResource("resources/board/iconTemp.png"), sf::Vector2f(760, 760), 0);
+	menu[endFl].text.setFont(font);
+	menu[endFl].text.setString("End Phase");
+	menu[endFl].text.setPosition({ 600, 760 });
+
+
 	S1 = new Card*[10];
 	S2 = new Card*[10];
 	S3 = new Card*[10];
@@ -72,6 +97,8 @@ Universe::Universe(ResourceManager<sf::Texture> &txtMgr)
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
 Universe::~Universe()
 {
+	for (int i = 0; i < MENUSIZE; i++)
+		delete menu[i].icon;
 	for (int i = 0; i < 4; i++)
 		delete flightSector[i].icon;
 	for (int i = 0; i < 10; i++)
@@ -114,14 +141,49 @@ void Universe::drawSectors(sf::RenderWindow &gWindow)
 
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
 //
+//  Checks to see if any of the sectors are clicked
+//
+// (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
+bool Universe::sectorsTargeted(sf::RenderWindow &gWindow, int &num)
+{
+	for (int i = 0; i < 4; i++)
+	{
+		if (flightSector[i].icon->isTargeted(gWindow))
+		{
+			num = i;
+			return true;
+		}
+	}
+	return false;
+}
+
+// (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
+//
+//  Checks to see if any objects in the flightpath are clicked
+//
+// (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
+bool Universe::flightPathTargeted(sf::RenderWindow &gWindow, int &num)
+{
+	for (int i = 0; i < currentMove; i++)
+	{
+		if (getSector(sectorNum)[i]->isTargeted(gWindow))
+		{
+			num = i;
+			return true;
+		}
+	}
+	return false;
+}
+
+// (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
+//
 //  Intializes the current flight path
 //
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
 void Universe::initializeFlightPath(int tempType)
 {
 	sectorNum = tempType + 1;
-	currentMove = 10;												///  debugging only
-	//flightPath.push_back(getSector(sectorNum)[0]);
+	currentMove = 1;												///  debugging only
 }
 
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
@@ -133,28 +195,83 @@ void Universe::drawFlightPath(sf::RenderWindow &gWindow)
 {
 	float xPos = 100;
 	float yPos = 150;
-	//std::cout << "Sector Num: " << sectorNum << std::endl;
+	//  Draws the flightPath taken so far
 	for (int i = 0; i < currentMove; i++)
 	{
 		getSector(sectorNum)[i]->setScale(CRDSSCL);
 		getSector(sectorNum)[i]->setPosition({ xPos + i * 100, yPos });
-		getSector(sectorNum)[i]->displayCard(gWindow);
-		//std::cout << getSector(sectorNum)[i]->getName() << "\t" << getSector(sectorNum)[i]->srcPos.x << " " << getSector(sectorNum)[i]->srcPos.y << std::endl;
+		getSector(sectorNum)[i]->draw(gWindow);
 	}
-	//cin.get();
+	//  Draws the Current Planet
+	gWindow.draw(cPlanet);
+	getSector(sectorNum)[currentMove - 1]->setScale(CRDLSCL);
+	getSector(sectorNum)[currentMove - 1]->setPosition({ 825, 520 });
+	getSector(sectorNum)[currentMove - 1]->draw(gWindow);
+	drawFlightMenu(gWindow);
 }
 
+// (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
+//
+//  Configures the Flight Menu Options
+//
+// (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
+void Universe::drawFlightMenu(sf::RenderWindow &gWindow)
+{
+	for (int i = 0; i < MENUSIZE; i++)
+		menu[i].icon->setQty(0);
+	if (getSector(sectorNum)[currentMove - 1]->getType() == 2)		//  PIRATE
+	{
+		std::cout << "Pirate" << std::endl;
+	}
+	else                                                             //  NOT PIRATE
+	{	
+		menu[conFly].icon->setQty(1);
+		menu[endFl].icon->setQty(1);
+		if (getSector(sectorNum)[currentMove - 1]->getType() == 0)		//  Trade Planet
+		{
+			menu[trdW].icon->setQty(1);
+			if (getSector(sectorNum)[currentMove - 1]->getPts() == 1)	//  Can be colonized
+				menu[colIt].icon->setQty(1);
+		}
+		else if (getSector(sectorNum)[currentMove - 1]->getType() == 1)	//  Colony Planet
+		{
+			//std::cout << "Colony" << std::endl;
+		}
+		else                                                             //  Everything else
+		{
+			//std::cout << "Everything Else" << std::endl;
+		}
+	}
+	drawMenu(gWindow);
+}	
 
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
 //
-//  Checks to see if any of the sectors are clicked
+//  Draws the Flight Menu
 //
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
-bool Universe::sectorsTargeted(sf::RenderWindow &gWindow, int &num)
+void Universe::drawMenu(sf::RenderWindow &gWindow)
 {
-	for (int i = 0; i < 4; i++)
+	for (int i = 0; i < MENUSIZE; i++)
 	{
-		if (flightSector[i].icon->isTargeted(gWindow))
+		if (menu[i].icon->getQty() == 1)
+		{
+			menu[i].icon->draw(gWindow);
+			gWindow.draw(menu[i].text);
+		}
+	}	
+}
+
+// (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
+//
+//  Checks if any current Menu Options are chosen
+//
+// (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
+bool Universe::menuOptionTargeted(sf::RenderWindow &gWindow, int &num)
+{
+	for (int i = 0; i < MENUSIZE; i++)
+	{
+		if (menu[i].icon->getQty() == 1 && menu[i].icon->isTargeted(gWindow))
 		{
 			num = i;
 			return true;
@@ -195,7 +312,7 @@ void Universe::printCurrentAdventure(sf::RenderWindow &gWindow)
 	for (int i = 0; i < 3; i++)
 	{
 		std::cout << "Adventure Card " << i + 1 << std::endl;
-		cAdv[i]->displayCard(gWindow);
+		cAdv[i]->draw(gWindow);
 	}
 }
 
@@ -316,6 +433,9 @@ void Universe::adventureDeckSetup()
 			tAry4[ctr4] = tempCard;
 			ctr4++;
 			break;
+		default:
+			std::cout << "Default Adventure Deck Setup...  should never print\n" << std::endl;
+			break;
 		}
 	}
 
@@ -420,14 +540,17 @@ void Universe::universeSetup(ResourceManager<sf::Texture> &txtMgr)
 				list4[ctr4] = tempCard;
 				ctr4++;
 				break;
+			default:
+				std::cout << "Default Universe Setup...  should never print\n" << std::endl;
+				break;
 		}
 	}
 
-//	shuffleDeck(list0, ctr0);				// each of the decks are shuffed individually
-//	shuffleDeck(list1, ctr1);
-//	shuffleDeck(list2, ctr2);
-//	shuffleDeck(list3, ctr3);
-//	shuffleDeck(list4, ctr4);
+	//shuffleDeck(list0, ctr0);				// each of the decks are shuffed individually
+	//shuffleDeck(list1, ctr1);
+	//shuffleDeck(list2, ctr2);
+	//shuffleDeck(list3, ctr3);
+	//shuffleDeck(list4, ctr4);
 	int count = 0;
 
 	for (int j = 0; j < 10; j++)				// Sectors 1-4 are populated into 4 stacks of 10 cards from deck 0 
@@ -441,13 +564,6 @@ void Universe::universeSetup(ResourceManager<sf::Texture> &txtMgr)
 		setSector(list0[count], 4, j);
 		count++;
 	}
-
-	//for (int i = 0; i < 10; i++)
-	//{
-	//	std::cout << S1[i]->getName() << std::endl;
-	//	std::cout << S1[i]->srcPos.x << " " << S1[i]->srcPos.y << std::endl;
-	//}
-		
 
 	count = 0;
 

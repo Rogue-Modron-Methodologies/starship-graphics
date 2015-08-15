@@ -11,8 +11,7 @@
 #define TRADECARD_H
 
 #include "Card.h"
-//enum cTypes{ trade, colony, pirate, adventure, lost };
-//enum ResourcesAvailable { Carbon, Fuel, Ore, Science, TradeGood, Wheat, Any };
+
 class TradeCard : public Card
 {
 private:
@@ -32,18 +31,18 @@ public:
 		this->limit = limit;
 		this->pts = pts;
 	}
-	Card* operator= (Card* right)
-	{
-		setDeckNum(right->getDeckNum());
-		setName(right->getName());
-		setType(right->getType());
-		this->resource = resource;
-		this->cost = cost;
-		this->transaction = transaction;
-		this->limit = limit;
-		this->pts = pts;		
-		return this;
-	}
+	//Card* operator= (Card* right)
+	//{
+	//	setDeckNum(right->getDeckNum());
+	//	setName(right->getName());
+	//	setType(right->getType());
+	//	this->resource = resource;
+	//	this->cost = cost;
+	//	this->transaction = transaction;
+	//	this->limit = limit;
+	//	this->pts = pts;		
+	//	return this;
+	//}
 	~TradeCard() {}
 	// Getters and Setters
 	int getResource() const

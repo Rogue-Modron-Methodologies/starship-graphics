@@ -15,6 +15,8 @@
 #include "Pirate.h"
 #include "AdventureCard.h"
 
+enum menuOptions {trdW, colIt, conFly, endFl };
+const int MENUSIZE = 4;
 const int CARDLISTSIZE = 71;					//  number of cards in the deck
 const std::string CARDLIST = "starship.csv";
 const std::string CARDIMAGES = "resources/cards/universeCards.png";
@@ -24,7 +26,9 @@ class Universe{
 private:
 	sf::Font font;
 	Object *board;
-	Icon flightSector[4];
+	sf::Text cPlanet;
+	Icon menu[4];
+	Icon flightSector[MENUSIZE];
 	Card **S1;				//  Sector 1
 	Card **S2;				//  Sector 2
 	Card **S3;				//  Sector 3
@@ -32,7 +36,6 @@ private:
 	Card **SE;				//  Extra Cards waiting to be put into Sectors
 	Card **AD;				//  Adventure Deck
 	Card **cAdv;				//  Current Adventure????
-	std::vector<Icon> flightPath;
 	int currentMove;
 	int sectorNum;
 	int ExtraDeckPtr;
@@ -45,20 +48,25 @@ public:
 	Card** getSector(int num);
 	Card* getAdvCard(int i);
 	Object *getBoard() const { return board; }
-	Icon getFlightSector() const { return flightSector[0]; }
-	void setSector(Card* nCard, int sNum, int cNum);
-	void shuffleDeck(Card* list[], int size);
-	void addCardtoSector(int secNum, int i);
-	void addCardtoAdvDeck(int i);
+	int getCurrentMove(){ return currentMove; }
 	void printCurrentAdventure(sf::RenderWindow &gWindow);
 	void drawSectors(sf::RenderWindow &gWindow);
 	void drawFlightPath(sf::RenderWindow &gWindow);
 	bool sectorsTargeted(sf::RenderWindow &gWindow, int &num);
+	bool flightPathTargeted(sf::RenderWindow &gWindow, int &num);
 	void initializeFlightPath(int tempType);
+	bool menuOptionTargeted(sf::RenderWindow &gWindow, int &num);
+	void continueFlight(){ currentMove++; }
 
 private:
 	void universeSetup(ResourceManager<sf::Texture> &txtMgr);
 	void adventureDeckSetup();
-	
+	void addCardtoAdvDeck(int i);		
+	void shuffleDeck(Card* list[], int size);
+	void addCardtoSector(int secNum, int i);
+	Icon getFlightSector() const { return flightSector[0]; }
+	void setSector(Card* nCard, int sNum, int cNum);
+	void drawFlightMenu(sf::RenderWindow &gWindow);
+	void drawMenu(sf::RenderWindow &gWindow);
 };
 #endif // UNIVERSE_H

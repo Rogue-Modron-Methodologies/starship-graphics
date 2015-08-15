@@ -12,9 +12,9 @@
 
 #include "Card.h"
 #include <iostream>
-//enum cTypes{ trade, colony, pirate, adventure, lost };
-//enum ResourcesAvailable { Carbon, Fuel, Ore, Science, TradeGood, Wheat, Any };
+
 const std::string STRFILE = "resources/cards/colonystarter.png";		//  Source file name for starter colonies
+
 class ColonyCard : public Card
 {
 private:
@@ -23,12 +23,6 @@ private:
 	int vicPts;
 
 public:
-	ColonyCard(int num, std::string name, int type, int resource, int actNum, int vicPts)
-	{
-		this->resource = resource;
-		this->actNum = actNum;
-		this->vicPts = vicPts;
-	}
 	ColonyCard(const sf::Texture &texture, sf::Vector2u srcPos, int num, std::string name, int type, int resource, int actNum, int vicPts) 
 		: Card(texture, srcPos, type, num, name)
 	{

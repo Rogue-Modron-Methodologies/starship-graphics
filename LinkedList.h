@@ -148,7 +148,7 @@ void displayHead(sf::RenderWindow &gWindow)
 
 	// Position walker after the front sentinel.
 	walker = front->getNext();
-	walker->getData()->displayCard(gWindow);
+	walker->getData()->draw(gWindow);
 
 }
 
@@ -167,7 +167,7 @@ void displayList(sf::RenderWindow &gWindow) const{
 	// While walker doesn't point to rear, traverse the list.
 	while (walker != rear)
 	{
-		walker->getData()->displayCard(gWindow);
+		walker->getData()->draw(gWindow);
 		walker = walker->getNext();
 	}
 }
