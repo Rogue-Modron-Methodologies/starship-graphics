@@ -182,7 +182,7 @@ bool Universe::flightPathTargeted(sf::RenderWindow &gWindow, int &num)
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
 void Universe::initializeFlightPath(int tempType)
 {
-	sectorNum = tempType + 1;
+	sectorNum = tempType;
 	currentMove = 1;												///  debugging only
 }
 
@@ -335,16 +335,16 @@ void Universe::setSector(Card* nCard, int sNum, int cNum)
 {
 	switch (sNum)
 	{
-	case 1:
+	case 0:
 		S1[cNum] = nCard;
 		break;
-	case 2:
+	case 1:
 		S2[cNum] = nCard;
 		break;
-	case 3:
+	case 2:
 		S3[cNum] = nCard;
 		break;
-	case 4:
+	case 3:
 		S4[cNum] = nCard;
 		break;
 	default:
@@ -361,13 +361,13 @@ Card** Universe::getSector(int num)
 {
 	switch (num)
 	{
-	case 1:
+	case 0:
 		return S1;
-	case 2:
+	case 1:
 		return S2;
-	case 3:
+	case 2:
 		return S3;
-	case 4:
+	case 3:
 		return S4;
 	default:
 		return SE;
@@ -553,16 +553,21 @@ void Universe::universeSetup(ResourceManager<sf::Texture> &txtMgr)
 	//shuffleDeck(list4, ctr4);
 	int count = 0;
 
-	for (int j = 0; j < 10; j++)				// Sectors 1-4 are populated into 4 stacks of 10 cards from deck 0 
-	{ 
-		setSector(list0[count], 1, j);
-		count++;
-		setSector(list0[count], 2, j);
-		count++;
-		setSector(list0[count], 3, j);
-		count++;
-		setSector(list0[count], 4, j);
-		count++;
+	for (int i = 0; i < 10; i++) 	{ 
+		S1[i] = list0[count]; 		
+		count++; 
+	} 	
+	for (int i = 0; i < 10; i++) 	{ 
+		S2[i] = list0[count];  		
+		count++; 
+	} 	
+	for (int i = 0; i < 10; i++) 	{ 
+		S3[i] = list0[count]; 		
+		count++; 
+	} 	
+	for (int i = 0; i < 10; i++) 	{ 
+		S4[i] = list0[count]; 		
+		count++; 
 	}
 
 	count = 0;

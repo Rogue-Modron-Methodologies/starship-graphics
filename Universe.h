@@ -49,6 +49,7 @@ public:
 	Card* getAdvCard(int i);
 	Object *getBoard() const { return board; }
 	int getCurrentMove(){ return currentMove; }
+	Card* getCurrentPlanet(){ return getSector(sectorNum)[currentMove - 1]; }
 	void printCurrentAdventure(sf::RenderWindow &gWindow);
 	void drawSectors(sf::RenderWindow &gWindow);
 	void drawFlightPath(sf::RenderWindow &gWindow);

@@ -414,7 +414,7 @@ void Game::flightPhaseSectorSelectionListener(sf::RenderWindow &gWindow, int &te
 	//  Sector is Clicked
 	else if (universe->sectorsTargeted(gWindow, tempType) && cPlyr->getStarship()->isSmall())
 	{
-		std::cout << "Sector " << tempType + 1 << " Clicked" << std::endl;
+		std::cout << "Sector " << tempType  << " Clicked" << std::endl;
 		infoString.setString("Flight: 1 / " + std::to_string(cPlyr->getStarship()->getMaxDistance()) + "\nMax Actions: 0 / " + std::to_string(cPlyr->getStarship()->getMaxActions()));
 		displaySectors = false;
 		sectorSelected = true;
@@ -472,7 +472,9 @@ void Game::flightPhaseListener(sf::RenderWindow &gWindow, int tempType)
 	// Current Planet in the FlightPath is clicked
 	else if (universe->flightPathTargeted(gWindow, tempType) && tempType == universe->getCurrentMove() - 1 && cPlyr->getStarship()->isSmall())
 	{
-		std::cout << "Current Planet Clicked" << std::endl;
+		std::cout << "Current Planet: " << universe->getCurrentPlanet()->getName() << std::endl;
+		std::cout << "Deck Num: " << universe->getCurrentPlanet()->getDeckNum() << std::endl;
+		std::cout << "Type: " << universe->getCurrentPlanet()->getType() << std::endl;
 	}
 	// Current Planet's Menu in the FlightPath is clicked
 	else if (universe->menuOptionTargeted(gWindow, tempType)  && cPlyr->getStarship()->isSmall()) // && tempType == universe->getCurrentMove() - 1
