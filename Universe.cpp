@@ -503,9 +503,9 @@ void Universe::universeSetup(ResourceManager<sf::Texture> &txtMgr)
 		pts = stoi(temp);
 /*H*/	getline(ss, name, ',');
 /*I*/	getline(ss, temp, ',');
-		srcX = stoi(temp);
-/*I*/	getline(ss, temp, ',');
 		srcY = stoi(temp);
+/*I*/	getline(ss, temp, ',');
+		srcX = stoi(temp);
 		srcPos = sf::Vector2u(srcX, srcY);
 		ss.clear();
 
