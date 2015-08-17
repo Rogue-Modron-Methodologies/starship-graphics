@@ -76,8 +76,8 @@ Universe::Universe(ResourceManager<sf::Texture> &txtMgr)
 
 	menu[endFl]->icon = new Object(txtMgr.getResource("resources/board/iconTemp.png"), sf::Vector2f(760, 760), 0);
 	menu[endFl]->text.setFont(font);
-	menu[endFl]->text.setString("End Phase");
-	menu[endFl]->text.setPosition({ 600, 760 });
+	menu[endFl]->text.setString("End Flight");
+	menu[endFl]->text.setPosition({ 610, 760 });
 
 
 	S1 = new Card*[10];

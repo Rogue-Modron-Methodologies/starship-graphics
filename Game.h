@@ -33,6 +33,7 @@ private:
 	int actionNum;
 	int cPhase;						//  Current Phase Num
 	sf::Text phaseNameString;			//  Phase Name Text String
+	sf::Text specialString;				//  For End of Phase Messages (And Sector Selection)
 	sf::Text errorString;				//  Error Text String
 	std::string statusUpdate;			//  Catches errors from called functions
 	sf::Text infoString;				//  Info Text String
