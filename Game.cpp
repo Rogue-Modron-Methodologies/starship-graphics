@@ -33,25 +33,35 @@ Game::Game()
 	phaseSetupComplete = false;
 	phaseComplete = false;
 	gainProductionResource = false;
+	displayFlightPath = true;
 	displaySectors = true;
 	sectorSelected = false;
 	cPhase = production;
+
+	cPlanet.setFont(font);
+	cPlanet.setString("Current Planet");
+	cPlanet.setPosition(835, 480);
+
 	phaseNameString.setFont(font);
 	phaseNameString.setString("Production Phase");
 	phaseNameString.setPosition({ 200, 820 });		 
+	
 	errorString.setFont(font);
 	errorString.setStyle(sf::Text::Bold);
 	errorString.setPosition({ 550, 820 });   
 	errorTimer = 255;
+	
 	infoString.setFont(font);
 	infoString.setStyle(sf::Text::Bold);
 	infoString.setPosition({ 40, 30 });	
+	
 	specialString.setFont(font);
 	specialString.setString("End of Phase\n(Press Enter)");
 	specialString.setStyle(sf::Text::Bold);
 	specialString.setScale(2, 2);
 	specialString.setColor(sf::Color::Red);
 	specialString.setPosition({ 825, 25 });
+	
 	cPlyr = P2;
 	playerSetup();
 	initCDie();
@@ -311,7 +321,9 @@ void Game::updateGameWindow(sf::RenderWindow &gWindow)
 			universe->drawSectors(gWindow);
 		else
 		{
-			universe->drawFlightPath(gWindow);
+			if (displayFlightPath)
+				drawFlightPath(gWindow);
+			drawCurrentPlanet(gWindow);
 			if (!phaseComplete && actionNum < cPlyr->getStarship()->getMaxActions())
 			{
 				updateFlightMenu(gWindow);
@@ -324,8 +336,6 @@ void Game::updateGameWindow(sf::RenderWindow &gWindow)
 				infoString.setString("Flight Complete");
 				phaseComplete = true;
 			}
-
-	
 		}
 		break;
 	default:
@@ -481,7 +491,10 @@ void Game::flightPhaseListener(sf::RenderWindow &gWindow, int tempType)
 	if (cPlyr->getStarship()->isTargeted(gWindow) && cPlyr->getStarship()->isSmall())
 	{
 		if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
-			cPlyr->makeBig();	
+		{
+			cPlyr->makeBig();
+			displayFlightPath = false;
+		}
 	}
 	// Starship (Large) is clicked
 	else if (cPlyr->getStarship()->isTargeted(gWindow) && !cPlyr->getStarship()->isSmall()){}	// Do Nothing this Phase
@@ -506,19 +519,19 @@ void Game::flightPhaseListener(sf::RenderWindow &gWindow, int tempType)
 	// Trade Zone (Large List) is clicked
 	else if (!cPlyr->getTradeZone()->isSmall() && !cPlyr->getTradeZone()->showIconOnly() && cPlyr->getTradeZone()->isZoneTargeted(gWindow, tempType)){}		// Do Nothing this Phase
 	// Objects in the FlightPath are clicked but not the current planet
-	else if (!phaseComplete && universe->flightPathTargeted(gWindow, tempType) && tempType != universe->getCurrentMove() - 1 && cPlyr->getStarship()->isSmall())
+	else if (!phaseComplete && universe->flightPathTargeted(gWindow, tempType) && tempType != universe->getCurrentMove() - 1)
 	{
 		std::cout << "Flight Path Object " << tempType << " Clicked" << std::endl;
 	}
 	// Current Planet in the FlightPath is clicked
-	else if (!phaseComplete && universe->flightPathTargeted(gWindow, tempType) && tempType == universe->getCurrentMove() - 1 && cPlyr->getStarship()->isSmall())
+	else if (!phaseComplete && universe->flightPathTargeted(gWindow, tempType) && tempType == universe->getCurrentMove() - 1)
 	{
 		std::cout << "Current Planet: " << universe->getCurrentPlanet()->getName() << std::endl;
 		std::cout << "Deck Num: " << universe->getCurrentPlanet()->getDeckNum() << std::endl;
 		std::cout << "Type: " << universe->getCurrentPlanet()->getType() << std::endl;
 	}
 	// Current Planet's Menu in the FlightPath is clicked
-	else if (!phaseComplete && universe->menuOptionTargeted(gWindow, tempType) && cPlyr->getStarship()->isSmall())
+	else if (!phaseComplete && universe->menuOptionTargeted(gWindow, tempType))
 	{
 		std::cout << "Current Planet Option " << tempType << " Clicked" << std::endl;
 		switch (tempType + 1)
@@ -539,11 +552,12 @@ void Game::flightPhaseListener(sf::RenderWindow &gWindow, int tempType)
 	}
 	//  Starship (Large) && Empty Space is clicked
 	else if (!cPlyr->getStarship()->isTargeted(gWindow) && !cPlyr->getStarship()->isSmall())
+	{
 		cPlyr->makeSmall();
+		displayFlightPath = true;
+	}
 
 }
-
-
 
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
 //  Deals with Mouse Click actions in the Trade Phase
@@ -736,4 +750,35 @@ void Game::drawFlightMenu(sf::RenderWindow &gWindow)
 			gWindow.draw(universe->getMenuItem(i)->text);
 		}
 	}
+}
+
+// (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
+//
+//  Draws the Flight Path
+//
+// (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
+void Game::drawFlightPath(sf::RenderWindow &gWindow)
+{
+	float xPos = 100;
+	float yPos = 150;
+	//  Draws the flightPath taken so far
+	for (int i = 0; i < universe->getCurrentMove(); i++)
+	{
+		universe->getCurrentSector()[i]->setScale(CRDSSCL);
+		universe->getCurrentSector()[i]->setPosition({ xPos + i * 100, yPos });
+		universe->getCurrentSector()[i]->draw(gWindow);
+	}
+}
+
+// (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
+//
+//  Draws the Current Planet
+//
+// (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
+void Game::drawCurrentPlanet(sf::RenderWindow &gWindow)
+{
+	gWindow.draw(cPlanet);
+	universe->getCurrentPlanet()->setScale(CRDLSCL);
+	universe->getCurrentPlanet()->setPosition({ 825, 520 });
+	universe->getCurrentPlanet()->draw(gWindow);
 }

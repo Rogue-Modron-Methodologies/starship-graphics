@@ -37,12 +37,14 @@ private:
 	sf::Text errorString;				//  Error Text String
 	std::string statusUpdate;			//  Catches errors from called functions
 	sf::Text infoString;				//  Info Text String
+	sf::Text cPlanet;					//  Current Planet Text String
 	int errorTimer;
 	Icon flightDie;
 	int combatDie[6];
 	bool phaseSetupComplete;				//  Flag 
 	bool gainProductionResource;			//  Flag for enabling free colony resource
-	bool displaySectors;				//  Flag for displaying Sectors
+	bool displayFlightPath;				//  Flag for displaying flightPath (so it isn't displayed when focusing on the starship)
+	bool displaySectors;				//  Flag for displaying Sectors (so it isn't displayed when focusing on the starship)
 	bool sectorSelected;				//  Flag for whether a sector has been chosen this turn
 	bool phaseComplete;					//  Flag
 
@@ -86,6 +88,8 @@ private:
 	void tradeMenu(sf::RenderWindow &gWindow, int tempType);
 	void drawFlightMenu(sf::RenderWindow &gWindow);
 	void updateFlightMenu(sf::RenderWindow &gWindow);
+	void drawFlightPath(sf::RenderWindow &gWindow);
+	void drawCurrentPlanet(sf::RenderWindow &gWindow);
 
 };
 

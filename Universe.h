@@ -26,7 +26,6 @@ class Universe{
 private:
 	sf::Font font;
 	Object *board;
-	sf::Text cPlanet;
 	Icon **menu;
 	Icon flightSector[MENUSIZE];
 	Card **S1;				//  Sector 1
@@ -46,6 +45,7 @@ public:
 	~Universe();
 	// Getters and Setters
 	Card** getSector(int num);
+	Card** getCurrentSector(){ return getSector(sectorNum);}
 	Icon* getMenuItem(int num) { return menu[num]; }
 	Card* getAdvCard(int i);
 	Object *getBoard() const { return board; }
@@ -53,12 +53,12 @@ public:
 	Card* getCurrentPlanet(){ return getSector(sectorNum)[currentMove - 1]; }
 	void printCurrentAdventure(sf::RenderWindow &gWindow);
 	void drawSectors(sf::RenderWindow &gWindow);
-	void drawFlightPath(sf::RenderWindow &gWindow);
 	bool sectorsTargeted(sf::RenderWindow &gWindow, int &num);
 	bool flightPathTargeted(sf::RenderWindow &gWindow, int &num);
 	void initializeFlightPath(int tempType);
 	bool menuOptionTargeted(sf::RenderWindow &gWindow, int &num);
 	void continueFlight(){ currentMove++; }
+
 
 private:
 	void universeSetup(ResourceManager<sf::Texture> &txtMgr);

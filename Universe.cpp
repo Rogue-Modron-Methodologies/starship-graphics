@@ -52,10 +52,6 @@ Universe::Universe(ResourceManager<sf::Texture> &txtMgr)
 	flightSector[3].text.setString("4");
 	flightSector[3].text.setPosition({ 760, 200 });
 
-	cPlanet.setFont(font);
-	cPlanet.setString("Current Planet");
-	cPlanet.setPosition(835, 480);
-
 	menu = new Icon*[4];
 	for (int i = 0; i < MENUSIZE; i++)
 		menu[i] = new Icon;
@@ -190,29 +186,6 @@ void Universe::initializeFlightPath(int tempType)
 {
 	sectorNum = tempType;
 	currentMove = 1;												///  debugging only
-}
-
-// (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
-//
-//  Draws the Flight Path
-//
-// (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
-void Universe::drawFlightPath(sf::RenderWindow &gWindow)
-{
-	float xPos = 100;
-	float yPos = 150;
-	//  Draws the flightPath taken so far
-	for (int i = 0; i < currentMove; i++)
-	{
-		getSector(sectorNum)[i]->setScale(CRDSSCL);
-		getSector(sectorNum)[i]->setPosition({ xPos + i * 100, yPos });
-		getSector(sectorNum)[i]->draw(gWindow);
-	}
-	//  Draws the Current Planet
-	gWindow.draw(cPlanet);
-	getCurrentPlanet()->setScale(CRDLSCL);
-	getCurrentPlanet()->setPosition({ 825, 520 });
-	getCurrentPlanet()->draw(gWindow);
 }
 
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
