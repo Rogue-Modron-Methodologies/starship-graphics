@@ -27,7 +27,7 @@ private:
 	sf::Font font;
 	Object *board;
 	sf::Text cPlanet;
-	Icon menu[4];
+	Icon **menu;
 	Icon flightSector[MENUSIZE];
 	Card **S1;				//  Sector 1
 	Card **S2;				//  Sector 2
@@ -46,6 +46,7 @@ public:
 	~Universe();
 	// Getters and Setters
 	Card** getSector(int num);
+	Icon* getMenuItem(int num) { return menu[num]; }
 	Card* getAdvCard(int i);
 	Object *getBoard() const { return board; }
 	int getCurrentMove(){ return currentMove; }
@@ -67,7 +68,6 @@ private:
 	void addCardtoSector(int secNum, int i);
 	Icon getFlightSector() const { return flightSector[0]; }
 	void setSector(Card* nCard, int sNum, int cNum);
-	void drawFlightMenu(sf::RenderWindow &gWindow);
-	void drawMenu(sf::RenderWindow &gWindow);
+
 };
 #endif // UNIVERSE_H

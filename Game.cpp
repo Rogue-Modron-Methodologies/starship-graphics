@@ -243,7 +243,7 @@ void Game::phaseSetup()
 	case flight:
 		phaseNameString.setString("Flight Phase");
 		cPlyr->makeSmall();
-		infoString.setString("Flight: 1 / " + std::to_string(cPlyr->getStarship()->getMaxDistance()) + "\nMax Actions: 0 / " + 
+		infoString.setString("Flight: 0 / " + std::to_string(cPlyr->getStarship()->getMaxDistance()) + "\nMax Actions: 0 / " + 
 			std::to_string(cPlyr->getStarship()->getMaxActions()) + "\n\t\t\t\t\t\t\t\t\t\tChoose a sector");
 		displaySectors = true;
 		sectorSelected = false;
@@ -300,7 +300,13 @@ void Game::updateGameWindow(sf::RenderWindow &gWindow)
 		if (!sectorSelected)
 			universe->drawSectors(gWindow);
 		else
+		{
 			universe->drawFlightPath(gWindow);
+			updateFlightMenu(gWindow);
+			drawFlightMenu(gWindow);
+			infoString.setString("Flight: " + std::to_string(universe->getCurrentMove()) + " / " + std::to_string(cPlyr->getStarship()->getMaxDistance()) 
+			+ "\nMax Actions: " + std::to_string(actionNum) + " / " + std::to_string(cPlyr->getStarship()->getMaxActions()));		
+		}
 		break;
 	default:
 		break;
@@ -477,7 +483,7 @@ void Game::flightPhaseListener(sf::RenderWindow &gWindow, int tempType)
 		std::cout << "Type: " << universe->getCurrentPlanet()->getType() << std::endl;
 	}
 	// Current Planet's Menu in the FlightPath is clicked
-	else if (universe->menuOptionTargeted(gWindow, tempType)  && cPlyr->getStarship()->isSmall()) // && tempType == universe->getCurrentMove() - 1
+	else if (universe->menuOptionTargeted(gWindow, tempType)  && cPlyr->getStarship()->isSmall()) 
 	{
 		std::cout << "Current Planet Option " << tempType << " Clicked" << std::endl;
 		switch (tempType + 1)
@@ -629,4 +635,63 @@ void Game::buildPhaseListener(sf::RenderWindow &gWindow)
 		cPlyr->makeSmall();
 	}
 
+}
+
+
+// (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
+//
+//  Configures the Flight Menu Options
+//
+// (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
+void Game::updateFlightMenu(sf::RenderWindow &gWindow)
+{
+	for (int i = 0; i < MENUSIZE; i++)
+		universe->getMenuItem(i)->icon->setQty(0);
+	if (universe->getCurrentPlanet()->getType() == 2)		//  PIRATE
+	{
+		//std::cout << "Pirate" << std::endl;
+	}
+	else                                                             //  NOT PIRATE
+	{
+		if (universe->getCurrentMove() < cPlyr->getStarship()->getMaxDistance())
+			universe->getMenuItem(conFly)->icon->setQty(1);
+		universe->getMenuItem(endFl)->icon->setQty(1);
+		if (universe->getCurrentPlanet()->getType() == 0)		//  Trade Planet
+		{
+			universe->getMenuItem(trdW)->icon->setQty(1);
+			if (universe->getCurrentPlanet()->getPts() == 1)	//  Can be colonized
+			{
+				universe->getMenuItem(colIt)->text.setString("Establish Trade Post");
+				universe->getMenuItem(colIt)->text.setPosition({ 480, 660 });
+				universe->getMenuItem(colIt)->icon->setQty(1);
+			}
+		}
+		else if (universe->getCurrentPlanet()->getType() == 1)	//  Colony Planet
+		{
+			universe->getMenuItem(colIt)->text.setString("Colonize the Planet");
+			universe->getMenuItem(colIt)->text.setPosition({ 500, 660 });
+			universe->getMenuItem(colIt)->icon->setQty(1);
+		}
+		else                                                             //  Everything else
+		{
+			//std::cout << "Everything Else" << std::endl;
+		}
+	}
+}
+
+// (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
+//
+//  Draws the Flight Menu
+//
+// (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
+void Game::drawFlightMenu(sf::RenderWindow &gWindow)
+{
+	for (int i = 0; i < MENUSIZE; i++)
+	{
+		if (universe->getMenuItem(i)->icon->getQty() == 1)
+		{
+			universe->getMenuItem(i)->icon->draw(gWindow);
+			gWindow.draw(universe->getMenuItem(i)->text);
+		}
+	}
 }

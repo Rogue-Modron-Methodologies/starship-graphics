@@ -39,7 +39,7 @@ public:
 	~Starship();
 
 	//  Getters/Setters
-	int getMaxDistance() const  { return maxMovement;	}
+	int getMaxDistance() const  { return 10 /* maxMovement*/; } ///////////////////////////// debugging ONLY
 	int getMaxActions() const  { return maxActions; }
 
 	//  Misc Inline Functions

@@ -56,25 +56,28 @@ Universe::Universe(ResourceManager<sf::Texture> &txtMgr)
 	cPlanet.setString("Current Planet");
 	cPlanet.setPosition(835, 480);
 
-	menu[trdW].icon = new Object(txtMgr.getResource("resources/board/iconTemp.png"), sf::Vector2f(760, 610), 0);
-	menu[trdW].text.setFont(font);
-	menu[trdW].text.setString("Trade With Planet");
-	menu[trdW].text.setPosition({ 520, 610 });
+	menu = new Icon*[4];
+	for (int i = 0; i < MENUSIZE; i++)
+		menu[i] = new Icon;
 
-	menu[colIt].icon = new Object(txtMgr.getResource("resources/board/iconTemp.png"), sf::Vector2f(760, 660), 0);
-	menu[colIt].text.setFont(font);
-	menu[colIt].text.setString("Colonize the Planet");
-	menu[colIt].text.setPosition({ 500, 660 });
+	menu[trdW]->icon = new Object(txtMgr.getResource("resources/board/iconTemp.png"), sf::Vector2f(760, 610), 0);
+	menu[trdW]->text.setFont(font);
+	menu[trdW]->text.setString("Trade With Planet");
+	menu[trdW]->text.setPosition({ 520, 610 });
 
-	menu[conFly].icon = new Object(txtMgr.getResource("resources/board/iconTemp.png"), sf::Vector2f(760, 710), 0);
-	menu[conFly].text.setFont(font);
-	menu[conFly].text.setString("Continue Flying");
-	menu[conFly].text.setPosition({ 550, 710 });
+	menu[colIt]->icon = new Object(txtMgr.getResource("resources/board/iconTemp.png"), sf::Vector2f(760, 660), 0);
+	menu[colIt]->text.setFont(font);
 
-	menu[endFl].icon = new Object(txtMgr.getResource("resources/board/iconTemp.png"), sf::Vector2f(760, 760), 0);
-	menu[endFl].text.setFont(font);
-	menu[endFl].text.setString("End Phase");
-	menu[endFl].text.setPosition({ 600, 760 });
+
+	menu[conFly]->icon = new Object(txtMgr.getResource("resources/board/iconTemp.png"), sf::Vector2f(760, 710), 0);
+	menu[conFly]->text.setFont(font);
+	menu[conFly]->text.setString("Continue Flying");
+	menu[conFly]->text.setPosition({ 550, 710 });
+
+	menu[endFl]->icon = new Object(txtMgr.getResource("resources/board/iconTemp.png"), sf::Vector2f(760, 760), 0);
+	menu[endFl]->text.setFont(font);
+	menu[endFl]->text.setString("End Phase");
+	menu[endFl]->text.setPosition({ 600, 760 });
 
 
 	S1 = new Card*[10];
@@ -98,7 +101,9 @@ Universe::Universe(ResourceManager<sf::Texture> &txtMgr)
 Universe::~Universe()
 {
 	for (int i = 0; i < MENUSIZE; i++)
-		delete menu[i].icon;
+		delete menu[i]->icon;
+	for (int i = 0; i < MENUSIZE; i++)
+		delete menu[i];
 	for (int i = 0; i < 4; i++)
 		delete flightSector[i].icon;
 	for (int i = 0; i < 10; i++)
@@ -115,13 +120,14 @@ Universe::~Universe()
 		delete AD[i];
 	for (int i = 0; i < 3; i++)
 		delete cAdv[i];
-	delete[] S1;
-	delete[] S2;
-	delete[] S3;
-	delete[] S4;
-	delete[] SE;
-	delete[] AD;
-	delete[] cAdv;
+	delete [] S1;
+	delete [] S2;
+	delete [] S3;
+	delete [] S4;
+	delete [] SE;
+	delete [] AD;
+	delete [] cAdv;
+	delete [] menu;
 	delete board;	
 }
 
@@ -204,62 +210,9 @@ void Universe::drawFlightPath(sf::RenderWindow &gWindow)
 	}
 	//  Draws the Current Planet
 	gWindow.draw(cPlanet);
-	getSector(sectorNum)[currentMove - 1]->setScale(CRDLSCL);
-	getSector(sectorNum)[currentMove - 1]->setPosition({ 825, 520 });
-	getSector(sectorNum)[currentMove - 1]->draw(gWindow);
-	drawFlightMenu(gWindow);
-}
-
-// (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
-//
-//  Configures the Flight Menu Options
-//
-// (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
-void Universe::drawFlightMenu(sf::RenderWindow &gWindow)
-{
-	for (int i = 0; i < MENUSIZE; i++)
-		menu[i].icon->setQty(0);
-	if (getSector(sectorNum)[currentMove - 1]->getType() == 2)		//  PIRATE
-	{
-		std::cout << "Pirate" << std::endl;
-	}
-	else                                                             //  NOT PIRATE
-	{	
-		menu[conFly].icon->setQty(1);
-		menu[endFl].icon->setQty(1);
-		if (getSector(sectorNum)[currentMove - 1]->getType() == 0)		//  Trade Planet
-		{
-			menu[trdW].icon->setQty(1);
-			if (getSector(sectorNum)[currentMove - 1]->getPts() == 1)	//  Can be colonized
-				menu[colIt].icon->setQty(1);
-		}
-		else if (getSector(sectorNum)[currentMove - 1]->getType() == 1)	//  Colony Planet
-		{
-			//std::cout << "Colony" << std::endl;
-		}
-		else                                                             //  Everything else
-		{
-			//std::cout << "Everything Else" << std::endl;
-		}
-	}
-	drawMenu(gWindow);
-}	
-
-// (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
-//
-//  Draws the Flight Menu
-//
-// (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
-void Universe::drawMenu(sf::RenderWindow &gWindow)
-{
-	for (int i = 0; i < MENUSIZE; i++)
-	{
-		if (menu[i].icon->getQty() == 1)
-		{
-			menu[i].icon->draw(gWindow);
-			gWindow.draw(menu[i].text);
-		}
-	}	
+	getCurrentPlanet()->setScale(CRDLSCL);
+	getCurrentPlanet()->setPosition({ 825, 520 });
+	getCurrentPlanet()->draw(gWindow);
 }
 
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
@@ -271,7 +224,7 @@ bool Universe::menuOptionTargeted(sf::RenderWindow &gWindow, int &num)
 {
 	for (int i = 0; i < MENUSIZE; i++)
 	{
-		if (menu[i].icon->getQty() == 1 && menu[i].icon->isTargeted(gWindow))
+		if (menu[i]->icon->getQty() == 1 && menu[i]->icon->isTargeted(gWindow))
 		{
 			num = i;
 			return true;

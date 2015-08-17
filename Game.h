@@ -83,6 +83,8 @@ private:
 	void tradePhaseListener(sf::RenderWindow &gWindow);
 	void buildPhaseListener(sf::RenderWindow &gWindow);
 	void tradeMenu(sf::RenderWindow &gWindow, int tempType);
+	void drawFlightMenu(sf::RenderWindow &gWindow);
+	void updateFlightMenu(sf::RenderWindow &gWindow);
 
 };
 
