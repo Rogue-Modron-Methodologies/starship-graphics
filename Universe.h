@@ -14,6 +14,7 @@
 #include "ColonyCard.h"		
 #include "Pirate.h"
 #include "AdventureCard.h"
+#include "Icon.h"
 
 enum menuOptions {trdW, colIt, conFly, endFl };
 const int MENUSIZE = 4;
@@ -25,8 +26,6 @@ const std::string ADVENTURELIST = "starship2.csv";
 class Universe{
 private:
 	Object *board;
-	Ico **menu;
-	Ico flightSector[MENUSIZE];
 	Card **S1;				//  Sector 1
 	Card **S2;				//  Sector 2
 	Card **S3;				//  Sector 3
@@ -34,6 +33,8 @@ private:
 	Card **SE;				//  Extra Cards waiting to be put into Sectors
 	Card **AD;				//  Adventure Deck
 	Card **cAdv;				//  Current Adventure????
+	Icon **menu;
+	Icon **flightSector;	
 	int currentMove;
 	int sectorNum;
 	int ExtraDeckPtr;
@@ -45,7 +46,7 @@ public:
 	// Getters and Setters
 	Card** getSector(int num);
 	Card** getCurrentSector(){ return getSector(sectorNum);}
-	Ico* getMenuItem(int num) { return menu[num]; }
+	Icon* getMenuItem(int num) { return menu[num]; }
 	Card* getAdvCard(int i);
 	Object *getBoard() const { return board; }
 	int getCurrentMove(){ return currentMove; }
@@ -65,7 +66,7 @@ private:
 	void addCardtoAdvDeck(int i);		
 	void shuffleDeck(Card* list[], int size);
 	void addCardtoSector(int secNum, int i);
-	Ico getFlightSector() const { return flightSector[0]; }
+	Icon* getFlightSector() const { return flightSector[0]; }
 	void setSector(Card* nCard, int sNum, int cNum);
 
 };

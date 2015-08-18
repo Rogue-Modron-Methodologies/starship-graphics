@@ -21,7 +21,7 @@
 const std::string SDIEFLE = "resources/board/flightdie.png";
 const std::string TRDICN = "resources/board/TradeMenuIcons.png";
 
-enum Phases{ production, flight, trades, build };
+enum phases{ production, flight, trades, build };
 enum tradeIcons{plus, minus, check, cancel};
 
 const int FLAGNUM = 9;
@@ -46,14 +46,14 @@ private:
 	ResourceManager<sf::Texture> txtMgr;
 	ResourceManager<sf::Font> fntMgr;
 	bool flag[9];						//  Will hold an array of flags for game decisions
-	sf::Text phaseNameString;			//  Phase Name Text String
-	sf::Text specialString;				//  For End of Phase Messages (And Sector Selection)
-	sf::Text infoString;				//  Info Text String
-	sf::Text cPlanet;					//  Current Planet Text String
-	sf::Text errorString;				//  Error Text String
+	Icon **tradeMenuIcons;				//  Icons for the Trade Menu
+	Icon *flightDie;	
+	Icon *phaseNameString;				//  Phase Name Text String
+	Icon *specialString;				//  For End of Phase Messages (And Sector Selection)
+	Icon *infoString;					//  Info Text String
+	Icon *cPlanet;						//  Current Planet Text String
+	Icon *errorString;					//  Error Text String
 	std::string statusUpdate;			//  Catches errors from called functions	
-	Ico tradeMenuIcons[4];				//  Icons for the Trade Menu
-	Ico flightDie;
 	int errorTimer;
 	int actionNum;						//  Current Action Num
 	int cPhase;						//  Current Phase Num
@@ -66,9 +66,15 @@ public:
 		delete P1;
 		delete P2;
 		delete universe;
-		delete flightDie.ico;
+		delete flightDie;
+		delete phaseNameString;
+		delete specialString;
+		delete infoString;
+		delete errorString;
+		delete cPlanet;
 		for (int i = 0; i < 4; i++)
-			delete tradeMenuIcons[i].ico;
+			delete tradeMenuIcons[i];
+		delete [] tradeMenuIcons;
 	}
 
 	// getters and setters

@@ -20,68 +20,44 @@ Player::Player(ResourceManager<sf::Texture> &txtMgr, ResourceManager<sf::Font> &
 	ColonyZone = new LinkedList<Card>;
 	TradeZone = new LinkedList<Card>;
 
-	cZoneString.setFont(fntMgr.getResource(FNTFLE));
-	cZoneString.setString("Colony");
-	cZoneString.setPosition({ 30, 515 });
+	cZoneIcon = new Icon(fntMgr.getResource(FNTFLE), { 30, 515 }, "Colony");
 
-	tZoneString.setFont(fntMgr.getResource(FNTFLE));
-	tZoneString.setString("Trade");
-	tZoneString.setPosition({ 130, 515 });
+	tZoneIcon = new Icon(fntMgr.getResource(FNTFLE), { 130, 515 }, "Trade");
 
-	statistics[player].ico = new Object(txtMgr.getResource(ICNFLE), { 10, 820 }, num, {75, 75 });
-	statistics[player].text.setFont(fntMgr.getResource(FNTFLE));
-	statistics[player].text.setString(name);
-	statistics[player].text.setPosition({ 90, 820 });
+	statistics = new Icon*[STATNUM];
 
-	statistics[vicPt].ico = new Object(txtMgr.getResource(SYM1FLE), { 180, 860 }, 1, { 35, 35 });		// sb 1
-	statistics[vicPt].text.setFont(fntMgr.getResource(FNTFLE));
-	statistics[vicPt].text.setString(std::to_string(statistics[vicPt].ico->getQty()));
-	statistics[vicPt].text.setPosition({ 220, 855 });
+	statistics[player] = new Icon(txtMgr.getResource(ICNFLE), { 10, 820 }, num, {75, 75 });
+	statistics[player]->initString(fntMgr.getResource(FNTFLE), { 90, 820 }, name);
 
-	statistics[frdPt].ico = new Object(txtMgr.getResource(SYM1FLE), { 260, 860 }, 1, { 35, 35 }, { 1, 0 });			// sb 0
-	statistics[frdPt].text.setFont(fntMgr.getResource(FNTFLE));
-	statistics[frdPt].text.setString(std::to_string(statistics[frdPt].ico->getQty()));
-	statistics[frdPt].text.setPosition({ 300, 855 });
+	statistics[vicPt] = new Icon(txtMgr.getResource(SYM1FLE), { 180, 860 }, 1, { 35, 35 });
+	statistics[vicPt]->initString(fntMgr.getResource(FNTFLE), { 220, 855 });
 
-	statistics[fmPt].ico = new Object(txtMgr.getResource(SYM1FLE), { 340, 860 }, 1, { 35, 35 }, { 2, 0 });			// sb 0
-	statistics[fmPt].text.setFont(fntMgr.getResource(FNTFLE));
-	statistics[fmPt].text.setString(std::to_string(statistics[fmPt].ico->getQty()));
-	statistics[fmPt].text.setPosition({ 380, 855 });
+	statistics[frdPt] = new Icon(txtMgr.getResource(SYM1FLE), { 260, 860 }, 0, { 35, 35 }, { 1, 0 });
+	statistics[frdPt]->initString(fntMgr.getResource(FNTFLE), { 300, 855 });
 
-	statistics[astro].ico = new Object(txtMgr.getResource(SYM1FLE), { 90, 860 }, 25, { 35, 35 }, { 3, 0 });			// sb 25
-	statistics[astro].text.setFont(fntMgr.getResource(FNTFLE));
-	statistics[astro].text.setString(std::to_string(statistics[astro].ico->getQty()));
-	statistics[astro].text.setPosition({ 130, 855 });
+	statistics[fmPt] = new Icon(txtMgr.getResource(SYM1FLE), { 340, 860 }, 0, { 35, 35 }, { 2, 0 });
+	statistics[fmPt]->initString(fntMgr.getResource(FNTFLE), { 380, 855 });
 
-	statistics[science].ico = new Object(txtMgr.getResource(RICNFLE), { 500, 860 }, 1, { 35, 35 });
-	statistics[science].text.setFont(fntMgr.getResource(FNTFLE));
-	statistics[science].text.setString(std::to_string(statistics[science].ico->getQty()));
-	statistics[science].text.setPosition({ 540, 855 });
+	statistics[astro] = new Icon(txtMgr.getResource(SYM1FLE), { 90, 860 }, 25, { 35, 35 }, { 3, 0 });
+	statistics[astro]->initString(fntMgr.getResource(FNTFLE), { 130, 855 });
+
+	statistics[science] = new Icon(txtMgr.getResource(RICNFLE), { 500, 860 }, 1, { 35, 35 });
+	statistics[science]->initString(fntMgr.getResource(FNTFLE), { 540, 855 });
 	
-	statistics[ore].ico = new Object(txtMgr.getResource(RICNFLE), { 420, 860 }, 1, { 35, 35 }, { 5, 0 });
-	statistics[ore].text.setFont(fntMgr.getResource(FNTFLE));
-	statistics[ore].text.setString(std::to_string(statistics[ore].ico->getQty()));
-	statistics[ore].text.setPosition({ 460, 855 });
+	statistics[ore] = new Icon(txtMgr.getResource(RICNFLE), { 420, 860 }, 1, { 35, 35 }, { 5, 0 });
+	statistics[ore]->initString(fntMgr.getResource(FNTFLE), { 460, 855 });
 
-	statistics[fuel].ico = new Object(txtMgr.getResource(RICNFLE), { 580, 860 }, 1, { 35, 35 }, { 1, 0 });
-	statistics[fuel].text.setFont(fntMgr.getResource(FNTFLE));
-	statistics[fuel].text.setString(std::to_string(statistics[fuel].ico->getQty()));
-	statistics[fuel].text.setPosition({ 620, 855 });
+	statistics[fuel] = new Icon(txtMgr.getResource(RICNFLE), { 580, 860 }, 1, { 35, 35 }, { 1, 0 });
+	statistics[fuel]->initString(fntMgr.getResource(FNTFLE), { 620, 855 });
 
-	statistics[tradeGood].ico = new Object(txtMgr.getResource(RICNFLE), { 660, 860 }, 1, { 35, 35 }, { 4, 0 });
-	statistics[tradeGood].text.setFont(fntMgr.getResource(FNTFLE));
-	statistics[tradeGood].text.setString(std::to_string(statistics[tradeGood].ico->getQty()));
-	statistics[tradeGood].text.setPosition({ 700, 855 });
+	statistics[tradeGood] = new Icon(txtMgr.getResource(RICNFLE), { 660, 860 }, 1, { 35, 35 }, { 4, 0 });
+	statistics[tradeGood]->initString(fntMgr.getResource(FNTFLE), { 700, 855 });
 
-	statistics[wheat].ico = new Object(txtMgr.getResource(RICNFLE), { 740, 860 }, 1, { 35, 35 }, { 2, 0 });
-	statistics[wheat].text.setFont(fntMgr.getResource(FNTFLE));
-	statistics[wheat].text.setString(std::to_string(statistics[wheat].ico->getQty()));
-	statistics[wheat].text.setPosition({ 780, 855 });
+	statistics[wheat] = new Icon(txtMgr.getResource(RICNFLE), { 740, 860 }, 1, { 35, 35 }, { 2, 0 });
+	statistics[wheat]->initString(fntMgr.getResource(FNTFLE), { 780, 855 });
 
-	statistics[carbon].ico = new Object(txtMgr.getResource(RICNFLE), { 820, 860 }, 1, { 35, 35 }, { 3, 0 });
-	statistics[carbon].text.setFont(fntMgr.getResource(FNTFLE));
-	statistics[carbon].text.setString(std::to_string(statistics[carbon].ico->getQty()));
-	statistics[carbon].text.setPosition({ 860, 855 });
+	statistics[carbon] = new Icon(txtMgr.getResource(RICNFLE), { 820, 860 }, 1, { 35, 35 }, { 3, 0 });
+	statistics[carbon]->initString(fntMgr.getResource(FNTFLE), { 860, 855 });
 }
  
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
@@ -94,19 +70,20 @@ Player::~Player()
 	delete starship;
 	delete ColonyZone;
 	delete TradeZone;
-	for (int i = 0; i < ICNNUM; i++)
-		delete statistics[i].ico;
+	for (int i = 0; i < STATNUM; i++)
+		delete statistics[i];
+	delete [] statistics;
 }
 
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
 //  
-//  Updates the Player ico
+//  Updates the Player Icon
 //
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
 void Player::update()
 {
-	statistics[player].ico->setSrcPosX(statistics[player].ico->getQty() - 1);
-	statistics[player].ico->updateTextRect();
+	statistics[player]->setSrcPosX(statistics[player]->getQty() - 1);
+	statistics[player]->updateTextRect();
 }
 
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
@@ -119,8 +96,7 @@ void Player::updateIcon(int type)
 	if (type < 6)
 	{
 		int tempNum = starship->getShipObjectQty(type);
-		statistics[type].ico->setQty(tempNum); 
-		statistics[type].text.setString(std::to_string(tempNum));
+		statistics[type]->setQty(tempNum);
 	}
 }
 
@@ -154,10 +130,10 @@ void Player::draw(sf::RenderWindow &gWindow)
 void Player::makeBig()
 {
 	starship->makeBig();
-	cZoneString.setPosition(CLPOS - sf::Vector2f(0, 35));
+	cZoneIcon->setTextPosition(CLPOS - sf::Vector2f(0, 35));
 	ColonyZone->setIconOnly(true);
 	ColonyZone->updateList(CLPOS, CRDZNSCL);
-	tZoneString.setPosition(TLPOS - sf::Vector2f(0, 35));
+	tZoneIcon->setTextPosition(TLPOS - sf::Vector2f(0, 35));
 	TradeZone->setIconOnly(true);
 	TradeZone->updateList(TLPOS, CRDZNSCL);	
 }
@@ -171,9 +147,9 @@ void Player::makeSmall()
 {
 	starship->makeSmall();
 	ColonyZone->setIconOnly(true);
-	cZoneString.setPosition(CSPOS - sf::Vector2f(0, 35));
+	cZoneIcon->setTextPosition(CSPOS - sf::Vector2f(0, 35));
 	ColonyZone->updateList(CSPOS, CRDSSCL);
-	tZoneString.setPosition(TSPOS - sf::Vector2f(0, 35));
+	tZoneIcon->setTextPosition(TSPOS - sf::Vector2f(0, 35));
 	TradeZone->setIconOnly(true);
 	TradeZone->updateList(TSPOS, CRDSSCL);
 }
@@ -185,10 +161,10 @@ void Player::makeSmall()
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
 void Player::expandColonyZone()
 {
-	cZoneString.setPosition(CLPOS - sf::Vector2f(0, 35));
+	cZoneIcon->setTextPosition(CLPOS - sf::Vector2f(0, 35));
 	ColonyZone->updateList(CLPOS, CRDZNSCL);
 	ColonyZone->setIconOnly(false);
-	tZoneString.setPosition(sf::Vector2f(1050, 575));
+	tZoneIcon->setTextPosition(sf::Vector2f(1050, 575));
 	TradeZone->updateList(sf::Vector2f(1050, 610), CRDZNSCL);
 	TradeZone->setIconOnly(true);
 }
@@ -200,10 +176,10 @@ void Player::expandColonyZone()
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
 void Player::expandTradeZone()
 {
-	tZoneString.setPosition(CLPOS - sf::Vector2f(0, 35));
+	tZoneIcon->setTextPosition(CLPOS - sf::Vector2f(0, 35));
 	TradeZone->updateList(CLPOS, CRDZNSCL);
 	TradeZone->setIconOnly(false);
-	cZoneString.setPosition(sf::Vector2f(1050, 575));
+	cZoneIcon->setTextPosition(sf::Vector2f(1050, 575));
 	ColonyZone->updateList(sf::Vector2f(1050, 610), CRDZNSCL);
 	ColonyZone->setIconOnly(true);
 }
@@ -215,11 +191,8 @@ void Player::expandTradeZone()
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
 void Player::drawCPlyrStats(sf::RenderWindow &gWindow)
 {
-	for (int i = 0; i < ICNNUM; i++)
-	{
-		statistics[i].ico->draw(gWindow);
-		gWindow.draw(statistics[i].text);
-	}
-	gWindow.draw(cZoneString);
-	gWindow.draw(tZoneString);
+	for (int i = 0; i < STATNUM; i++)
+		statistics[i]->draw(gWindow);
+	cZoneIcon->draw(gWindow);
+	tZoneIcon->draw(gWindow);
 }

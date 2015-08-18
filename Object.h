@@ -31,7 +31,6 @@ protected:
 	bool smallDisplay;
 
 public:	
-	
 	Object(){};
 	Object(const sf::Texture &texture, sf::Vector2f pos, int num = 1, sf::Vector2u srcSize = { 0, 0 }, sf::Vector2u srcPos = { 0, 0 });
 	~Object() { delete sprite; };
@@ -46,8 +45,7 @@ public:
 	int getQty() const { return qty; }
 
 	// Misc Inline Functions
-	bool isSmall() const  { 
-		return smallDisplay; }
+	bool isSmall() const  { 	return smallDisplay; }
 
 	// Prototypes
 	virtual void updateTextRect();
@@ -56,9 +54,4 @@ public:
 	sf::Vector2f convertCoord(sf::RenderWindow &gWindow);
 };
 
-struct Ico						// For When an object needs to be paired with displayable text
-{
-	sf::Text text;					//  Text String
-	Object *ico;					//  Ico 
-};
 #endif  // OBJECT_H
