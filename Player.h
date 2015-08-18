@@ -52,6 +52,23 @@ public:
 	void expandTradeZone();
 	void makeBig();
 	void makeSmall();
+	bool canAfford(int num, std::string &statusUpdate)
+	{
+		if (num <= statistics[astro].icon->getQty())
+			return true;
+		statusUpdate = "Can not afford to trade ";
+		return false;
+	}
+	void subAstro(int num)
+	{
+		statistics[astro].icon->setQty(statistics[astro].icon->getQty() - num);
+		statistics[astro].text.setString(std::to_string(statistics[astro].icon->getQty()));
+	}
+	void addAstro(int num)
+	{
+		statistics[astro].icon->setQty(statistics[astro].icon->getQty() + num);
+		statistics[astro].text.setString(std::to_string(statistics[astro].icon->getQty()));
+	}
 	
 
 };
