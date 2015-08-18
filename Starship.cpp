@@ -14,7 +14,7 @@
 //	Constructor: Calls the Object Constructor	
 //		
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
-Starship::Starship(ResourceManager<sf::Texture> &txtMgr, sf::Vector2f pos) : Object(txtMgr.getResource(SRCFILE), pos)
+Starship::Starship(ResourceManager<sf::Texture> &txtMgr, ResourceManager<sf::Font> &fntMgr, sf::Vector2f pos) : Object(txtMgr.getResource(SRCFILE), pos)
 {
 	shipObjects = new ShipObject*[CLKNUM];			// will be higher once modules are included
 

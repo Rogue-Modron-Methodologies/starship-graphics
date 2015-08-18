@@ -16,51 +16,47 @@
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
 Game::Game()
 {
-	if (!font.loadFromFile(FNTFLE)){
-		std::cout << "Font not Loaded" << std::endl;
-	}
-
-	flightDie.icon = new Object(txtMgr.getResource(SDIEFLE), sf::Vector2f{ 350, 525 }, 1, sf::Vector2u(200, 200));
-	flightDie.icon->setScale({ .4f, .4f });
-	flightDie.text.setFont(font);
+	flightDie.ico = new Object(txtMgr.getResource(SDIEFLE), sf::Vector2f{ 350, 525 }, 1, sf::Vector2u(200, 200));
+	flightDie.ico->setScale({ .4f, .4f });
+	flightDie.text.setFont(fntMgr.getResource(FNTFLE));
 	flightDie.text.setStyle(sf::Text::Bold);
 	flightDie.text.setPosition({ 440, 545 });		
-	P1 = new Player(txtMgr, "Player1", 1);		// Default names for bugtesting
-	P2 = new Player(txtMgr, "Player2", 2);		// Default names for bugtesting
-	universe = new Universe(txtMgr);
+	P1 = new Player(txtMgr, fntMgr, "Player1", 1);		// Default names for bugtesting
+	P2 = new Player(txtMgr, fntMgr, "Player2", 2);		// Default names for bugtesting
+	universe = new Universe(txtMgr, fntMgr);
 	screenSize = sf::Vector2u(1200, 900);
 	gWindow.create(sf::VideoMode(screenSize.x, screenSize.y), "Starship Game");
 
 	cPhase = production;
 
-	cPlanet.setFont(font);
+	cPlanet.setFont(fntMgr.getResource(FNTFLE));
 	cPlanet.setString("Current Planet");
 	cPlanet.setPosition(835, 480);
 
-	phaseNameString.setFont(font);
+	phaseNameString.setFont(fntMgr.getResource(FNTFLE));
 	phaseNameString.setString("Production Phase");
 	phaseNameString.setPosition({ 200, 820 });		 
 	
-	errorString.setFont(font);
+	errorString.setFont(fntMgr.getResource(FNTFLE));
 	errorString.setStyle(sf::Text::Bold);
 	errorString.setPosition({ 550, 820 });   
 	errorTimer = 255;
 	
-	infoString.setFont(font);
+	infoString.setFont(fntMgr.getResource(FNTFLE));
 	infoString.setStyle(sf::Text::Bold);
 	infoString.setPosition({ 40, 30 });	
 	
-	specialString.setFont(font);
+	specialString.setFont(fntMgr.getResource(FNTFLE));
 	specialString.setString("End of Phase\n(Press Enter)");
 	specialString.setStyle(sf::Text::Bold);
 	specialString.setScale(2, 2);
 	specialString.setColor(sf::Color::Red);
 	specialString.setPosition({ 825, 25 });
 
-	tradeMenuIcons[plus].icon = new Object(txtMgr.getResource(TRDICN), { 715, 550 }, 1, { 50, 50 }, { 0, 0 });
-	tradeMenuIcons[minus].icon = new Object(txtMgr.getResource(TRDICN), { 715, 650 }, 1, { 50, 50 }, { 1, 0 });
-	tradeMenuIcons[check].icon = new Object(txtMgr.getResource(TRDICN), { 675, 760 }, 1, { 50, 50 }, { 2, 0 });
-	tradeMenuIcons[cancel].icon = new Object(txtMgr.getResource(TRDICN), { 750, 760 }, 1, { 50, 50 }, { 3, 0 });
+	tradeMenuIcons[plus].ico = new Object(txtMgr.getResource(TRDICN), { 715, 550 }, 1, { 50, 50 }, { 0, 0 });
+	tradeMenuIcons[minus].ico = new Object(txtMgr.getResource(TRDICN), { 715, 650 }, 1, { 50, 50 }, { 1, 0 });
+	tradeMenuIcons[check].ico = new Object(txtMgr.getResource(TRDICN), { 675, 760 }, 1, { 50, 50 }, { 2, 0 });
+	tradeMenuIcons[cancel].ico = new Object(txtMgr.getResource(TRDICN), { 750, 760 }, 1, { 50, 50 }, { 3, 0 });
 
 
 	for (int i = 0; i < FLAGNUM; i++)
@@ -326,7 +322,7 @@ void Game::updateGameWindow(sf::RenderWindow &gWindow)
 		switch (cPhase)
 	{
 	case production:
-		flightDie.icon->draw(gWindow);
+		flightDie.ico->draw(gWindow);
 		gWindow.draw(flightDie.text);
 		break;
 	case flight:
@@ -353,7 +349,7 @@ void Game::updateGameWindow(sf::RenderWindow &gWindow)
 				else
 				{
 					for (int i = 0; i < 4; i++)
-						tradeMenuIcons[i].icon->draw(gWindow);
+						tradeMenuIcons[i].ico->draw(gWindow);
 				}
 				infoString.setString("Flight: " + std::to_string(universe->getCurrentMove()) + " / " + std::to_string(cPlyr->getStarship()->getMaxDistance())
 					+ "\nMax Actions: " + std::to_string(actionNum) + " / " + std::to_string(cPlyr->getStarship()->getMaxActions()));
@@ -402,8 +398,8 @@ void Game::setError(std::string error)
 int Game::rollSpeedDie()
 {
 	int num = rand() % 3;
-	flightDie.icon->setSrcPos(sf::Vector2u(num, 0));
-	flightDie.icon->updateTextRect();
+	flightDie.ico->setSrcPos(sf::Vector2u(num, 0));
+	flightDie.ico->updateTextRect();
 	flightDie.text.setString("Dice roll: " + std::to_string(num + 1));
 	return num + 1;
 }
@@ -420,7 +416,7 @@ void Game::productionPhaseListener(sf::RenderWindow &gWindow)
 		if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
 			cPlyr->makeBig();
 	}
-	// Colony Zone (Large Icon) is clicked
+	// Colony Zone (Large ico) is clicked
 	else if (!cPlyr->getColonyZone()->isSmall() && cPlyr->getColonyZone()->showIconOnly() && cPlyr->getColonyZone()->isIconTargeted(gWindow))
 	{
 		if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
@@ -471,7 +467,7 @@ void Game::preFlightListener(sf::RenderWindow &gWindow, int &tempType)
 	}
 	// Starship (Large) is clicked
 	else if (cPlyr->getStarship()->isTargeted(gWindow) && !cPlyr->getStarship()->isSmall()){}	// Do Nothing this Phase
-	// Colony Zone (Large Icon) is clicked
+	// Colony Zone (Large Ico) is clicked
 	else if (!cPlyr->getColonyZone()->isSmall() && cPlyr->getColonyZone()->showIconOnly() && cPlyr->getColonyZone()->isIconTargeted(gWindow))
 	{
 		if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
@@ -479,7 +475,7 @@ void Game::preFlightListener(sf::RenderWindow &gWindow, int &tempType)
 		else if (sf::Mouse::isButtonPressed(sf::Mouse::Right))
 			cPlyr->makeBig();
 	}
-	// Trade Zone (Large Icon) is clicked
+	// Trade Zone (Large Ico) is clicked
 	else if (!cPlyr->getTradeZone()->isSmall() && cPlyr->getTradeZone()->showIconOnly() && cPlyr->getTradeZone()->isIconTargeted(gWindow))
 	{
 		if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
@@ -527,7 +523,7 @@ void Game::flightPhaseListener(sf::RenderWindow &gWindow, int tempType)
 	}
 	// Starship (Large) is clicked
 	else if (cPlyr->getStarship()->isTargeted(gWindow) && !cPlyr->getStarship()->isSmall()){}	// Do Nothing this Phase
-	// Colony Zone (Large Icon) is clicked
+	// Colony Zone (Large Ico) is clicked
 	else if (!cPlyr->getColonyZone()->isSmall() && cPlyr->getColonyZone()->showIconOnly() && cPlyr->getColonyZone()->isIconTargeted(gWindow))
 	{
 		if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
@@ -535,7 +531,7 @@ void Game::flightPhaseListener(sf::RenderWindow &gWindow, int tempType)
 		else if (sf::Mouse::isButtonPressed(sf::Mouse::Right))
 			cPlyr->makeBig();
 	}
-	// Trade Zone (Large Icon) is clicked
+	// Trade Zone (Large Ico) is clicked
 	else if (!cPlyr->getTradeZone()->isSmall() && cPlyr->getTradeZone()->showIconOnly() && cPlyr->getTradeZone()->isIconTargeted(gWindow))
 	{
 		if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
@@ -601,7 +597,7 @@ void Game::tradePhaseListener(sf::RenderWindow &gWindow)
 	}
 	// Starship (Large) is clicked
 	else if (cPlyr->getStarship()->isTargeted(gWindow) && !cPlyr->getStarship()->isSmall()){}	// Do Nothing this Phase
-	// Colony Zone (Large Icon) is clicked
+	// Colony Zone (Large Ico) is clicked
 	else if (!cPlyr->getColonyZone()->isSmall() && cPlyr->getColonyZone()->showIconOnly() && cPlyr->getColonyZone()->isIconTargeted(gWindow))
 	{
 		if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
@@ -609,7 +605,7 @@ void Game::tradePhaseListener(sf::RenderWindow &gWindow)
 		else if (sf::Mouse::isButtonPressed(sf::Mouse::Right))
 			cPlyr->makeBig();
 	}
-	// Trade Zone (Large Icon) is clicked
+	// Trade Zone (Large Ico) is clicked
 	else if (!cPlyr->getTradeZone()->isSmall() && cPlyr->getTradeZone()->showIconOnly() && cPlyr->getTradeZone()->isIconTargeted(gWindow))
 	{
 		if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
@@ -656,7 +652,7 @@ void Game::buildPhaseListener(sf::RenderWindow &gWindow)
 				cPlyr->updateIcon(tempType);
 		}
 	}
-	// Colony Zone (Large Icon) is clicked
+	// Colony Zone (Large Ico) is clicked
 	else if (!cPlyr->getColonyZone()->isSmall() && cPlyr->getColonyZone()->showIconOnly() && cPlyr->getColonyZone()->isIconTargeted(gWindow))
 	{
 		if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
@@ -664,7 +660,7 @@ void Game::buildPhaseListener(sf::RenderWindow &gWindow)
 		else if (sf::Mouse::isButtonPressed(sf::Mouse::Right))
 			cPlyr->makeBig();
 	}
-	// Trade Zone (Large Icon) is clicked
+	// Trade Zone (Large Ico) is clicked
 	else if (!cPlyr->getTradeZone()->isSmall() && cPlyr->getTradeZone()->showIconOnly() && cPlyr->getTradeZone()->isIconTargeted(gWindow))
 	{
 		if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
@@ -727,7 +723,7 @@ void Game::tradeMenu(sf::RenderWindow &gWindow, int tempType)
 	tempType = universe->getCurrentPlanet()->getResource();
 	int cost = universe->getCurrentPlanet()->getCost();
 
-	if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && tradeMenuIcons[plus].icon->isTargeted(gWindow))
+	if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && tradeMenuIcons[plus].ico->isTargeted(gWindow))
 	{
 		if (cPlyr->canAfford(cost, statusUpdate) && cPlyr->getStarship()->gainItem(tempType, statusUpdate))
 		{
@@ -736,7 +732,7 @@ void Game::tradeMenu(sf::RenderWindow &gWindow, int tempType)
 		}
 
 	}
-	else if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && tradeMenuIcons[minus].icon->isTargeted(gWindow))
+	else if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && tradeMenuIcons[minus].ico->isTargeted(gWindow))
 	{
 		if (cPlyr->getStarship()->loseItem(tempType, statusUpdate))
 		{
@@ -744,13 +740,13 @@ void Game::tradeMenu(sf::RenderWindow &gWindow, int tempType)
 			cPlyr->addAstro(cost);
 		}
 	}
-	else if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && tradeMenuIcons[check].icon->isTargeted(gWindow))
+	else if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && tradeMenuIcons[check].ico->isTargeted(gWindow))
 	{
 		flag[tradeInProgress] = false;
 		actionNum++;
 		std::cout << "Trade Complete" << std::endl;
 	}
-	else if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && tradeMenuIcons[cancel].icon->isTargeted(gWindow))
+	else if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && tradeMenuIcons[cancel].ico->isTargeted(gWindow))
 	{
 		flag[tradeInProgress] = false;
 		std::cout << "Trade Cancelled" << std::endl;
@@ -773,10 +769,10 @@ void Game::tradeMenu(sf::RenderWindow &gWindow, int tempType)
 void Game::updateFlightMenu(sf::RenderWindow &gWindow)
 {
 	for (int i = 0; i < MENUSIZE; i++)
-		universe->getMenuItem(i)->icon->setQty(0);
-	universe->getMenuItem(endFl)->icon->setQty(1);	////////////////////////////////////////////  
+		universe->getMenuItem(i)->ico->setQty(0);
+	universe->getMenuItem(endFl)->ico->setQty(1);	////////////////////////////////////////////  
 	if (universe->getCurrentMove() < cPlyr->getStarship()->getMaxDistance()) /////////////////////  THESE THREE LINES SHOULDNT BE HERE
-		universe->getMenuItem(conFly)->icon->setQty(1); /////////////////////////////////////////
+		universe->getMenuItem(conFly)->ico->setQty(1); /////////////////////////////////////////
 	if (universe->getCurrentPlanet()->getType() == 2)		//  PIRATE
 	{
 		//std::cout << "Pirate" << std::endl;
@@ -787,19 +783,19 @@ void Game::updateFlightMenu(sf::RenderWindow &gWindow)
 		if (universe->getCurrentPlanet()->getType() == 0)		//  Trade Planet
 		{
 			if (!flag[justTraded])
-				universe->getMenuItem(trdW)->icon->setQty(1);
+				universe->getMenuItem(trdW)->ico->setQty(1);
 			if (universe->getCurrentPlanet()->getPts() == 1)	//  Can be colonized
 			{
 				universe->getMenuItem(colIt)->text.setString("Establish Trade Post");
 				universe->getMenuItem(colIt)->text.setPosition({ 480, 660 });
-				universe->getMenuItem(colIt)->icon->setQty(1);
+				universe->getMenuItem(colIt)->ico->setQty(1);
 			}
 		}
 		else if (universe->getCurrentPlanet()->getType() == 1)	//  Colony Planet
 		{
 			universe->getMenuItem(colIt)->text.setString("Colonize the Planet");
 			universe->getMenuItem(colIt)->text.setPosition({ 500, 660 });
-			universe->getMenuItem(colIt)->icon->setQty(1);
+			universe->getMenuItem(colIt)->ico->setQty(1);
 		}
 		else                                                             //  Everything else
 		{
@@ -817,9 +813,9 @@ void Game::drawFlightMenu(sf::RenderWindow &gWindow)
 {
 	for (int i = 0; i < MENUSIZE; i++)
 	{
-		if (universe->getMenuItem(i)->icon->getQty() == 1)
+		if (universe->getMenuItem(i)->ico->getQty() == 1)
 		{
-			universe->getMenuItem(i)->icon->draw(gWindow);
+			universe->getMenuItem(i)->ico->draw(gWindow);
 			gWindow.draw(universe->getMenuItem(i)->text);
 		}
 	}

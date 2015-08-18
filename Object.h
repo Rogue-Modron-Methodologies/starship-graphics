@@ -56,9 +56,9 @@ public:
 	sf::Vector2f convertCoord(sf::RenderWindow &gWindow);
 };
 
-struct Icon						// For When an object needs to be paired with displayable text
+struct Ico						// For When an object needs to be paired with displayable text
 {
 	sf::Text text;					//  Text String
-	Object *icon;					//  Icon 
+	Object *ico;					//  Ico 
 };
 #endif  // OBJECT_H

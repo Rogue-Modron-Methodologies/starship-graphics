@@ -16,62 +16,59 @@
 //  Constructor
 //
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
-Universe::Universe(ResourceManager<sf::Texture> &txtMgr)
+Universe::Universe(ResourceManager<sf::Texture> &txtMgr, ResourceManager<sf::Font> &fntMgr)
 {
 	board = new Object(txtMgr.getResource("resources/board/starrynight.png"), sf::Vector2f(0, 0));
 	board->setScale({ 3.1f, 3.6f });
 
-	if (!font.loadFromFile(FNTFLE)){
-		std::cout << "Font not Loaded" << std::endl;
-	}
-	flightSector[0].icon = new Object(txtMgr.getResource("resources/cards/CardBackground.png"), sf::Vector2f(100, 150), 10, sf::Vector2u(200, 300));
-	flightSector[0].text.setFont(font);
+	flightSector[0].ico = new Object(txtMgr.getResource("resources/cards/CardBackground.png"), sf::Vector2f(100, 150), 10, sf::Vector2u(200, 300));
+	flightSector[0].text.setFont(fntMgr.getResource(FNTFLE));
 	flightSector[0].text.Bold;
 	flightSector[0].text.setScale(sf::Vector2f(5, 5));
 	flightSector[0].text.setString("1");
 	flightSector[0].text.setPosition({ 175, 200 });
 
-	flightSector[1].icon = new Object(txtMgr.getResource("resources/cards/CardBackground.png"), sf::Vector2f(300, 150), 10, sf::Vector2u(200, 300));
-	flightSector[1].text.setFont(font);
+	flightSector[1].ico = new Object(txtMgr.getResource("resources/cards/CardBackground.png"), sf::Vector2f(300, 150), 10, sf::Vector2u(200, 300));
+	flightSector[1].text.setFont(fntMgr.getResource(FNTFLE));
 	flightSector[1].text.Bold;
 	flightSector[1].text.setScale(sf::Vector2f(5, 5));
 	flightSector[1].text.setString("2");
 	flightSector[1].text.setPosition({ 360, 200 });
 
-	flightSector[2].icon = new Object(txtMgr.getResource("resources/cards/CardBackground.png"), sf::Vector2f(500, 150), 10, sf::Vector2u(200, 300));
-	flightSector[2].text.setFont(font);
+	flightSector[2].ico = new Object(txtMgr.getResource("resources/cards/CardBackground.png"), sf::Vector2f(500, 150), 10, sf::Vector2u(200, 300));
+	flightSector[2].text.setFont(fntMgr.getResource(FNTFLE));
 	flightSector[2].text.Bold;
 	flightSector[2].text.setScale(sf::Vector2f(5, 5));
 	flightSector[2].text.setString("3");
 	flightSector[2].text.setPosition({ 560, 200 });
 
-	flightSector[3].icon = new Object(txtMgr.getResource("resources/cards/CardBackground.png"), sf::Vector2f(700, 150), 10, sf::Vector2u(200, 300));
-	flightSector[3].text.setFont(font);
+	flightSector[3].ico = new Object(txtMgr.getResource("resources/cards/CardBackground.png"), sf::Vector2f(700, 150), 10, sf::Vector2u(200, 300));
+	flightSector[3].text.setFont(fntMgr.getResource(FNTFLE));
 	flightSector[3].text.Bold;
 	flightSector[3].text.setScale(sf::Vector2f(5, 5));
 	flightSector[3].text.setString("4");
 	flightSector[3].text.setPosition({ 760, 200 });
 
-	menu = new Icon*[4];
+	menu = new Ico*[4];
 	for (int i = 0; i < MENUSIZE; i++)
-		menu[i] = new Icon;
+		menu[i] = new Ico;
 
-	menu[trdW]->icon = new Object(txtMgr.getResource("resources/board/iconTemp.png"), sf::Vector2f(760, 610), 0);
-	menu[trdW]->text.setFont(font);
+	menu[trdW]->ico = new Object(txtMgr.getResource("resources/board/iconTemp.png"), sf::Vector2f(760, 610), 0);
+	menu[trdW]->text.setFont(fntMgr.getResource(FNTFLE));
 	menu[trdW]->text.setString("Trade With Planet");
 	menu[trdW]->text.setPosition({ 520, 610 });
 
-	menu[colIt]->icon = new Object(txtMgr.getResource("resources/board/iconTemp.png"), sf::Vector2f(760, 660), 0);
-	menu[colIt]->text.setFont(font);
+	menu[colIt]->ico = new Object(txtMgr.getResource("resources/board/iconTemp.png"), sf::Vector2f(760, 660), 0);
+	menu[colIt]->text.setFont(fntMgr.getResource(FNTFLE));
 
 
-	menu[conFly]->icon = new Object(txtMgr.getResource("resources/board/iconTemp.png"), sf::Vector2f(760, 710), 0);
-	menu[conFly]->text.setFont(font);
+	menu[conFly]->ico = new Object(txtMgr.getResource("resources/board/iconTemp.png"), sf::Vector2f(760, 710), 0);
+	menu[conFly]->text.setFont(fntMgr.getResource(FNTFLE));
 	menu[conFly]->text.setString("Continue Flying");
 	menu[conFly]->text.setPosition({ 550, 710 });
 
-	menu[endFl]->icon = new Object(txtMgr.getResource("resources/board/iconTemp.png"), sf::Vector2f(760, 760), 0);
-	menu[endFl]->text.setFont(font);
+	menu[endFl]->ico = new Object(txtMgr.getResource("resources/board/iconTemp.png"), sf::Vector2f(760, 760), 0);
+	menu[endFl]->text.setFont(fntMgr.getResource(FNTFLE));
 	menu[endFl]->text.setString("End Flight");
 	menu[endFl]->text.setPosition({ 610, 760 });
 
@@ -97,11 +94,11 @@ Universe::Universe(ResourceManager<sf::Texture> &txtMgr)
 Universe::~Universe()
 {
 	for (int i = 0; i < MENUSIZE; i++)
-		delete menu[i]->icon;
+		delete menu[i]->ico;
 	for (int i = 0; i < MENUSIZE; i++)
 		delete menu[i];
 	for (int i = 0; i < 4; i++)
-		delete flightSector[i].icon;
+		delete flightSector[i].ico;
 	for (int i = 0; i < 10; i++)
 		delete S1[i];
 	for (int i = 0; i < 10; i++)
@@ -136,7 +133,7 @@ void Universe::drawSectors(sf::RenderWindow &gWindow)
 {
 	for (int i = 0; i < 4; i++)
 	{
-		flightSector[i].icon->draw(gWindow);
+		flightSector[i].ico->draw(gWindow);
 		gWindow.draw(flightSector[i].text);
 	}
 }
@@ -150,7 +147,7 @@ bool Universe::sectorsTargeted(sf::RenderWindow &gWindow, int &num)
 {
 	for (int i = 0; i < 4; i++)
 	{
-		if (flightSector[i].icon->isTargeted(gWindow))
+		if (flightSector[i].ico->isTargeted(gWindow))
 		{
 			num = i;
 			return true;
@@ -197,7 +194,7 @@ bool Universe::menuOptionTargeted(sf::RenderWindow &gWindow, int &num)
 {
 	for (int i = 0; i < MENUSIZE; i++)
 	{
-		if (menu[i]->icon->getQty() == 1 && menu[i]->icon->isTargeted(gWindow))
+		if (menu[i]->ico->getQty() == 1 && menu[i]->ico->isTargeted(gWindow))
 		{
 			num = i;
 			return true;

@@ -14,75 +14,73 @@
 //  Constructor
 //
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
-Player::Player(ResourceManager<sf::Texture> &txtMgr, std::string name, int num)
+Player::Player(ResourceManager<sf::Texture> &txtMgr, ResourceManager<sf::Font> &fntMgr, std::string name, int num)
 {
-	starship = new Starship(txtMgr);
+	starship = new Starship(txtMgr, fntMgr);
 	ColonyZone = new LinkedList<Card>;
 	TradeZone = new LinkedList<Card>;
-	if (!font.loadFromFile(FNTFLE)){
-		std::cout << "Font not Loaded" << std::endl;
-	}
-	cZoneString.setFont(font);
+
+	cZoneString.setFont(fntMgr.getResource(FNTFLE));
 	cZoneString.setString("Colony");
 	cZoneString.setPosition({ 30, 515 });
 
-	tZoneString.setFont(font);
+	tZoneString.setFont(fntMgr.getResource(FNTFLE));
 	tZoneString.setString("Trade");
 	tZoneString.setPosition({ 130, 515 });
 
-	statistics[player].icon = new Object(txtMgr.getResource(ICNFLE), { 10, 820 }, num, {75, 75 });
-	statistics[player].text.setFont(font);
+	statistics[player].ico = new Object(txtMgr.getResource(ICNFLE), { 10, 820 }, num, {75, 75 });
+	statistics[player].text.setFont(fntMgr.getResource(FNTFLE));
 	statistics[player].text.setString(name);
 	statistics[player].text.setPosition({ 90, 820 });
 
-	statistics[vicPt].icon = new Object(txtMgr.getResource(SYM1FLE), { 180, 860 }, 1, { 35, 35 });		// sb 1
-	statistics[vicPt].text.setFont(font);
-	statistics[vicPt].text.setString(std::to_string(statistics[vicPt].icon->getQty()));
+	statistics[vicPt].ico = new Object(txtMgr.getResource(SYM1FLE), { 180, 860 }, 1, { 35, 35 });		// sb 1
+	statistics[vicPt].text.setFont(fntMgr.getResource(FNTFLE));
+	statistics[vicPt].text.setString(std::to_string(statistics[vicPt].ico->getQty()));
 	statistics[vicPt].text.setPosition({ 220, 855 });
 
-	statistics[frdPt].icon = new Object(txtMgr.getResource(SYM1FLE), { 260, 860 }, 1, { 35, 35 }, { 1, 0 });			// sb 0
-	statistics[frdPt].text.setFont(font);
-	statistics[frdPt].text.setString(std::to_string(statistics[frdPt].icon->getQty()));
+	statistics[frdPt].ico = new Object(txtMgr.getResource(SYM1FLE), { 260, 860 }, 1, { 35, 35 }, { 1, 0 });			// sb 0
+	statistics[frdPt].text.setFont(fntMgr.getResource(FNTFLE));
+	statistics[frdPt].text.setString(std::to_string(statistics[frdPt].ico->getQty()));
 	statistics[frdPt].text.setPosition({ 300, 855 });
 
-	statistics[fmPt].icon = new Object(txtMgr.getResource(SYM1FLE), { 340, 860 }, 1, { 35, 35 }, { 2, 0 });			// sb 0
-	statistics[fmPt].text.setFont(font);
-	statistics[fmPt].text.setString(std::to_string(statistics[fmPt].icon->getQty()));
+	statistics[fmPt].ico = new Object(txtMgr.getResource(SYM1FLE), { 340, 860 }, 1, { 35, 35 }, { 2, 0 });			// sb 0
+	statistics[fmPt].text.setFont(fntMgr.getResource(FNTFLE));
+	statistics[fmPt].text.setString(std::to_string(statistics[fmPt].ico->getQty()));
 	statistics[fmPt].text.setPosition({ 380, 855 });
 
-	statistics[astro].icon = new Object(txtMgr.getResource(SYM1FLE), { 90, 860 }, 25, { 35, 35 }, { 3, 0 });			// sb 25
-	statistics[astro].text.setFont(font);
-	statistics[astro].text.setString(std::to_string(statistics[astro].icon->getQty()));
+	statistics[astro].ico = new Object(txtMgr.getResource(SYM1FLE), { 90, 860 }, 25, { 35, 35 }, { 3, 0 });			// sb 25
+	statistics[astro].text.setFont(fntMgr.getResource(FNTFLE));
+	statistics[astro].text.setString(std::to_string(statistics[astro].ico->getQty()));
 	statistics[astro].text.setPosition({ 130, 855 });
 
-	statistics[science].icon = new Object(txtMgr.getResource(RICNFLE), { 500, 860 }, 1, { 35, 35 });
-	statistics[science].text.setFont(font);
-	statistics[science].text.setString(std::to_string(statistics[science].icon->getQty()));
+	statistics[science].ico = new Object(txtMgr.getResource(RICNFLE), { 500, 860 }, 1, { 35, 35 });
+	statistics[science].text.setFont(fntMgr.getResource(FNTFLE));
+	statistics[science].text.setString(std::to_string(statistics[science].ico->getQty()));
 	statistics[science].text.setPosition({ 540, 855 });
 	
-	statistics[ore].icon = new Object(txtMgr.getResource(RICNFLE), { 420, 860 }, 1, { 35, 35 }, { 5, 0 });
-	statistics[ore].text.setFont(font);
-	statistics[ore].text.setString(std::to_string(statistics[ore].icon->getQty()));
+	statistics[ore].ico = new Object(txtMgr.getResource(RICNFLE), { 420, 860 }, 1, { 35, 35 }, { 5, 0 });
+	statistics[ore].text.setFont(fntMgr.getResource(FNTFLE));
+	statistics[ore].text.setString(std::to_string(statistics[ore].ico->getQty()));
 	statistics[ore].text.setPosition({ 460, 855 });
 
-	statistics[fuel].icon = new Object(txtMgr.getResource(RICNFLE), { 580, 860 }, 1, { 35, 35 }, { 1, 0 });
-	statistics[fuel].text.setFont(font);
-	statistics[fuel].text.setString(std::to_string(statistics[fuel].icon->getQty()));
+	statistics[fuel].ico = new Object(txtMgr.getResource(RICNFLE), { 580, 860 }, 1, { 35, 35 }, { 1, 0 });
+	statistics[fuel].text.setFont(fntMgr.getResource(FNTFLE));
+	statistics[fuel].text.setString(std::to_string(statistics[fuel].ico->getQty()));
 	statistics[fuel].text.setPosition({ 620, 855 });
 
-	statistics[tradeGood].icon = new Object(txtMgr.getResource(RICNFLE), { 660, 860 }, 1, { 35, 35 }, { 4, 0 });
-	statistics[tradeGood].text.setFont(font);
-	statistics[tradeGood].text.setString(std::to_string(statistics[tradeGood].icon->getQty()));
+	statistics[tradeGood].ico = new Object(txtMgr.getResource(RICNFLE), { 660, 860 }, 1, { 35, 35 }, { 4, 0 });
+	statistics[tradeGood].text.setFont(fntMgr.getResource(FNTFLE));
+	statistics[tradeGood].text.setString(std::to_string(statistics[tradeGood].ico->getQty()));
 	statistics[tradeGood].text.setPosition({ 700, 855 });
 
-	statistics[wheat].icon = new Object(txtMgr.getResource(RICNFLE), { 740, 860 }, 1, { 35, 35 }, { 2, 0 });
-	statistics[wheat].text.setFont(font);
-	statistics[wheat].text.setString(std::to_string(statistics[wheat].icon->getQty()));
+	statistics[wheat].ico = new Object(txtMgr.getResource(RICNFLE), { 740, 860 }, 1, { 35, 35 }, { 2, 0 });
+	statistics[wheat].text.setFont(fntMgr.getResource(FNTFLE));
+	statistics[wheat].text.setString(std::to_string(statistics[wheat].ico->getQty()));
 	statistics[wheat].text.setPosition({ 780, 855 });
 
-	statistics[carbon].icon = new Object(txtMgr.getResource(RICNFLE), { 820, 860 }, 1, { 35, 35 }, { 3, 0 });
-	statistics[carbon].text.setFont(font);
-	statistics[carbon].text.setString(std::to_string(statistics[carbon].icon->getQty()));
+	statistics[carbon].ico = new Object(txtMgr.getResource(RICNFLE), { 820, 860 }, 1, { 35, 35 }, { 3, 0 });
+	statistics[carbon].text.setFont(fntMgr.getResource(FNTFLE));
+	statistics[carbon].text.setString(std::to_string(statistics[carbon].ico->getQty()));
 	statistics[carbon].text.setPosition({ 860, 855 });
 }
  
@@ -97,18 +95,18 @@ Player::~Player()
 	delete ColonyZone;
 	delete TradeZone;
 	for (int i = 0; i < ICNNUM; i++)
-		delete statistics[i].icon;
+		delete statistics[i].ico;
 }
 
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
 //  
-//  Updates the Player Icon
+//  Updates the Player ico
 //
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
 void Player::update()
 {
-	statistics[player].icon->setSrcPosX(statistics[player].icon->getQty() - 1);
-	statistics[player].icon->updateTextRect();
+	statistics[player].ico->setSrcPosX(statistics[player].ico->getQty() - 1);
+	statistics[player].ico->updateTextRect();
 }
 
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
@@ -121,7 +119,7 @@ void Player::updateIcon(int type)
 	if (type < 6)
 	{
 		int tempNum = starship->getShipObjectQty(type);
-		statistics[type].icon->setQty(tempNum); 
+		statistics[type].ico->setQty(tempNum); 
 		statistics[type].text.setString(std::to_string(tempNum));
 	}
 }
@@ -219,7 +217,7 @@ void Player::drawCPlyrStats(sf::RenderWindow &gWindow)
 {
 	for (int i = 0; i < ICNNUM; i++)
 	{
-		statistics[i].icon->draw(gWindow);
+		statistics[i].ico->draw(gWindow);
 		gWindow.draw(statistics[i].text);
 	}
 	gWindow.draw(cZoneString);

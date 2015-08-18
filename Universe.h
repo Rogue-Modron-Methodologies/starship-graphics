@@ -24,10 +24,9 @@ const std::string ADVENTURELIST = "starship2.csv";
 
 class Universe{
 private:
-	sf::Font font;
 	Object *board;
-	Icon **menu;
-	Icon flightSector[MENUSIZE];
+	Ico **menu;
+	Ico flightSector[MENUSIZE];
 	Card **S1;				//  Sector 1
 	Card **S2;				//  Sector 2
 	Card **S3;				//  Sector 3
@@ -41,12 +40,12 @@ private:
 	int advPtr;
 
 public:
-	Universe(ResourceManager<sf::Texture> &txtMgr);
+	Universe(ResourceManager<sf::Texture> &txtMgr, ResourceManager<sf::Font> &fntMgr);
 	~Universe();
 	// Getters and Setters
 	Card** getSector(int num);
 	Card** getCurrentSector(){ return getSector(sectorNum);}
-	Icon* getMenuItem(int num) { return menu[num]; }
+	Ico* getMenuItem(int num) { return menu[num]; }
 	Card* getAdvCard(int i);
 	Object *getBoard() const { return board; }
 	int getCurrentMove(){ return currentMove; }
@@ -66,7 +65,7 @@ private:
 	void addCardtoAdvDeck(int i);		
 	void shuffleDeck(Card* list[], int size);
 	void addCardtoSector(int secNum, int i);
-	Icon getFlightSector() const { return flightSector[0]; }
+	Ico getFlightSector() const { return flightSector[0]; }
 	void setSector(Card* nCard, int sNum, int cNum);
 
 };

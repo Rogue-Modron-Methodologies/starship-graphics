@@ -44,16 +44,16 @@ private:
 	sf::RenderWindow gWindow;
 	sf::Vector2u screenSize;
 	ResourceManager<sf::Texture> txtMgr;
+	ResourceManager<sf::Font> fntMgr;
 	bool flag[9];						//  Will hold an array of flags for game decisions
-	sf::Font font;						//  Font for Texts
 	sf::Text phaseNameString;			//  Phase Name Text String
 	sf::Text specialString;				//  For End of Phase Messages (And Sector Selection)
 	sf::Text infoString;				//  Info Text String
 	sf::Text cPlanet;					//  Current Planet Text String
 	sf::Text errorString;				//  Error Text String
 	std::string statusUpdate;			//  Catches errors from called functions	
-	Icon tradeMenuIcons[4];				//  Icons for the Trade Menu
-	Icon flightDie;
+	Ico tradeMenuIcons[4];				//  Icons for the Trade Menu
+	Ico flightDie;
 	int errorTimer;
 	int actionNum;						//  Current Action Num
 	int cPhase;						//  Current Phase Num
@@ -66,9 +66,9 @@ public:
 		delete P1;
 		delete P2;
 		delete universe;
-		delete flightDie.icon;
+		delete flightDie.ico;
 		for (int i = 0; i < 4; i++)
-			delete tradeMenuIcons[i].icon;
+			delete tradeMenuIcons[i].ico;
 	}
 
 	// getters and setters
