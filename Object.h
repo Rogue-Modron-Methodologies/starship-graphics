@@ -46,7 +46,8 @@ public:
 	int getQty() const { return qty; }
 
 	// Misc Inline Functions
-	bool isSmall() const  { return smallDisplay; }
+	bool isSmall() const  { 
+		return smallDisplay; }
 
 	// Prototypes
 	virtual void updateTextRect();

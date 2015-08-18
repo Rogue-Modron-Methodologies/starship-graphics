@@ -161,7 +161,7 @@ void Player::makeBig()
 	ColonyZone->updateList(CLPOS, CRDZNSCL);
 	tZoneString.setPosition(TLPOS - sf::Vector2f(0, 35));
 	TradeZone->setIconOnly(true);
-	TradeZone->updateList(TLPOS, CRDZNSCL);
+	TradeZone->updateList(TLPOS, CRDZNSCL);	
 }
 
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 

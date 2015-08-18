@@ -215,8 +215,9 @@ void Game::gameLoop()
 				}
 			}				
 		}
+
 		gWindow.clear();
-		updateGameWindow(gWindow);
+		updateGameWindow(gWindow);		
 		gWindow.display();
 	}
 }
@@ -332,14 +333,19 @@ void Game::updateGameWindow(sf::RenderWindow &gWindow)
 	case flight:
 		if (!sectorSelected && displaySectors)
 			universe->drawSectors(gWindow);
+		else if (!sectorSelected && !displaySectors)
+			break;
 		else
 		{
 			if (displayFlightPath)
+			{
 				drawFlightPath(gWindow);
-
+			}	
 			drawCurrentPlanet(gWindow);
+
 			if (!phaseComplete && actionNum < cPlyr->getStarship()->getMaxActions())
 			{
+				
 				if (displayFlightMenu)
 				{
 					updateFlightMenu(gWindow);
@@ -461,7 +467,7 @@ void Game::flightPhaseSectorSelectionListener(sf::RenderWindow &gWindow, int &te
 		if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
 		{
 			cPlyr->makeBig();
-			displaySectors = false;
+			displaySectors = false;	
 		}
 	}
 	// Starship (Large) is clicked
@@ -483,9 +489,9 @@ void Game::flightPhaseSectorSelectionListener(sf::RenderWindow &gWindow, int &te
 			cPlyr->makeBig();
 	}
 	// Colony Zone (Large List) is clicked
-	else if (!cPlyr->getColonyZone()->isSmall() && !cPlyr->getColonyZone()->showIconOnly() && cPlyr->getColonyZone()->isZoneTargeted(gWindow, tempType)){}	// Do Nothing this Phase
+	else if (!cPlyr->getColonyZone()->isSmall() && !cPlyr->getColonyZone()->showIconOnly() && cPlyr->getColonyZone()->isZoneTargeted(gWindow, tempType)){ }	// Do Nothing this Phase
 	// Trade Zone (Large List) is clicked
-	else if (!cPlyr->getTradeZone()->isSmall() && !cPlyr->getTradeZone()->showIconOnly() && cPlyr->getTradeZone()->isZoneTargeted(gWindow, tempType)){}		// Do Nothing this Phase
+	else if (!cPlyr->getTradeZone()->isSmall() && !cPlyr->getTradeZone()->showIconOnly() && cPlyr->getTradeZone()->isZoneTargeted(gWindow, tempType)){ }		// Do Nothing this Phase
 	//  Sector is Clicked
 	else if (universe->sectorsTargeted(gWindow, tempType) && cPlyr->getStarship()->isSmall())
 	{
@@ -543,12 +549,12 @@ void Game::flightPhaseListener(sf::RenderWindow &gWindow, int tempType)
 	// Trade Zone (Large List) is clicked
 	else if (!cPlyr->getTradeZone()->isSmall() && !cPlyr->getTradeZone()->showIconOnly() && cPlyr->getTradeZone()->isZoneTargeted(gWindow, tempType)){}		// Do Nothing this Phase
 	// Objects in the FlightPath are clicked but not the current planet
-	else if (!phaseComplete && universe->flightPathTargeted(gWindow, tempType) && tempType != universe->getCurrentMove() - 1)
+	else if (!phaseComplete && displayFlightPath && universe->flightPathTargeted(gWindow, tempType) && tempType != universe->getCurrentMove() - 1)
 	{
 		std::cout << "Flight Path Object " << tempType << " Clicked" << std::endl;
 	}
 	// Current Planet in the FlightPath is clicked
-	else if (!phaseComplete && !displayFlightMenu && universe->getCurrentPlanet()->isTargeted(gWindow))
+	else if (!phaseComplete && displayFlightMenu && universe->getCurrentPlanet()->isTargeted(gWindow))
 	{
 		std::cout << "Current Planet Clicked" << std::endl;
 	}
