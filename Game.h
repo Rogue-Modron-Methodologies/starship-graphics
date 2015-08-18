@@ -24,6 +24,19 @@ const std::string TRDICN = "resources/board/TradeMenuIcons.png";
 enum Phases{ production, flight, trades, build };
 enum tradeIcons{plus, minus, check, cancel};
 
+const int FLAGNUM = 9;
+enum flagTypes{
+	phaseSetupComplete,				//  Flag:  Phase Setup Complete
+	gainResource,					//  Flag:  Choose one resource
+	visFlightPath,					//  Flag:  Display flightPath
+	visSectors,					//  Flag:  Display Sectors
+	sectorSelected,				//  Flag:  Sector Selection Complete
+	phaseComplete,					//  Flag:  Phase Complete
+	visFlightMenu,					//  Flag:	 Display Flight Menu
+	tradeInProgress,				//  Flag:  Trade in Progress
+	justTraded					//  Flag:  Traded Already
+};
+
 class Game{
 private:
 	Player *P1, *P2, *cPlyr;
@@ -31,28 +44,20 @@ private:
 	sf::RenderWindow gWindow;
 	sf::Vector2u screenSize;
 	ResourceManager<sf::Texture> txtMgr;
-	sf::Font font;
-	int actionNum;
-	int cPhase;						//  Current Phase Num
+	bool flag[9];						//  Will hold an array of flags for game decisions
+	sf::Font font;						//  Font for Texts
 	sf::Text phaseNameString;			//  Phase Name Text String
 	sf::Text specialString;				//  For End of Phase Messages (And Sector Selection)
-	sf::Text errorString;				//  Error Text String
-	std::string statusUpdate;			//  Catches errors from called functions
 	sf::Text infoString;				//  Info Text String
 	sf::Text cPlanet;					//  Current Planet Text String
+	sf::Text errorString;				//  Error Text String
+	std::string statusUpdate;			//  Catches errors from called functions	
 	Icon tradeMenuIcons[4];				//  Icons for the Trade Menu
-	int errorTimer;
 	Icon flightDie;
+	int errorTimer;
+	int actionNum;						//  Current Action Num
+	int cPhase;						//  Current Phase Num
 	int combatDie[6];
-	bool phaseSetupComplete;				//  Flag 
-	bool gainProductionResource;			//  Flag for enabling free colony resource
-	bool displayFlightPath;				//  Flag for displaying flightPath (so it isn't displayed when focusing on the starship)
-	bool displaySectors;				//  Flag for displaying Sectors (so it isn't displayed when focusing on the starship)
-	bool sectorSelected;				//  Flag for whether a sector has been chosen this turn
-	bool phaseComplete;					//  Flag 
-	bool displayFlightMenu;				//  Flag
-	bool tradeComplete;					//  Flag
-	bool justTraded;					//  Flag
 
 public:
 	Game();
@@ -65,19 +70,15 @@ public:
 		for (int i = 0; i < 4; i++)
 			delete tradeMenuIcons[i].icon;
 	}
+
 	// getters and setters
-	Player* getP1() const
-	{	return P1;  }
-	Player* getP2() const
-	{	return P2;  }
-	Universe* getUniverse() const
-	{	return universe;	}
+	Player* getP1() const { return P1; }
+	Player* getP2() const { return P2; }
+	Universe* getUniverse() const { return universe; }
 
-
-	int rollCombatDie()
-	{	return combatDie[rand() % 6];	}
-	void startGame()
-	{	gameLoop();	};
+	//  Misc Inline Functions
+	int rollCombatDie() { return combatDie[rand() % 6]; }
+	void startGame() { gameLoop(); };
 
 private:	
 	void gameLoop();
@@ -90,7 +91,7 @@ private:
 	int rollSpeedDie();
 	void productionPhaseListener(sf::RenderWindow &gWindow);
 	void flightPhaseListener(sf::RenderWindow &gWindow, int tempType);
-	void flightPhaseSectorSelectionListener(sf::RenderWindow &gWindow, int &tempType);
+	void preFlightListener(sf::RenderWindow &gWindow, int &tempType);
 	void tradePhaseListener(sf::RenderWindow &gWindow);
 	void buildPhaseListener(sf::RenderWindow &gWindow);
 	void tradeMenu(sf::RenderWindow &gWindow, int tempType);
@@ -98,7 +99,7 @@ private:
 	void updateFlightMenu(sf::RenderWindow &gWindow);
 	void drawFlightPath(sf::RenderWindow &gWindow);
 	void drawCurrentPlanet(sf::RenderWindow &gWindow);
-	void updateTradeMenu(sf::RenderWindow &gWindow, int tempType);
+	void initTradeMenu(sf::RenderWindow &gWindow, int tempType);
 
 };
 
