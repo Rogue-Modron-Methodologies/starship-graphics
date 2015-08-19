@@ -38,12 +38,20 @@ Game::Game()
 	specialString->setTextScale({ 2, 2 });
 	specialString->setTextColor(sf::Color::Red);
 
+	tradeSaveState = new Icon*[7];
+	tradeSaveState[astro] = new Icon(txtMgr.getResource(SYM1FLE), { 780, 540 }, 25, { 35, 35 }, { 3, 0 });
+	tradeSaveState[science] = new Icon(txtMgr.getResource(RICNFLE), { 780, 540 }, 1, { 35, 35 });
+	tradeSaveState[ore] = new Icon(txtMgr.getResource(RICNFLE), { 780, 575 }, 1, { 35, 35 }, { 1, 0 });
+	tradeSaveState[fuel] = new Icon(txtMgr.getResource(RICNFLE), { 780, 610 }, 1, { 35, 35 }, { 2, 0 });
+	tradeSaveState[tradeGood] = new Icon(txtMgr.getResource(RICNFLE), { 780, 645 }, 1, { 35, 35 }, { 3, 0 });
+	tradeSaveState[wheat] = new Icon(txtMgr.getResource(RICNFLE), { 780, 680 }, 1, { 35, 35 }, { 4, 0 });
+	tradeSaveState[carbon] = new Icon(txtMgr.getResource(RICNFLE), { 780, 715 }, 1, { 35, 35 }, { 5, 0 });
 
 	tradeMenuIcons = new Icon*[4];
-	tradeMenuIcons[plus] = new Icon(txtMgr.getResource(TRDICN), { 715, 550 }, 1, { 50, 50 }, { 0, 0 });
-	tradeMenuIcons[minus] = new Icon(txtMgr.getResource(TRDICN), { 715, 650 }, 1, { 50, 50 }, { 1, 0 });
-	tradeMenuIcons[check] = new Icon(txtMgr.getResource(TRDICN), { 675, 760 }, 1, { 50, 50 }, { 2, 0 });
-	tradeMenuIcons[cancel] = new Icon(txtMgr.getResource(TRDICN), { 750, 760 }, 1, { 50, 50 }, { 3, 0 });
+	tradeMenuIcons[plus] = new Icon(txtMgr.getResource(TRDICN), { 675, 550 }, 1, { 50, 50 }, { 0, 0 });
+	tradeMenuIcons[minus] = new Icon(txtMgr.getResource(TRDICN), { 675, 650 }, 1, { 50, 50 }, { 1, 0 });
+	tradeMenuIcons[check] = new Icon(txtMgr.getResource(TRDICN), { 635, 760 }, 1, { 50, 50 }, { 2, 0 });
+	tradeMenuIcons[cancel] = new Icon(txtMgr.getResource(TRDICN), { 710, 760 }, 1, { 50, 50 }, { 3, 0 });
 
 	for (int i = 0; i < FLAGNUM; i++)
 		flag[i] = false;
@@ -165,6 +173,8 @@ void Game::gameLoop()
 						preFlightListener(gWindow, tempNum);
 					if (flag[sectorSelected])
 						flightPhaseListener(gWindow, tempNum);
+					if (flag[tradeInProgress])
+						tradeMenu(gWindow, tempNum);
 					break;
 				case trades:	
 					tradePhaseListener(gWindow);
@@ -335,7 +345,9 @@ void Game::updateGameWindow(sf::RenderWindow &gWindow)
 				{
 					for (int i = 0; i < 4; i++)
 						tradeMenuIcons[i]->draw(gWindow);
-				}
+					for (int i = 0; i < 6; i++)					////////////////////////   Dont Print Astro
+						tradeSaveState[i]->draw(gWindow);            /////////////////////////////             TESTING /////////////////////////////////////
+ 				}
 				infoString->setString("Flight: " + std::to_string(universe->getCurrentMove()) + " / " + std::to_string(cPlyr->getStarship()->getMaxDistance())
 					+ "\nMax Actions: " + std::to_string(actionNum) + " / " + std::to_string(cPlyr->getStarship()->getMaxActions()));
 			}
@@ -494,9 +506,8 @@ void Game::preFlightListener(sf::RenderWindow &gWindow, int &tempType)
 //  Deals with Mouse Click actions in the Flight Phase
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
 void Game::flightPhaseListener(sf::RenderWindow &gWindow, int tempType)
-{
-	if (flag[tradeInProgress])
-		tradeMenu(gWindow, tempType);
+{	
+
 	// Starship (Small) is clicked
 	if (cPlyr->getStarship()->isTargeted(gWindow) && cPlyr->getStarship()->isSmall())
 	{
@@ -559,9 +570,11 @@ void Game::flightPhaseListener(sf::RenderWindow &gWindow, int tempType)
 			break;
 		}
 	}
+
 	//  Starship (Large) && Empty Space is clicked
-	else if (!cPlyr->getStarship()->isTargeted(gWindow) && !cPlyr->getStarship()->isSmall())
+	else if (!cPlyr->getStarship()->isTargeted(gWindow) && !cPlyr->getStarship()->isSmall() && !tradeIconsTargeted(gWindow))
 	{
+		std::cout << "CRASH?\n";
 		cPlyr->makeSmall();
 		flag[visFlightPath] = true;
 	}
@@ -697,7 +710,15 @@ void Game::initTradeMenu(sf::RenderWindow &gWindow, int tempType)
 {
 	flag[visFlightMenu] = false;
 	flag[tradeInProgress] = true;
-	// save preTrade values so they can be restored if the trade is cancelled
+	int cResource = universe->getCurrentPlanet()->getResource();
+	for (int i = 0; i < 6; i++)							// creates a saveState for all resource and astro values
+	{
+		tradeSaveState[i]->setQty(cPlyr->getStatQty(i));
+		tradeSaveState[i]->greyOut();
+	}
+	std::cout << "Current Resource :" << cResource << std::endl;
+	tradeSaveState[cResource]->setColor();
+	
 }
 
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
@@ -727,19 +748,16 @@ void Game::tradeMenu(sf::RenderWindow &gWindow, int tempType)
 	else if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && tradeMenuIcons[check]->isTargeted(gWindow))
 	{
 		flag[tradeInProgress] = false;
+		flag[visFlightMenu] = true;
+		flag[justTraded] = true;
 		actionNum++;
 		std::cout << "Trade Complete" << std::endl;
 	}
 	else if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && tradeMenuIcons[cancel]->isTargeted(gWindow))
 	{
 		flag[tradeInProgress] = false;
+		flag[visFlightMenu] = true;		
 		std::cout << "Trade Cancelled" << std::endl;
-	}
-
-	if (!flag[tradeInProgress])
-	{
-		flag[visFlightMenu] = true;
-		flag[justTraded] = true;
 	}
 }
 
@@ -831,4 +849,25 @@ void Game::drawCurrentPlanet(sf::RenderWindow &gWindow)
 	universe->getCurrentPlanet()->setScale(CRDLSCL);
 	universe->getCurrentPlanet()->setPosition({ 825, 520 });
 	universe->getCurrentPlanet()->draw(gWindow);
+}
+
+// (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
+//
+//  Returns true if any Trade Icons are clicked
+//
+// (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
+bool Game::tradeIconsTargeted(sf::RenderWindow &gWindow)
+{
+	if (flag[tradeInProgress])
+	{
+		for (int i = 0; i < 4; i++)
+			if (tradeMenuIcons[i]->isTargeted(gWindow))
+				return true;
+		for (int i = 0; i < 6; i++)						
+			if(tradeSaveState[i]->isTargeted(gWindow))
+				return true;
+		if (universe->getCurrentPlanet()->isTargeted(gWindow))
+			return true;
+	}
+	return false;
 }

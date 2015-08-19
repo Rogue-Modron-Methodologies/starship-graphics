@@ -43,15 +43,18 @@ public:
 	void setSrcPosY(unsigned num){ this->srcPos.y = num; }
 	void setQty(int num){ this->qty = num; }
 	int getQty() const { return qty; }
+	void setColor(sf::Color color = sf::Color::White){ sprite->setColor(color); }
 
 	// Misc Inline Functions
 	bool isSmall() const  { 	return smallDisplay; }
+	void greyOut(){ sprite->setColor(sf::Color(255, 255, 255, 100)); }
 
 	// Prototypes
 	virtual void updateTextRect();
 	virtual void draw(sf::RenderWindow &window) { window.draw(*sprite); }
 	bool isTargeted(sf::RenderWindow &gWindow);	
 	sf::Vector2f convertCoord(sf::RenderWindow &gWindow);
+
 };
 
 #endif  // OBJECT_H

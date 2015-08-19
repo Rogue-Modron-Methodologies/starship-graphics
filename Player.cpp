@@ -20,43 +20,43 @@ Player::Player(ResourceManager<sf::Texture> &txtMgr, ResourceManager<sf::Font> &
 	ColonyZone = new LinkedList<Card>;
 	TradeZone = new LinkedList<Card>;
 
-	cZoneIcon = new Icon(fntMgr.getResource(FNTFLE), { 30, 515 }, "Colony");
+	cZoneIcon = new Icon(fntMgr.getResource(FNTFLE), CLPOS, "Coloniy Zone");
 
-	tZoneIcon = new Icon(fntMgr.getResource(FNTFLE), { 130, 515 }, "Trade");
+	tZoneIcon = new Icon(fntMgr.getResource(FNTFLE), TLPOS, "Trade Zone");
 
 	statistics = new Icon*[STATNUM];
 
 	statistics[player] = new Icon(txtMgr.getResource(ICNFLE), { 10, 820 }, num, {75, 75 });
 	statistics[player]->initString(fntMgr.getResource(FNTFLE), { 90, 820 }, name);
 
+	statistics[astro] = new Icon(txtMgr.getResource(SYM1FLE), { 90, 860 }, 25, { 35, 35 }, { 3, 0 });
+	statistics[astro]->initString(fntMgr.getResource(FNTFLE), { 130, 855 });
+	
 	statistics[vicPt] = new Icon(txtMgr.getResource(SYM1FLE), { 180, 860 }, 1, { 35, 35 });
 	statistics[vicPt]->initString(fntMgr.getResource(FNTFLE), { 220, 855 });
-
+	
 	statistics[frdPt] = new Icon(txtMgr.getResource(SYM1FLE), { 260, 860 }, 0, { 35, 35 }, { 1, 0 });
 	statistics[frdPt]->initString(fntMgr.getResource(FNTFLE), { 300, 855 });
 
 	statistics[fmPt] = new Icon(txtMgr.getResource(SYM1FLE), { 340, 860 }, 0, { 35, 35 }, { 2, 0 });
 	statistics[fmPt]->initString(fntMgr.getResource(FNTFLE), { 380, 855 });
 
-	statistics[astro] = new Icon(txtMgr.getResource(SYM1FLE), { 90, 860 }, 25, { 35, 35 }, { 3, 0 });
-	statistics[astro]->initString(fntMgr.getResource(FNTFLE), { 130, 855 });
-
-	statistics[science] = new Icon(txtMgr.getResource(RICNFLE), { 500, 860 }, 1, { 35, 35 });
-	statistics[science]->initString(fntMgr.getResource(FNTFLE), { 540, 855 });
+	statistics[science] = new Icon(txtMgr.getResource(RICNFLE), { 420, 860 }, 1, { 35, 35 }, { 0, 0 });
+	statistics[science]->initString(fntMgr.getResource(FNTFLE), { 460, 855 });
+		
+	statistics[ore] = new Icon(txtMgr.getResource(RICNFLE), { 500, 860 }, 1, { 35, 35 }, { 1, 0 });
+	statistics[ore]->initString(fntMgr.getResource(FNTFLE), { 540, 855 });
 	
-	statistics[ore] = new Icon(txtMgr.getResource(RICNFLE), { 420, 860 }, 1, { 35, 35 }, { 5, 0 });
-	statistics[ore]->initString(fntMgr.getResource(FNTFLE), { 460, 855 });
-
-	statistics[fuel] = new Icon(txtMgr.getResource(RICNFLE), { 580, 860 }, 1, { 35, 35 }, { 1, 0 });
+	statistics[fuel] = new Icon(txtMgr.getResource(RICNFLE), { 580, 860 }, 1, { 35, 35 }, { 2, 0 });
 	statistics[fuel]->initString(fntMgr.getResource(FNTFLE), { 620, 855 });
 
-	statistics[tradeGood] = new Icon(txtMgr.getResource(RICNFLE), { 660, 860 }, 1, { 35, 35 }, { 4, 0 });
+	statistics[tradeGood] = new Icon(txtMgr.getResource(RICNFLE), { 660, 860 }, 1, { 35, 35 }, { 3, 0 });
 	statistics[tradeGood]->initString(fntMgr.getResource(FNTFLE), { 700, 855 });
 
-	statistics[wheat] = new Icon(txtMgr.getResource(RICNFLE), { 740, 860 }, 1, { 35, 35 }, { 2, 0 });
+	statistics[wheat] = new Icon(txtMgr.getResource(RICNFLE), { 740, 860 }, 1, { 35, 35 }, { 4, 0 });
 	statistics[wheat]->initString(fntMgr.getResource(FNTFLE), { 780, 855 });
 
-	statistics[carbon] = new Icon(txtMgr.getResource(RICNFLE), { 820, 860 }, 1, { 35, 35 }, { 3, 0 });
+	statistics[carbon] = new Icon(txtMgr.getResource(RICNFLE), { 820, 860 }, 1, { 35, 35 }, { 5, 0 });
 	statistics[carbon]->initString(fntMgr.getResource(FNTFLE), { 860, 855 });
 }
  

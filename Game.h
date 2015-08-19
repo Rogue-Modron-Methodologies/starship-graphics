@@ -45,7 +45,8 @@ private:
 	sf::Vector2u screenSize;
 	ResourceManager<sf::Texture> txtMgr;
 	ResourceManager<sf::Font> fntMgr;
-	bool flag[9];						//  Will hold an array of flags for game decisions
+	bool flag[9];						//  Will hold an array of flags for game decisions	
+	Icon **tradeSaveState;				//  Saves value of all six resources and astro in case of cancel 
 	Icon **tradeMenuIcons;				//  Icons for the Trade Menu
 	Icon *flightDie;	
 	Icon *phaseNameString;				//  Phase Name Text String
@@ -58,6 +59,7 @@ private:
 	int actionNum;						//  Current Action Num
 	int cPhase;						//  Current Phase Num
 	int combatDie[6];
+
 
 public:
 	Game();
@@ -75,6 +77,9 @@ public:
 		for (int i = 0; i < 4; i++)
 			delete tradeMenuIcons[i];
 		delete [] tradeMenuIcons;
+		for (int i = 0; i < 7; i++)
+			delete tradeSaveState[i];
+		delete [] tradeSaveState;
 	}
 
 	// getters and setters
@@ -106,6 +111,7 @@ private:
 	void drawFlightPath(sf::RenderWindow &gWindow);
 	void drawCurrentPlanet(sf::RenderWindow &gWindow);
 	void initTradeMenu(sf::RenderWindow &gWindow, int tempType);
+	bool tradeIconsTargeted(sf::RenderWindow &gWindow);
 
 };
 

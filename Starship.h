@@ -15,6 +15,7 @@
 #include <string>
 #include "Resource.h"
 #include "BoosterLaser.h"
+#include "ShipObject.h"
 #include "Icon.h"
 #include "Module.h"
 #include "Card.h"

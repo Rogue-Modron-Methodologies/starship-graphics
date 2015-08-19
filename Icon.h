@@ -56,6 +56,8 @@ public:
 	void setTextColor(sf::Color color) { text.setColor(color); }
 	void setSrcPos(sf::Vector2u source) { icon->setSrcPos(source); }
 	void setPosition(sf::Vector2f pos) { std::cout << "ERROR: Icon setPostion function should never be called\n"; }
+	void greyOut(){ icon->greyOut(); }
+	void setColor(sf::Color color = sf::Color::White){ icon->setColor(color); }
 
 	//  Initializes the string member variable	
 	void initString(const sf::Font &font, sf::Vector2f pos, std::string words = "XXX", int style = sf::Text::Regular)
