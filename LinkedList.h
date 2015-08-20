@@ -56,14 +56,14 @@ int showIconOnly() const{
 }
 
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯)
-// Returns iconOnly flag value.     
+// Sets iconOnly flag value.     
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯)
 void setIconOnly(bool toggle) {
 	iconOnly = toggle;
 }
 
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯)
-// Returns iconOnly flag value.     
+// Checks to see if Icon is Targeted.    
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯)
 bool isIconTargeted(sf::RenderWindow &gWindow) const{
 	if (front->getNext())

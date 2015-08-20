@@ -17,8 +17,7 @@
 Game::Game()
 {
 	initCDie();
-	flightDie = new Icon(txtMgr.getResource(SDIEFLE), sf::Vector2f{ 350, 525 }, 1, sf::Vector2u(200, 200));
-	flightDie->setScale({ .4f, .4f });
+	flightDie = new Icon(txtMgr.getResource(SDIEFLE), sf::Vector2f{ 350, 525 }, 1, sf::Vector2u(80, 80));
 	flightDie->initString(fntMgr.getResource(FNTFLE), { 440, 545 }, "", sf::Text::Bold);		
 	
 	P1 = new Player(txtMgr, fntMgr, "Player1", 1);		// Default names for bugtesting
@@ -338,7 +337,7 @@ void Game::updateGameWindow(sf::RenderWindow &gWindow)
 			break;
 		else
 		{
-			specialString->setString("Sector #" + std::to_string(universe->getCurrentSectorNum() + 1));
+			specialString->setString("Flight Sector: " + std::to_string(universe->getCurrentSectorNum() + 1));
 			if (flag[visFlightPath])
 			{
 				drawFlightPath(gWindow);
@@ -425,7 +424,11 @@ void Game::productionPhaseListener(sf::RenderWindow &gWindow)
 	if (cPlyr->getStarship()->isTargeted(gWindow) && cPlyr->getStarship()->isSmall())
 	{
 		if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+		{
 			cPlyr->makeBig();
+			flightDie->setIconPosition({ 350, 525 });
+			flightDie->setTextPosition({ 440, 545 });
+		}
 	}
 	// Colony Zone (Large Icon) is clicked
 	else if (!cPlyr->getColonyZone()->isSmall() && cPlyr->getColonyZone()->showIconOnly() && cPlyr->getColonyZone()->isIconTargeted(gWindow))
@@ -459,7 +462,11 @@ void Game::productionPhaseListener(sf::RenderWindow &gWindow)
 	else if (!cPlyr->getTradeZone()->isSmall() && !cPlyr->getTradeZone()->showIconOnly() && cPlyr->getTradeZone()->isZoneTargeted(gWindow, tempType)){}		// Do Nothing this Phase
 	//  Starship (Large) && Empty Space is clicked
 	else if (!cPlyr->getStarship()->isTargeted(gWindow) && !cPlyr->getStarship()->isSmall())
+	{
 		cPlyr->makeSmall();
+		flightDie->setIconPosition({ 250, 725 });
+		flightDie->setTextPosition({ 340, 745 });
+	}
 }
 
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
@@ -577,6 +584,8 @@ void Game::flightPhaseListener(sf::RenderWindow &gWindow, int tempType)
 			break;
 		case 3:
 			universe->continueFlight();
+			//if (flag[justTraded])
+			//	flightActions.push_back(Icon())
 			flag[justTraded] = false;
 			tradeProgressString->clear();
 			break;

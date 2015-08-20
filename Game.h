@@ -56,7 +56,7 @@ private:
 	Icon *cPlanet;						//  Current Planet Text String
 	Icon *errorString;					//  Error Text String
 	Icon *tradeProgressString;			//  In Progress/Complete/Cancelled
-	std::string statusUpdate;			//  Catches errors from called functions	
+	std::string statusUpdate;			//  Catches errors from called functions
 	int errorTimer;
 	int actionNum;						//  Current Action Num
 	int cPhase;						//  Current Phase Num

@@ -25,7 +25,7 @@ Universe::Universe(ResourceManager<sf::Texture> &txtMgr, ResourceManager<sf::Fon
 
 	flightSector[0] = new Icon(txtMgr.getResource("resources/cards/CardBackground.png"), sf::Vector2f(100, 150), 10, sf::Vector2u(200, 300));
 	flightSector[0]->initString(fntMgr.getResource(FNTFLE), { 175, 200 }, "1", sf::Text::Bold);
-	flightSector[0]->setTextScale({5, 5});
+	flightSector[0]->setTextScale({ 5, 5 });
 
 	flightSector[1] = new Icon(txtMgr.getResource("resources/cards/CardBackground.png"), sf::Vector2f(300, 150), 10, sf::Vector2u(200, 300));
 	flightSector[1]->initString(fntMgr.getResource(FNTFLE), { 360, 200 }, "2", sf::Text::Bold);
@@ -41,16 +41,16 @@ Universe::Universe(ResourceManager<sf::Texture> &txtMgr, ResourceManager<sf::Fon
 
 	menu = new Icon*[4];
 
-	menu[trdW] = new Icon(txtMgr.getResource("resources/board/iconTemp.png"), sf::Vector2f(760, 610), 0);
+	menu[trdW] = new Icon(txtMgr.getResource("resources/board/SymbolsBig.png"), { 760, 610 }, 0, { 50, 50 }, { 3, 0 });
 	menu[trdW]->initString(fntMgr.getResource(FNTFLE), { 520, 610 }, "Trade With Planet");
 
-	menu[colIt] = new Icon(txtMgr.getResource("resources/board/iconTemp.png"), sf::Vector2f(760, 660), 0);
+	menu[colIt] = new Icon(txtMgr.getResource("resources/board/SymbolsBig.png"), sf::Vector2f(760, 660), 0, { 50, 50 }, { 1, 0 });
 	menu[colIt]->initString(fntMgr.getResource(FNTFLE), {760, 660}, "Colonize");
 
-	menu[conFly] = new Icon(txtMgr.getResource("resources/board/iconTemp.png"), sf::Vector2f(760, 710), 0);
+	menu[conFly] = new Icon(txtMgr.getResource("resources/board/SymbolsBig.png"), sf::Vector2f(760, 710), 0, { 50, 50 }, { 4, 0 });
 	menu[conFly]->initString(fntMgr.getResource(FNTFLE), { 550, 710 }, "Continue Flying");
 
-	menu[endFl] = new Icon(txtMgr.getResource("resources/board/iconTemp.png"), sf::Vector2f(760, 760), 0);
+	menu[endFl] = new Icon(txtMgr.getResource("resources/board/SymbolsBig.png"), sf::Vector2f(760, 760), 0, { 50, 50 }, { 5, 0 });
 	menu[endFl]->initString(fntMgr.getResource(FNTFLE), { 610, 760 }, "End Flight");
 
 	S1 = new Card*[10];
@@ -158,7 +158,7 @@ bool Universe::flightPathTargeted(sf::RenderWindow &gWindow, int &num)
 void Universe::initializeFlightPath(int tempType)
 {
 	sectorNum = tempType;
-	currentMove = 1;												///  debugging only
+	currentMove = 1;											
 }
 
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 

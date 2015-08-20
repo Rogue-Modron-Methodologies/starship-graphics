@@ -20,9 +20,9 @@ Player::Player(ResourceManager<sf::Texture> &txtMgr, ResourceManager<sf::Font> &
 	ColonyZone = new LinkedList<Card>;
 	TradeZone = new LinkedList<Card>;
 
-	cZoneIcon = new Icon(fntMgr.getResource(FNTFLE), CLPOS, "Coloniy Zone");
+	cZoneIcon = new Icon(fntMgr.getResource(FNTFLE), CLPOS, "Colony");
 
-	tZoneIcon = new Icon(fntMgr.getResource(FNTFLE), TLPOS, "Trade Zone");
+	tZoneIcon = new Icon(fntMgr.getResource(FNTFLE), TLPOS, "Trade");
 
 	statistics = new Icon*[STATNUM];
 

@@ -22,9 +22,10 @@ private:
 public:
 	Resource(const sf::Texture &texture, sf::Vector2f pos, sf::Vector2u srcSize, int num, std::string name, sf::Vector2u srcPos = sf::Vector2u{ 0, 0 })
 		: ShipObject(texture, pos, num, srcSize, srcPos)	
-	{
-		rCap = 4;			///////////////////////  SB 2 except for science which should be 4.
+	{		
 		this->name = name;
+		// name == "Science" ? rCap = 4 : rCap = 2;						///////////////////////  SB 2 except for science which should be 4.
+		rCap = 4;
 	}	
 	int getQty(){ return qty; }
 	int getRCap() const  { return rCap; }
