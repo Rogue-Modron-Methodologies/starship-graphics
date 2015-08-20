@@ -45,6 +45,7 @@ public:
 	~Universe();
 	// Getters and Setters
 	Card** getSector(int num);
+	int getCurrentSectorNum(){ return sectorNum; }
 	Card** getCurrentSector(){ return getSector(sectorNum);}
 	Icon* getMenuItem(int num) { return menu[num]; }
 	Card* getAdvCard(int i);

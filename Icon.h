@@ -23,9 +23,8 @@ public:
 	Icon(){};
 	//  Constructor for initializing the Icon (preferred)
 	Icon(const sf::Texture &texture, sf::Vector2f pos, int num = 1, sf::Vector2u srcSize = { 0, 0 }, sf::Vector2u srcPos = { 0, 0 })
-	{
-		icon = new Object(texture, pos, num, srcSize, srcPos);
-	}
+	{ icon = new Object(texture, pos, num, srcSize, srcPos); }
+
 	//  Constructor for initializing the text with a string
 	Icon(const sf::Font &font, sf::Vector2f pos, std::string words, int style = sf::Text::Regular ) { initString(font, pos, words); }
 
@@ -38,6 +37,7 @@ public:
 	~Icon() {	delete icon; }
 
 	// Getters and Setters
+	sf::Text getText(){ return text; }
 	int getQty() const { return icon->getQty(); }
 	void setQty(int num, bool changeQty = true) 
 	{
@@ -58,6 +58,7 @@ public:
 	void setPosition(sf::Vector2f pos) { std::cout << "ERROR: Icon setPostion function should never be called\n"; }
 	void greyOut(){ icon->greyOut(); }
 	void setColor(sf::Color color = sf::Color::White){ icon->setColor(color); }
+	void clear(){ text.setString(""); }
 
 	//  Initializes the string member variable	
 	void initString(const sf::Font &font, sf::Vector2f pos, std::string words = "XXX", int style = sf::Text::Regular)

@@ -44,7 +44,8 @@ public:
 	Starship* getStarship() const {  return starship;  }
 	LinkedList<Card>* getColonyZone() const {	return ColonyZone;	}
 	LinkedList<Card>* getTradeZone() const 	{	return TradeZone;	}
-	int getAstro() const  { return statistics[astro]->getQty(); }
+	int getStatQty(int num){ return statistics[num]->getQty(); }
+	void setStatQty(int stat, int num){ statistics[stat]->setQty(num); }
 
 	//  Misc Inline Functions
 	void update();
@@ -64,6 +65,6 @@ public:
 		statusUpdate = "Can not afford ";
 		return false;
 	}	
-	int getStatQty(int num){ return statistics[num]->getQty(); }
+	
 };
 #endif // PLAYER_H

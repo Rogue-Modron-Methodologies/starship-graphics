@@ -43,6 +43,8 @@ public:
 	//  Getters/Setters
 	int getMaxDistance() const  { return 10 /* maxMovement*/; } ///////////////////////////// debugging ONLY
 	int getMaxActions() const  { return maxActions; }
+	int getShipObjectQty(int type){ return shipObjects[type]->getQty(); }
+	void setShipObjectQty(int type, int num){ shipObjects[type]->setQty(num); }
 
 	//  Misc Inline Functions
 	void calcMaxDistance(int dieRoll)  { maxMovement = (dieRoll + totalBoosters()); }	
@@ -58,7 +60,7 @@ public:
 	void update(ShipObject *o, sf::Vector2f scale = { 1, 1 });	
 	bool gainItem(int type, std::string &statusUpdate);
 	bool loseItem(int type, std::string &statusUpdate);
-	int getShipObjectQty(int type){ return shipObjects[type]->getQty(); }
+	void updateShipIcons();
 	
 };
 

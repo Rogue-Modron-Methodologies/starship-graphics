@@ -50,10 +50,12 @@ private:
 	Icon **tradeMenuIcons;				//  Icons for the Trade Menu
 	Icon *flightDie;	
 	Icon *phaseNameString;				//  Phase Name Text String
-	Icon *specialString;				//  For End of Phase Messages (And Sector Selection)
+	Icon *endPhaseString;				//  For End of Phase Messages
+	Icon *specialString;				//  For special instructions
 	Icon *infoString;					//  Info Text String
 	Icon *cPlanet;						//  Current Planet Text String
 	Icon *errorString;					//  Error Text String
+	Icon *tradeProgressString;			//  In Progress/Complete/Cancelled
 	std::string statusUpdate;			//  Catches errors from called functions	
 	int errorTimer;
 	int actionNum;						//  Current Action Num
@@ -70,6 +72,8 @@ public:
 		delete universe;
 		delete flightDie;
 		delete phaseNameString;
+		delete tradeProgressString;
+		delete endPhaseString;
 		delete specialString;
 		delete infoString;
 		delete errorString;

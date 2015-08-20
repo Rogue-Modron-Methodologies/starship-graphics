@@ -103,12 +103,10 @@ bool Starship::bigLeftClicked(sf::RenderWindow &gWindow, std::string &statusUpda
 {
 	for (int i = 0; i < CLKNUM; i++)
 	{
-		if (shipObjects[i]->isTargeted(gWindow))
+		if (shipObjects[i]->isTargeted(gWindow) && gainItem(i, statusUpdate))
 		{
-			if (gainItem(i, statusUpdate)){
-				tempNum = i;
-				return true;
-			}
+			tempNum = i;
+			return true;
 		}		
 	}	
 	return false;
@@ -123,13 +121,10 @@ bool Starship::bigRightClicked(sf::RenderWindow &gWindow, std::string &statusUpd
 {
 	for (int i = 0; i < CLKNUM; i++)
 	{
-		if (shipObjects[i]->isTargeted(gWindow))
+		if (shipObjects[i]->isTargeted(gWindow) && loseItem(i, statusUpdate))
 		{
-			if (loseItem(i, statusUpdate))
-			{
-				tempNum = i;
-				return true;
-			}			
+			tempNum = i;
+			return true;			
 		}
 	}
 	return false;
@@ -273,3 +268,14 @@ bool Starship::loseItem(int pos, std::string &statusUpdate)
 	}
 }
 
+
+// (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
+//  
+//  Restores shipObject quantities to a set value/position
+//
+// (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
+void Starship::updateShipIcons()
+{
+	for (int i = 0; i < CLKNUM; i++)
+		shipObjects[i]->updateTextRect();
+}
