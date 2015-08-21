@@ -58,6 +58,20 @@ Game::Game()
 	tradeMenuIcons[check] = new Icon(txtMgr.getResource(TRDICN), { 635, 760 }, 1, { 50, 50 }, { 2, 0 });
 	tradeMenuIcons[cancel] = new Icon(txtMgr.getResource(TRDICN), { 710, 760 }, 1, { 50, 50 }, { 3, 0 });
 
+	menu = new Icon*[4];
+
+	menu[trdW] = new Icon(txtMgr.getResource("resources/board/SymbolsBig.png"), { 760, 610 }, 0, { 50, 50 }, { 3, 0 });
+	menu[trdW]->initString(fntMgr.getResource(FNTFLE), { 520, 610 }, "Trade With Planet");
+
+	menu[colIt] = new Icon(txtMgr.getResource("resources/board/SymbolsBig.png"), sf::Vector2f(760, 660), 0, { 50, 50 }, { 1, 0 });
+	menu[colIt]->initString(fntMgr.getResource(FNTFLE), { 760, 660 }, "Colonize");
+
+	menu[conFly] = new Icon(txtMgr.getResource("resources/board/SymbolsBig.png"), sf::Vector2f(760, 710), 0, { 50, 50 }, { 4, 0 });
+	menu[conFly]->initString(fntMgr.getResource(FNTFLE), { 550, 710 }, "Continue Flying");
+
+	menu[endFl] = new Icon(txtMgr.getResource("resources/board/SymbolsBig.png"), sf::Vector2f(760, 760), 0, { 50, 50 }, { 5, 0 });
+	menu[endFl]->initString(fntMgr.getResource(FNTFLE), { 610, 760 }, "End Flight");
+
 	for (int i = 0; i < FLAGNUM; i++)
 		flag[i] = false;
 	flag[visFlightPath] = true;
@@ -571,25 +585,36 @@ void Game::flightPhaseListener(sf::RenderWindow &gWindow, int tempType)
 		std::cout << "Current Planet Clicked" << std::endl;
 	}
 	//  Current Planet's Menu in the FlightPath is clicked
-	else if (!flag[phaseComplete] && flag[visFlightMenu] && universe->menuOptionTargeted(gWindow, tempType))
+	else if (!flag[phaseComplete] && flag[visFlightMenu] && menuOptionTargeted(gWindow, tempType))
 	{
-		std::cout << "Current Planet Option " << tempType << " Clicked" << std::endl;
-		switch (tempType + 1)
+		switch (tempType)
 		{
-		case 1:
+		case colIt:	//  Colonize/Establish Post
+			if (universe->getCurrentPlanet()->getType() == tradeShip && cPlyr->getStarship()->shipAvailable(tradeShip, tempType, statusUpdate))
+			{
+				cPlyr->getStarship()->loseItem(tempType, statusUpdate);
+				flag[justColonized] = true;
+				actionNum++;
+			}
+			else if (universe->getCurrentPlanet()->getType() == colonyShip &&cPlyr->getStarship()->shipAvailable(colonyShip, tempType, statusUpdate))
+			{
+				cPlyr->getStarship()->loseItem(tempType, statusUpdate);
+				flag[justColonized] = true;
+				actionNum++;
+			}
+			else
+				infoString->setString(statusUpdate);
+			break;			
+		case trdW:	//  Trade with Planet
 			initTradeMenu(gWindow, tempType);
 			break;
-		case 2:
-			actionNum++;
-			break;
-		case 3:
+		case conFly:	// Continue Flight
 			universe->continueFlight();
-			//if (flag[justTraded])
-			//	flightActions.push_back(Icon())
 			flag[justTraded] = false;
+			flag[justColonized] = false;
 			tradeProgressString->clear();
 			break;
-		case 4:
+		case endFl:	//  End Flight
 			flag[phaseComplete] = true;
 			tradeProgressString->clear();
 			break;
@@ -745,7 +770,7 @@ void Game::initTradeMenu(sf::RenderWindow &gWindow, int tempType)
 }
 
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
-//  Deals with Mouse Click actions in the Menu
+//  Deals with Mouse Click actions when the tradeMenu is displayed
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
 void Game::tradeMenu(sf::RenderWindow &gWindow, int tempType)
 {
@@ -806,10 +831,10 @@ void Game::tradeMenu(sf::RenderWindow &gWindow, int tempType)
 void Game::updateFlightMenu(sf::RenderWindow &gWindow)
 {
 	for (int i = 0; i < MENUSIZE; i++)
-		universe->getMenuItem(i)->setQty(0, false);
-	universe->getMenuItem(endFl)->setQty(1, false);	////////////////////////////////////////////  
+		menu[i]->setQty(0, false);
+	menu[endFl]->setQty(1, false);	////////////////////////////////////////////  
 	if (universe->getCurrentMove() < cPlyr->getStarship()->getMaxDistance()) /////////////////////  THESE THREE LINES SHOULDNT BE HERE
-		universe->getMenuItem(conFly)->setQty(1, false); /////////////////////////////////////////
+		menu[conFly]->setQty(1, false); /////////////////////////////////////////
 	if (universe->getCurrentPlanet()->getType() == 2)		//  PIRATE
 	{
 		//std::cout << "Pirate" << std::endl;
@@ -819,20 +844,24 @@ void Game::updateFlightMenu(sf::RenderWindow &gWindow)
 		////////////////////////////////////////////////////////////////////////////////////////  THEY SHOULD BE HERE ONCE PIRATE IS IMPLETEMENTED			
 		if (universe->getCurrentPlanet()->getType() == 0)		//  Trade Planet
 		{
-			if (!flag[justTraded])
-				universe->getMenuItem(trdW)->setQty(1, false);
-			if (universe->getCurrentPlanet()->getPts() == 1)	//  Can be colonized
+			if (!flag[justTraded] && !flag[justColonized])
+				menu[trdW]->setQty(1, false);
+			if (universe->getCurrentPlanet()->getPts() == 1 && !flag[justColonized])	//  Can be colonized
 			{
-				universe->getMenuItem(colIt)->setString("Establish Trade Post");
-				universe->getMenuItem(colIt)->setTextPosition({ 480, 660 });
-				universe->getMenuItem(colIt)->setQty(1, false);
+				menu[colIt]->setString("Establish Trade Post");
+				menu[colIt]->setSrcPos({ 1, 0 });
+				menu[colIt]->updateTextRect();
+				menu[colIt]->setTextPosition({ 480, 660 });
+				menu[colIt]->setQty(1, false);
 			}
 		}
-		else if (universe->getCurrentPlanet()->getType() == 1)	//  Colony Planet
+		else if (universe->getCurrentPlanet()->getType() == 1 && !flag[justColonized])	//  Colony Planet
 		{
-			universe->getMenuItem(colIt)->setString("Colonize the Planet");
-			universe->getMenuItem(colIt)->setTextPosition({ 500, 660 });
-			universe->getMenuItem(colIt)->setQty(1, false);
+			menu[colIt]->setString("Colonize the Planet");
+			menu[colIt]->setTextPosition({ 500, 660 });
+			menu[colIt]->setSrcPos({ 0, 0 });
+			menu[colIt]->updateTextRect();
+			menu[colIt]->setQty(1, false);
 		}
 		else                                                             //  Everything else
 		{
@@ -850,10 +879,8 @@ void Game::drawFlightMenu(sf::RenderWindow &gWindow)
 {
 	for (int i = 0; i < MENUSIZE; i++)
 	{
-		if (universe->getMenuItem(i)->getQty() == 1)
-		{
-			universe->getMenuItem(i)->draw(gWindow);
-		}
+		if (menu[i]->getQty() == 1)
+			menu[i]->draw(gWindow);
 	}
 }
 
@@ -905,6 +932,24 @@ bool Game::tradeIconsTargeted(sf::RenderWindow &gWindow)
 				return true;
 		if (universe->getCurrentPlanet()->isTargeted(gWindow))
 			return true;
+	}
+	return false;
+}
+
+// (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
+//
+//  Checks if any current Menu Options are chosen
+//
+// (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
+bool Game::menuOptionTargeted(sf::RenderWindow &gWindow, int &num)
+{
+	for (int i = 0; i < MENUSIZE; i++)
+	{
+		if (menu[i]->getQty() == 1 && menu[i]->isTargeted(gWindow))
+		{
+			num = i;
+			return true;
+		}
 	}
 	return false;
 }

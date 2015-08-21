@@ -39,20 +39,6 @@ Universe::Universe(ResourceManager<sf::Texture> &txtMgr, ResourceManager<sf::Fon
 	flightSector[3]->initString(fntMgr.getResource(FNTFLE), { 760, 200 }, "4", sf::Text::Bold);
 	flightSector[3]->setTextScale({ 5, 5 });
 
-	menu = new Icon*[4];
-
-	menu[trdW] = new Icon(txtMgr.getResource("resources/board/SymbolsBig.png"), { 760, 610 }, 0, { 50, 50 }, { 3, 0 });
-	menu[trdW]->initString(fntMgr.getResource(FNTFLE), { 520, 610 }, "Trade With Planet");
-
-	menu[colIt] = new Icon(txtMgr.getResource("resources/board/SymbolsBig.png"), sf::Vector2f(760, 660), 0, { 50, 50 }, { 1, 0 });
-	menu[colIt]->initString(fntMgr.getResource(FNTFLE), {760, 660}, "Colonize");
-
-	menu[conFly] = new Icon(txtMgr.getResource("resources/board/SymbolsBig.png"), sf::Vector2f(760, 710), 0, { 50, 50 }, { 4, 0 });
-	menu[conFly]->initString(fntMgr.getResource(FNTFLE), { 550, 710 }, "Continue Flying");
-
-	menu[endFl] = new Icon(txtMgr.getResource("resources/board/SymbolsBig.png"), sf::Vector2f(760, 760), 0, { 50, 50 }, { 5, 0 });
-	menu[endFl]->initString(fntMgr.getResource(FNTFLE), { 610, 760 }, "End Flight");
-
 	S1 = new Card*[10];
 	S2 = new Card*[10];
 	S3 = new Card*[10];
@@ -73,8 +59,7 @@ Universe::Universe(ResourceManager<sf::Texture> &txtMgr, ResourceManager<sf::Fon
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
 Universe::~Universe()
 {
-	for (int i = 0; i < MENUSIZE; i++)
-		delete menu[i];
+
 	for (int i = 0; i < 4; i++)
 		delete flightSector[i];
 	for (int i = 0; i < 10; i++)
@@ -98,7 +83,6 @@ Universe::~Universe()
 	delete [] SE;
 	delete [] AD;
 	delete [] cAdv;
-	delete [] menu;
 	delete [] flightSector;
 	delete board;	
 }
@@ -161,23 +145,7 @@ void Universe::initializeFlightPath(int tempType)
 	currentMove = 1;											
 }
 
-// (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
-//
-//  Checks if any current Menu Options are chosen
-//
-// (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
-bool Universe::menuOptionTargeted(sf::RenderWindow &gWindow, int &num)
-{
-	for (int i = 0; i < MENUSIZE; i++)
-	{
-		if (menu[i]->getQty() == 1 && menu[i]->isTargeted(gWindow))
-		{
-			num = i;
-			return true;
-		}
-	}
-	return false;
-}
+
 
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
 //

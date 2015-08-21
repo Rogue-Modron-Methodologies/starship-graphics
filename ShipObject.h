@@ -13,7 +13,6 @@
 #include "Object.h"
 
 enum ShipComponents { Science, Ore, Fuel, TradeGood, Wheat, Carbon, B1, B2, B3, L1, L2, L3, H1, H2 };
-enum Ships { empty, tradeShip, colonyShip };
 const std::string ARWFILE = "resources/board/arrows.png";		//  Source File name for resource arrows
 const std::string BSTFILE = "resources/board/boosters.png";		//  Source file name for boosters
 const std::string LSRFILE = "resources/board/lasers.png";		//  Source file name for lasers
@@ -32,8 +31,9 @@ public:
 	}
 	~ShipObject() {};
 	sf::Vector2f getRelPos() const { return relPos; }
-	virtual bool loseItem(std::string &error){ error = "shipObject loseItem Function Called"; return false; }
-	virtual bool gainItem(std::string &error){ error = "shipObject gainItem Function Called"; return false; }
+	virtual bool loseItem(std::string &error){ std::cout << "shipObject loseItem Function Called"; return false; }
+	virtual bool gainItem(std::string &error){ std::cout << "shipObject gainItem Function Called"; return false; }
+	virtual int getType() const { std::cout << "shipObject getType Function Called\n"; return -1; }
 	virtual void updateTextRect()
 	{
 		srcPos.x = qty - 1;

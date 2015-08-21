@@ -16,7 +16,7 @@
 #include "AdventureCard.h"
 #include "Icon.h"
 
-enum menuOptions {trdW, colIt, conFly, endFl };
+
 const int MENUSIZE = 4;
 const int CARDLISTSIZE = 71;					//  number of cards in the deck
 const std::string CARDLIST = "starship.csv";
@@ -33,7 +33,6 @@ private:
 	Card **SE;				//  Extra Cards waiting to be put into Sectors
 	Card **AD;				//  Adventure Deck
 	Card **cAdv;				//  Current Adventure????
-	Icon **menu;
 	Icon **flightSector;	
 	int currentMove;
 	int sectorNum;
@@ -47,7 +46,6 @@ public:
 	Card** getSector(int num);
 	int getCurrentSectorNum(){ return sectorNum; }
 	Card** getCurrentSector(){ return getSector(sectorNum);}
-	Icon* getMenuItem(int num) { return menu[num]; }
 	Card* getAdvCard(int i);
 	Object *getBoard() const { return board; }
 	int getCurrentMove(){ return currentMove; }
@@ -57,9 +55,7 @@ public:
 	bool sectorsTargeted(sf::RenderWindow &gWindow, int &num);
 	bool flightPathTargeted(sf::RenderWindow &gWindow, int &num);
 	void initializeFlightPath(int tempType);
-	bool menuOptionTargeted(sf::RenderWindow &gWindow, int &num);
 	void continueFlight(){ currentMove++; }
-
 
 private:
 	void universeSetup(ResourceManager<sf::Texture> &txtMgr);

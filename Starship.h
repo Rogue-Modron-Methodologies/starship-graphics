@@ -15,6 +15,7 @@
 #include <string>
 #include "Resource.h"
 #include "BoosterLaser.h"
+#include "HangarShips.h"
 #include "ShipObject.h"
 #include "Icon.h"
 #include "Module.h"
@@ -50,6 +51,21 @@ public:
 	void calcMaxDistance(int dieRoll)  { maxMovement = (dieRoll + totalBoosters()); }	
 	int totalLasers() { return shipObjects[L1]->getQty() + shipObjects[L2]->getQty() + shipObjects[L3]->getQty(); }			// used in combat
 	int totalBoosters()  { return shipObjects[B1]->getQty() + shipObjects[B2]->getQty() + shipObjects[B3]->getQty(); }			// called by calcMaxDistance and events	
+	bool shipAvailable(int type, int &hanger, std::string &error)
+	{
+		if (shipObjects[H1]->getType() == type && shipObjects[H1]->getQty() > 0)
+		{
+			hanger = H1;
+			return true;
+		}
+		else if (shipObjects[H2]->getType() == type && shipObjects[H2]->getQty() > 0)
+		{
+			hanger = H2;
+			return true;
+		}
+		error = "No ship in Hangar can complete this action!";
+		return false;
+	}
 
 	//  Prototypes
 	void draw(sf::RenderWindow &window);

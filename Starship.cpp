@@ -33,8 +33,8 @@ Starship::Starship(ResourceManager<sf::Texture> &txtMgr, ResourceManager<sf::Fon
 	shipObjects[L2] = new BoosterLaser(txtMgr.getResource(LSRFILE), sf::Vector2f{ 770, 180 }, 1, sf::Vector2u(105, 63));
 	shipObjects[L3] = new BoosterLaser(txtMgr.getResource(LSRFILE), sf::Vector2f{ 770, 250 }, 0, sf::Vector2u(105, 63));
 
-	shipObjects[H1] = new ShipObject(txtMgr.getResource(SHPFILE), sf::Vector2f{ 131, 161 }, 1, sf::Vector2u(85, 50));
-	shipObjects[H2] = new ShipObject(txtMgr.getResource(SHPFILE), sf::Vector2f{ 131, 212 }, 1, sf::Vector2u(85, 50), sf::Vector2u(1, 0));
+	shipObjects[H1] = new HangarShips(txtMgr.getResource(SHPFILE), sf::Vector2f{ 131, 161 }, sf::Vector2u(85, 50), 1, colonyShip, sf::Vector2u(0, 0));	
+	shipObjects[H2] = new HangarShips(txtMgr.getResource(SHPFILE), sf::Vector2f{ 131, 212 }, sf::Vector2u(85, 50), 1, tradeShip, sf::Vector2u(1, 0));	
 	
 	maxActions = 2;		
 }	
@@ -148,6 +148,7 @@ void Starship::update(ShipObject *o, sf::Vector2f scale)
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
 bool Starship::gainItem(int pos, std::string &statusUpdate)
 { 
+	std::cout << pos;
 	switch (pos)
 	{
 	case Carbon:
@@ -209,7 +210,10 @@ bool Starship::gainItem(int pos, std::string &statusUpdate)
 		break;
 	case H1:
 	case H2:
-		return true;
+		if (shipObjects[pos]->gainItem(statusUpdate))
+			return true;
+		else
+			return false;
 		break;
 	default:
 		return false;
@@ -261,7 +265,11 @@ bool Starship::loseItem(int pos, std::string &statusUpdate)
 		break;
 	case H1:
 	case H2:
-		return true;
+		if (shipObjects[pos]->loseItem(statusUpdate))
+			return true;
+		else
+			return false;
+		break;
 		break;
 	default:
 		return false;

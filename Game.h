@@ -21,10 +21,11 @@
 const std::string SDIEFLE = "resources/board/flightdie.png";
 const std::string TRDICN = "resources/board/TradeMenuIcons.png";
 
+enum menuOptions { trdW, colIt, conFly, endFl };
 enum phases{ production, flight, trades, build };
 enum tradeIcons{plus, minus, check, cancel};
 
-const int FLAGNUM = 9;
+const int FLAGNUM = 10;
 enum flagTypes{
 	phaseSetupComplete,				//  Flag:  Phase Setup Complete
 	gainResource,					//  Flag:  Choose one resource
@@ -34,7 +35,8 @@ enum flagTypes{
 	phaseComplete,					//  Flag:  Phase Complete
 	visFlightMenu,					//  Flag:	 Display Flight Menu
 	tradeInProgress,				//  Flag:  Trade in Progress
-	justTraded					//  Flag:  Traded Already
+	justTraded,					//  Flag:  Traded Already
+	justColonized					//  Flag:	 Colonized/Established Post
 };
 
 class Game{
@@ -56,6 +58,7 @@ private:
 	Icon *cPlanet;						//  Current Planet Text String
 	Icon *errorString;					//  Error Text String
 	Icon *tradeProgressString;			//  In Progress/Complete/Cancelled
+	Icon **menu;						//  
 	std::string statusUpdate;			//  Catches errors from called functions
 	int errorTimer;
 	int actionNum;						//  Current Action Num
@@ -84,6 +87,9 @@ public:
 		for (int i = 0; i < 7; i++)
 			delete tradeSaveState[i];
 		delete [] tradeSaveState;
+		for (int i = 0; i < MENUSIZE; i++)
+			delete menu[i];
+		delete[] menu;
 	}
 
 	// getters and setters
@@ -116,6 +122,7 @@ private:
 	void drawCurrentPlanet(sf::RenderWindow &gWindow);
 	void initTradeMenu(sf::RenderWindow &gWindow, int tempType);
 	bool tradeIconsTargeted(sf::RenderWindow &gWindow);
+	bool menuOptionTargeted(sf::RenderWindow &gWindow, int &num);
 
 };
 
