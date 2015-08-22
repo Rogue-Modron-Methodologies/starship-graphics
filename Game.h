@@ -115,7 +115,7 @@ private:
 	void preFlightListener(sf::RenderWindow &gWindow, int &tempType);
 	void tradePhaseListener(sf::RenderWindow &gWindow);
 	void buildPhaseListener(sf::RenderWindow &gWindow);
-	void tradeMenu(sf::RenderWindow &gWindow, int tempType);
+	void tradeMenuListener(sf::RenderWindow &gWindow, int tempType);
 	void drawFlightMenu(sf::RenderWindow &gWindow);
 	void updateFlightMenu(sf::RenderWindow &gWindow);
 	void drawFlightPath(sf::RenderWindow &gWindow);

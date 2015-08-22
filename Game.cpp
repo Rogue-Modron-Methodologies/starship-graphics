@@ -101,7 +101,7 @@ void Game::playerSetup()
 	getline(cin, tempName);
 	P2->setName(tempName);
 	*/
-	Card* tempCard;
+	ColonyCard* tempCard;
 	//M		colony	Carbon	1	N/A	0	1	Colony: Alioth VIII
 	//ColonyCard(const sf::Texture &texture, sf::Vector2u srcPos, int num, std::string name, int type, int resource, int actNum, int vicPts)
 	tempCard = new ColonyCard(txtMgr.getResource(STRFILE), { 0, 0 }, -1, "Colony: Alioth VIII", colony, Fuel, 1, 1);
@@ -110,30 +110,31 @@ void Game::playerSetup()
 	P1->getColonyZone()->insertNode(tempCard);
 
 	///////////////////////   BEGIN TEST STUFF
-	tempCard = new ColonyCard(txtMgr.getResource(STRFILE), { 0, 0 }, -1, "Colony: Alioth VIII", colony, Fuel, 1, 1);
-	tempCard->setScale(CRDZNSCL);
-	tempCard->updateTextRect();
-	P1->getColonyZone()->insertNode(tempCard);
+	//tempCard = new ColonyCard(txtMgr.getResource(STRFILE), { 0, 0 }, -1, "Colony: Alioth VIII", colony, Fuel, 1, 1);
+	//tempCard->setScale(CRDZNSCL);
+	//tempCard->updateTextRect();
+	//P1->getColonyZone()->insertNode(tempCard);
 
-	tempCard = new ColonyCard(txtMgr.getResource(STRFILE), { 0, 0 }, -1, "Colony: Alioth VIII", colony, Fuel, 1, 1);
-	tempCard->setScale(CRDZNSCL);
-	tempCard->updateTextRect();
-	P1->getColonyZone()->insertNode(tempCard);
+	//tempCard = new ColonyCard(txtMgr.getResource(STRFILE), { 0, 0 }, -1, "Colony: Alioth VIII", colony, Fuel, 1, 1);
+	//tempCard->setScale(CRDZNSCL);
+	//tempCard->updateTextRect();
+	//P1->getColonyZone()->insertNode(tempCard);
 
-	tempCard = new ColonyCard(txtMgr.getResource(STRFILE), { 0, 0 }, -1, "Colony: Alioth VIII", colony, Fuel, 1, 1);
-	tempCard->setScale(CRDZNSCL);
-	tempCard->updateTextRect();
-	P1->getColonyZone()->insertNode(tempCard);
+	//tempCard = new ColonyCard(txtMgr.getResource(STRFILE), { 0, 0 }, -1, "Colony: Alioth VIII", colony, Fuel, 1, 1);
+	//tempCard->setScale(CRDZNSCL);
+	//tempCard->updateTextRect();
+	//P1->getColonyZone()->insertNode(tempCard);
 
-	tempCard = new ColonyCard(txtMgr.getResource(STRFILE), { 0, 0 }, -1, "Colony: Alioth VIII", colony, Fuel, 1, 1);
-	tempCard->setScale(CRDZNSCL);
-	tempCard->updateTextRect();
-	P1->getTradeZone()->insertNode(tempCard);
+	//tempCard = new ColonyCard(txtMgr.getResource(STRFILE), { 0, 0 }, -1, "Colony: Alioth VIII", colony, Fuel, 1, 1);
+	//tempCard->setScale(CRDZNSCL);
+	//tempCard->updateTextRect();
+	//P1->getTradeZone()->insertNode(tempCard);
 
-	tempCard = new ColonyCard(txtMgr.getResource(STRFILE), { 0, 0 }, -1, "Colony: Alioth VIII", colony, Fuel, 1, 1);
+	//TradeCard(const sf::Texture &texture, sf::Vector2u srcPos, int num, std::string name, int type, int resource, int cost, std::string transaction, int limit, int pts)
+	TradeCard *tempCard2 = new TradeCard(txtMgr.getResource(STRFILE), { 0, 0 }, -1, "Colony: Alioth VIII", colony, Fuel, 1, "Both", 1, 0);
 	tempCard->setScale(CRDZNSCL);
 	tempCard->updateTextRect();
-	P1->getTradeZone()->insertNode(tempCard);
+	P1->getTradeZone()->insertNode(tempCard2);
 
 	///////////////////////   END TEST STUFF
 
@@ -193,7 +194,7 @@ void Game::gameLoop()
 					if (flag[sectorSelected])
 						flightPhaseListener(gWindow, tempNum);
 					if (flag[tradeInProgress])
-						tradeMenu(gWindow, tempNum);
+						tradeMenuListener(gWindow, tempNum);
 					break;
 				case trades:	
 					tradePhaseListener(gWindow);
@@ -227,7 +228,7 @@ void Game::gameLoop()
 		}
 
 		gWindow.clear();
-		updateGameWindow(gWindow);		
+		updateGameWindow(gWindow);			//  Updates the screen objects	
 		gWindow.display();
 	}
 }
@@ -257,7 +258,6 @@ void Game::phaseSetup()
 	int dieRoll;
 	std::string tempString;
 	flag[phaseComplete] = false;	
-	std::cout << "PHASESETUP: flag[phaseComplete] = false\n";
 	switch (cPhase)
 	{
 	case production:
@@ -291,6 +291,7 @@ void Game::phaseSetup()
 		flag[sectorSelected] = false;		
 		flag[visFlightMenu] = true;
 		flag[justTraded] = false;
+		flag[justColonized] = false;
 		infoString->setString("Flight: 0 / " + std::to_string(cPlyr->getStarship()->getMaxDistance()) + "\nMax Actions: 0 / " + 
 			std::to_string(cPlyr->getStarship()->getMaxActions()));
 		specialString->setString("Select a Sector");
@@ -339,7 +340,7 @@ void Game::endPhase()
 void Game::updateGameWindow(sf::RenderWindow &gWindow)
 {
 	universe->getBoard()->draw(gWindow);
-		switch (cPhase)
+	switch (cPhase)
 	{
 	case production:
 		flightDie->draw(gWindow);
@@ -357,26 +358,27 @@ void Game::updateGameWindow(sf::RenderWindow &gWindow)
 				drawFlightPath(gWindow);
 			}	
 			drawCurrentPlanet(gWindow);
-
+			//  If phase is not complete and player hasn't reached max actions
 			if (!flag[phaseComplete] && actionNum < cPlyr->getStarship()->getMaxActions())
 			{
-				
+				infoString->setString("Flight: " + std::to_string(universe->getCurrentMove()) + " / " + std::to_string(cPlyr->getStarship()->getMaxDistance())
+					+ "\nMax Actions: " + std::to_string(actionNum) + " / " + std::to_string(cPlyr->getStarship()->getMaxActions()));
+
+				//  When flight menu is active	
 				if (flag[visFlightMenu])
 				{
 					updateFlightMenu(gWindow);
 					drawFlightMenu(gWindow);
 				}
-				else
+				else									//  When trade menu is active
 				{
 					for (int i = 0; i < 4; i++)
-						tradeMenuIcons[i]->draw(gWindow);
-					for (int i = 0; i < 6; i++)					////////////////////////   Dont Print Astro
-						tradeSaveState[i]->draw(gWindow);            /////////////////////////////             TESTING /////////////////////////////////////
+						tradeMenuIcons[i]->draw(gWindow);	//  Prints the Trade Menu Clickable Items
+					for (int i = 0; i < 6; i++)					
+						tradeSaveState[i]->draw(gWindow);	//  Prints the resource icons available			
  				}
-				infoString->setString("Flight: " + std::to_string(universe->getCurrentMove()) + " / " + std::to_string(cPlyr->getStarship()->getMaxDistance())
-					+ "\nMax Actions: " + std::to_string(actionNum) + " / " + std::to_string(cPlyr->getStarship()->getMaxActions()));
 			}
-			else
+			else     //  When the flight phase is complete
 			{
 				specialString->setString("Flight Complete");
 				tradeProgressString->clear();
@@ -387,6 +389,7 @@ void Game::updateGameWindow(sf::RenderWindow &gWindow)
 	default:
 		break;
 	}
+	// Non Phase Specific Drawables
 	phaseNameString->draw(gWindow);
 	infoString->draw(gWindow);	
 	specialString->draw(gWindow);	
@@ -396,6 +399,7 @@ void Game::updateGameWindow(sf::RenderWindow &gWindow)
 	if (statusUpdate.length())
 		setError(statusUpdate);
 	statusUpdate.clear();
+
 	if (errorTimer)
 	{
 		errorString->setTextColor(sf::Color(255, 0, 0, errorTimer / 10));
@@ -583,6 +587,7 @@ void Game::flightPhaseListener(sf::RenderWindow &gWindow, int tempType)
 	else if (!flag[phaseComplete] && flag[visFlightMenu] && universe->getCurrentPlanet()->isTargeted(gWindow))
 	{
 		std::cout << "Current Planet Clicked" << std::endl;
+		std::cout << "Resource " << universe->getCurrentPlanet()->getResource() << std::endl;
 	}
 	//  Current Planet's Menu in the FlightPath is clicked
 	else if (!flag[phaseComplete] && flag[visFlightMenu] && menuOptionTargeted(gWindow, tempType))
@@ -593,17 +598,20 @@ void Game::flightPhaseListener(sf::RenderWindow &gWindow, int tempType)
 			if (universe->getCurrentPlanet()->getType() == tradeShip && cPlyr->getStarship()->shipAvailable(tradeShip, tempType, statusUpdate))
 			{
 				cPlyr->getStarship()->loseItem(tempType, statusUpdate);
+				cPlyr->getTradeZone()->insertNode((TradeCard*)universe->getCurrentPlanet());
+				//universe->replaceCurrentPlanet();
 				flag[justColonized] = true;
 				actionNum++;
 			}
 			else if (universe->getCurrentPlanet()->getType() == colonyShip &&cPlyr->getStarship()->shipAvailable(colonyShip, tempType, statusUpdate))
 			{
 				cPlyr->getStarship()->loseItem(tempType, statusUpdate);
+				cPlyr->getColonyZone()->insertNode((ColonyCard*)universe->getCurrentPlanet());
+				//universe->replaceCurrentPlanet();
 				flag[justColonized] = true;
 				actionNum++;
 			}
-			else
-				infoString->setString(statusUpdate);
+			infoString->setString(statusUpdate);
 			break;			
 		case trdW:	//  Trade with Planet
 			initTradeMenu(gWindow, tempType);
@@ -626,7 +634,6 @@ void Game::flightPhaseListener(sf::RenderWindow &gWindow, int tempType)
 		cPlyr->makeSmall();
 		flag[visFlightPath] = true;
 	}
-
 }
 
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
@@ -760,19 +767,18 @@ void Game::initTradeMenu(sf::RenderWindow &gWindow, int tempType)
 	flag[tradeInProgress] = true;
 	tradeProgressString->setString("Trade In Progress");
 	int cResource = universe->getCurrentPlanet()->getResource();
-	for (int i = 0; i < 7; i++)							// creates a saveState for all resource and astro values
+	for (int i = 0; i < 7; i++)							
 	{
-		tradeSaveState[i]->setQty(cPlyr->getStatQty(i));
-		tradeSaveState[i]->greyOut();
+		tradeSaveState[i]->setQty(cPlyr->getStatQty(i));			//  saves the current resource and astro values
+		tradeSaveState[i]->greyOut();							
 	}
 	tradeSaveState[cResource]->setColor();
-	
 }
 
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
 //  Deals with Mouse Click actions when the tradeMenu is displayed
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
-void Game::tradeMenu(sf::RenderWindow &gWindow, int tempType)
+void Game::tradeMenuListener(sf::RenderWindow &gWindow, int tempType)
 {
 	tempType = universe->getCurrentPlanet()->getResource();
 	int cost = universe->getCurrentPlanet()->getCost();

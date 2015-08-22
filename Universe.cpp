@@ -145,8 +145,6 @@ void Universe::initializeFlightPath(int tempType)
 	currentMove = 1;											
 }
 
-
-
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
 //
 //  Adds a Card to the Sector and increments the Pointer

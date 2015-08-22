@@ -30,8 +30,8 @@ class Player
 {
 private:	
 	Starship* starship;
-	LinkedList<Card>* ColonyZone;		//  Colony Zone 
-	LinkedList<Card>* TradeZone;		//  Trade Zone 
+	LinkedList<ColonyCard>* ColonyZone;		//  Colony Zone 
+	LinkedList<TradeCard>* TradeZone;		//  Trade Zone 
 	Icon* cZoneIcon;				//  Colony Zone Text String	
 	Icon* tZoneIcon;				//  Trade Zone Text String
 	Icon** statistics;				//  Array for the statistic Icons
@@ -42,8 +42,8 @@ public:
 
 	// getters and setters
 	Starship* getStarship() const {  return starship;  }
-	LinkedList<Card>* getColonyZone() const {	return ColonyZone;	}
-	LinkedList<Card>* getTradeZone() const 	{	return TradeZone;	}
+	LinkedList<ColonyCard>* getColonyZone() const {	return ColonyZone;	}
+	LinkedList<TradeCard>* getTradeZone() const 	{	return TradeZone;	}
 	int getStatQty(int num){ return statistics[num]->getQty(); }
 	void setStatQty(int stat, int num){ statistics[stat]->setQty(num); }
 

@@ -148,7 +148,6 @@ void Starship::update(ShipObject *o, sf::Vector2f scale)
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
 bool Starship::gainItem(int pos, std::string &statusUpdate)
 { 
-	std::cout << pos;
 	switch (pos)
 	{
 	case Carbon:
@@ -228,6 +227,7 @@ bool Starship::gainItem(int pos, std::string &statusUpdate)
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
 bool Starship::loseItem(int pos, std::string &statusUpdate)
 {
+	std::cout << pos << std::endl;
 	switch (pos)
 	{
 	case Carbon:
@@ -276,7 +276,6 @@ bool Starship::loseItem(int pos, std::string &statusUpdate)
 	}
 }
 
-
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
 //  
 //  Restores shipObject quantities to a set value/position
@@ -286,4 +285,25 @@ void Starship::updateShipIcons()
 {
 	for (int i = 0; i < CLKNUM; i++)
 		shipObjects[i]->updateTextRect();
+}
+
+// (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
+//  
+//  Checks to see if the proper ship is in the hangar 
+//
+// (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
+bool Starship::shipAvailable(int type, int &hanger, std::string &error)
+{
+	if (shipObjects[H1]->getType() == type && shipObjects[H1]->getQty() > 0)
+	{
+		hanger = H1;
+		return true;
+	}
+	else if (shipObjects[H2]->getType() == type && shipObjects[H2]->getQty() > 0)
+	{
+		hanger = H2;
+		return true;
+	}
+	error = "No ship in Hangar can complete this action!";
+	return false;
 }

@@ -75,7 +75,7 @@ bool isIconTargeted(sf::RenderWindow &gWindow) const{
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯)
 // Checks to see if any card in the List has been targeted   
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯)
-bool isZoneTargeted(sf::RenderWindow &gWindow, int &type) const
+bool isZoneTargeted(sf::RenderWindow &gWindow, int &resource) const
 {
 	ListNode<T> *walker;  
 
@@ -86,7 +86,7 @@ bool isZoneTargeted(sf::RenderWindow &gWindow, int &type) const
 	{
 		if (walker->getData()->isTargeted(gWindow))
 		{
-			type = walker->getData()->getType();
+			resource = walker->getData()->getResource();
 			return true;
 		}
 		walker = walker->getNext();

@@ -35,13 +35,7 @@ public:
 		this->name = name;
 		this->type = type;
 	}
-	virtual Card* operator= (Card* right)
-	{
-		this->qty = right->qty;
-		this->name = right->name;
-		this->type = right->type;
-		return this;
-	}
+
 	~Card() {}
 	// Getters and Setters
 	void setDeckNum(int num)

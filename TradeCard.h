@@ -31,18 +31,6 @@ public:
 		this->limit = limit;
 		this->pts = pts;
 	}
-	//Card* operator= (Card* right)
-	//{
-	//	setDeckNum(right->getDeckNum());
-	//	setName(right->getName());
-	//	setType(right->getType());
-	//	this->resource = resource;
-	//	this->cost = cost;
-	//	this->transaction = transaction;
-	//	this->limit = limit;
-	//	this->pts = pts;		
-	//	return this;
-	//}
 	~TradeCard() {}
 	// Getters and Setters
 	int getResource() const

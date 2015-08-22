@@ -56,6 +56,7 @@ public:
 	bool flightPathTargeted(sf::RenderWindow &gWindow, int &num);
 	void initializeFlightPath(int tempType);
 	void continueFlight(){ currentMove++; }
+	void replaceCurrentPlanet(){ getSector(sectorNum)[currentMove - 1] = SE[ExtraDeckPtr++]; }
 
 private:
 	void universeSetup(ResourceManager<sf::Texture> &txtMgr);

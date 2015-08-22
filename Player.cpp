@@ -17,8 +17,8 @@
 Player::Player(ResourceManager<sf::Texture> &txtMgr, ResourceManager<sf::Font> &fntMgr, std::string name, int num)
 {
 	starship = new Starship(txtMgr, fntMgr);
-	ColonyZone = new LinkedList<Card>;
-	TradeZone = new LinkedList<Card>;
+	ColonyZone = new LinkedList<ColonyCard>;
+	TradeZone = new LinkedList<TradeCard>;
 
 	cZoneIcon = new Icon(fntMgr.getResource(FNTFLE), CLPOS, "Colony");
 
