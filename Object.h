@@ -41,9 +41,14 @@ public:
 	void setSrcPos(sf::Vector2u source) { this->srcPos = source; }
 	void setSrcPosX(unsigned num){ this->srcPos.x = num; }	
 	void setSrcPosY(unsigned num){ this->srcPos.y = num; }
+	sf::Vector2u getSrcPos() const { return srcPos; }
 	void setQty(int num){ this->qty = num; }
 	int getQty() const { return qty; }
 	void setColor(sf::Color color = sf::Color::White){ sprite->setColor(color); }
+	const sf::Texture* getTexture() { return sprite->getTexture(); }
+	void setTexture(const sf::Texture &texture){ sprite->setTexture(texture); }
+	sf::Vector2f getPosition() const { return sprite->getPosition(); }
+	sf::Vector2f getScale() const { return sprite->getScale(); }
 
 	// Misc Inline Functions
 	bool isSmall() const  { 	return smallDisplay; }

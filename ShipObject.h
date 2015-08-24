@@ -34,6 +34,7 @@ public:
 	virtual bool loseItem(std::string &error){ std::cout << "shipObject loseItem Function Called"; return false; }
 	virtual bool gainItem(std::string &error){ std::cout << "shipObject gainItem Function Called"; return false; }
 	virtual int getType() const { std::cout << "shipObject getType Function Called\n"; return -1; }
+	virtual int getRCap() const  { "shipObject getRCap Function Called\n"; return -1; }
 	virtual void updateTextRect()
 	{
 		srcPos.x = qty - 1;

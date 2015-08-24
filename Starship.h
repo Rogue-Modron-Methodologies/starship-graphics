@@ -52,6 +52,7 @@ public:
 	int totalLasers() { return shipObjects[L1]->getQty() + shipObjects[L2]->getQty() + shipObjects[L3]->getQty(); }			// used in combat
 	int totalBoosters()  { return shipObjects[B1]->getQty() + shipObjects[B2]->getQty() + shipObjects[B3]->getQty(); }			// called by calcMaxDistance and events	
 	bool shipAvailable(int type, int &hanger, std::string &error);
+	bool holdFull(int resource) { return shipObjects[resource]->getQty() >= shipObjects[resource]->getRCap(); }
 
 	//  Prototypes
 	void draw(sf::RenderWindow &window);

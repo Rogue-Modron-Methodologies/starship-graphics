@@ -17,13 +17,14 @@
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
 bool Resource::loseItem(std::string &statusUpdate)
 {
-	if (qty > 0)		// num: current resource quantity
-	{
+	if (qty > 0)		
+	{		
 		qty--;
 		updateTextRect();
 		return true;
 	}
-	statusUpdate = name + " hold is empty!";
+	else
+		statusUpdate = name + " hold is empty!";
 	return false;
 }
 
@@ -34,12 +35,13 @@ bool Resource::loseItem(std::string &statusUpdate)
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
 bool Resource::gainItem(std::string &statusUpdate)
 {
-	if (qty < rCap)	// num: current resource quantity
+	if (qty < rCap)	
 	{
 		qty++;
 		updateTextRect();
 		return true;
 	}
-	statusUpdate = name + " hold is full!";
+	else
+		statusUpdate = name + " hold is full!";
 	return false;
 }

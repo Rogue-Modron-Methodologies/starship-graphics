@@ -20,7 +20,7 @@
 const int MENUSIZE = 4;
 const int CARDLISTSIZE = 71;					//  number of cards in the deck
 const std::string CARDLIST = "starship.csv";
-const std::string CARDIMAGES = "resources/cards/universeCards.png";
+
 const std::string ADVENTURELIST = "starship2.csv";
 
 class Universe{
@@ -56,7 +56,7 @@ public:
 	bool flightPathTargeted(sf::RenderWindow &gWindow, int &num);
 	void initializeFlightPath(int tempType);
 	void continueFlight(){ currentMove++; }
-	void replaceCurrentPlanet(){ getSector(sectorNum)[currentMove - 1] = SE[ExtraDeckPtr++]; }
+	void replaceCurrentPlanet();
 
 private:
 	void universeSetup(ResourceManager<sf::Texture> &txtMgr);

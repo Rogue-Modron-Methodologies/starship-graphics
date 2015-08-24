@@ -227,7 +227,6 @@ bool Starship::gainItem(int pos, std::string &statusUpdate)
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
 bool Starship::loseItem(int pos, std::string &statusUpdate)
 {
-	std::cout << pos << std::endl;
 	switch (pos)
 	{
 	case Carbon:

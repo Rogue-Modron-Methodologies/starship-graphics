@@ -109,7 +109,7 @@ private:
 	void updateGameWindow(sf::RenderWindow &gWindow);
 	void endPhase();
 	void setError(std::string error);
-	int rollSpeedDie();
+	void rollSpeedDie();
 	void productionPhaseListener(sf::RenderWindow &gWindow);
 	void flightPhaseListener(sf::RenderWindow &gWindow, int tempType);
 	void preFlightListener(sf::RenderWindow &gWindow, int &tempType);
@@ -123,6 +123,7 @@ private:
 	void initTradeMenu(sf::RenderWindow &gWindow, int tempType);
 	bool tradeIconsTargeted(sf::RenderWindow &gWindow);
 	bool menuOptionTargeted(sf::RenderWindow &gWindow, int &num);
+	bool Game::resourcesAvailable(int resAvail[]);
 
 };
 

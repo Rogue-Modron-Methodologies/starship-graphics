@@ -17,12 +17,8 @@
 Player::Player(ResourceManager<sf::Texture> &txtMgr, ResourceManager<sf::Font> &fntMgr, std::string name, int num)
 {
 	starship = new Starship(txtMgr, fntMgr);
-	ColonyZone = new LinkedList<ColonyCard>;
-	TradeZone = new LinkedList<TradeCard>;
-
-	cZoneIcon = new Icon(fntMgr.getResource(FNTFLE), CLPOS, "Colony");
-
-	tZoneIcon = new Icon(fntMgr.getResource(FNTFLE), TLPOS, "Trade");
+	colonyZone = new Zone<ColonyCard>(txtMgr, fntMgr, "Colony");
+	tradeZone = new Zone<TradeCard>(txtMgr, fntMgr, "Trade");
 
 	statistics = new Icon*[STATNUM];
 
@@ -68,19 +64,21 @@ Player::Player(ResourceManager<sf::Texture> &txtMgr, ResourceManager<sf::Font> &
 Player::~Player()
 {
 	delete starship;
-	delete ColonyZone;
-	delete TradeZone;
+	delete colonyZone;
+	delete tradeZone;
 	for (int i = 0; i < STATNUM; i++)
 		delete statistics[i];
 	delete [] statistics;
 }
+
+
 
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
 //  
 //  Updates the Player Icon
 //
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
-void Player::update()
+void Player::updatePlayerIcon()
 {
 	statistics[player]->setSrcPosX(statistics[player]->getQty() - 1);
 	statistics[player]->updateTextRect();
@@ -108,18 +106,10 @@ void Player::updateIcon(int type)
 void Player::draw(sf::RenderWindow &gWindow)
 {
 	starship->draw(gWindow);
-	drawCPlyrStats(gWindow);
-	if (ColonyZone->showIconOnly())
-		ColonyZone->displayHead(gWindow);
-	else
-		ColonyZone->displayList(gWindow);
-	if (TradeZone->getCount())
-	{
-		if (TradeZone->showIconOnly())
-			TradeZone->displayHead(gWindow);
-		else
-			TradeZone->displayList(gWindow);
-	}
+	colonyZone->draw(gWindow);
+	tradeZone->draw(gWindow);
+	for (int i = 0; i < STATNUM; i++)
+		statistics[i]->draw(gWindow);
 }
 
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
@@ -130,12 +120,9 @@ void Player::draw(sf::RenderWindow &gWindow)
 void Player::makeBig()
 {
 	starship->makeBig();
-	cZoneIcon->setTextPosition(CLPOS - sf::Vector2f(0, 35));
-	ColonyZone->setIconOnly(true);
-	ColonyZone->updateList(CLPOS, CRDZNSCL);
-	tZoneIcon->setTextPosition(TLPOS - sf::Vector2f(0, 35));
-	TradeZone->setIconOnly(true);
-	TradeZone->updateList(TLPOS, CRDZNSCL);	
+	colonyZone->updateZone(CLPOS, CRDZNSCL, true);
+	tradeZone->updateZone(TLPOS, CRDZNSCL, true);
+	smallDisplay = false;
 }
 
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
@@ -146,12 +133,9 @@ void Player::makeBig()
 void Player::makeSmall()
 {
 	starship->makeSmall();
-	ColonyZone->setIconOnly(true);
-	cZoneIcon->setTextPosition(CSPOS - sf::Vector2f(0, 35));
-	ColonyZone->updateList(CSPOS, CRDSSCL);
-	tZoneIcon->setTextPosition(TSPOS - sf::Vector2f(0, 35));
-	TradeZone->setIconOnly(true);
-	TradeZone->updateList(TSPOS, CRDSSCL);
+	colonyZone->updateZone(CSPOS, CRDSSCL, true);
+	tradeZone->updateZone(TSPOS, CRDSSCL, true);
+	smallDisplay = true;
 }
 
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
@@ -161,12 +145,8 @@ void Player::makeSmall()
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
 void Player::expandColonyZone()
 {
-	cZoneIcon->setTextPosition(CLPOS - sf::Vector2f(0, 35));
-	ColonyZone->updateList(CLPOS, CRDZNSCL);
-	ColonyZone->setIconOnly(false);
-	tZoneIcon->setTextPosition(sf::Vector2f(1050, 575));
-	TradeZone->updateList(sf::Vector2f(1050, 610), CRDZNSCL);
-	TradeZone->setIconOnly(true);
+	colonyZone->updateZone(CLPOS, CRDZNSCL, false);
+	tradeZone->updateZone(sf::Vector2f(1050, 610), CRDZNSCL, true);
 }
 
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
@@ -176,23 +156,9 @@ void Player::expandColonyZone()
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
 void Player::expandTradeZone()
 {
-	tZoneIcon->setTextPosition(CLPOS - sf::Vector2f(0, 35));
-	TradeZone->updateList(CLPOS, CRDZNSCL);
-	TradeZone->setIconOnly(false);
-	cZoneIcon->setTextPosition(sf::Vector2f(1050, 575));
-	ColonyZone->updateList(sf::Vector2f(1050, 610), CRDZNSCL);
-	ColonyZone->setIconOnly(true);
+	tradeZone->updateZone(CLPOS, CRDZNSCL, false);
+	colonyZone->updateZone(sf::Vector2f(1050, 610), CRDZNSCL, true);
 }
 
-// (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
-//  
-//  draws the icons and stats for current player
-//
-// (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
-void Player::drawCPlyrStats(sf::RenderWindow &gWindow)
-{
-	for (int i = 0; i < STATNUM; i++)
-		statistics[i]->draw(gWindow);
-	cZoneIcon->draw(gWindow);
-	tZoneIcon->draw(gWindow);
-}
+
+

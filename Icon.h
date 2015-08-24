@@ -59,6 +59,10 @@ public:
 	void greyOut(){ icon->greyOut(); }
 	void setColor(sf::Color color = sf::Color::White){ icon->setColor(color); }
 	void clear(){ text.setString(""); }
+	const sf::Texture* getTexture() { return icon->getTexture(); }
+	void setTexture(const sf::Texture &texture){ icon->setTexture(texture); }
+	sf::Vector2f getIconPosition() const { return icon->getPosition(); }
+	sf::Vector2f getScale() const { return icon->getScale(); }
 
 	//  Initializes the string member variable	
 	void initString(const sf::Font &font, sf::Vector2f pos, std::string words = "XXX", int style = sf::Text::Regular)

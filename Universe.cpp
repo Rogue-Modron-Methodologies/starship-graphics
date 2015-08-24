@@ -241,6 +241,21 @@ Card** Universe::getSector(int num)
 
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
 //
+//  Replaces the current planet with the top of the Extra Deck 
+//
+// (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
+void Universe::replaceCurrentPlanet()
+{
+	if (SE[ExtraDeckPtr])
+	{
+		getSector(sectorNum)[currentMove - 1] = SE[ExtraDeckPtr]; 
+		SE[ExtraDeckPtr++] = NULL;
+	}
+		
+}
+
+// (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
+//
 //  Sets up the adventure deck
 //
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 

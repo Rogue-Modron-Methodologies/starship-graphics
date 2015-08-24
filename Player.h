@@ -11,7 +11,7 @@
 #define PLAYER_H
 
 #include "Starship.h"
-#include "LinkedList.h"
+#include "Zone.h"
 #include "ColonyCard.h"
 #include "TradeCard.h"
 
@@ -30,11 +30,10 @@ class Player
 {
 private:	
 	Starship* starship;
-	LinkedList<ColonyCard>* ColonyZone;		//  Colony Zone 
-	LinkedList<TradeCard>* TradeZone;		//  Trade Zone 
-	Icon* cZoneIcon;				//  Colony Zone Text String	
-	Icon* tZoneIcon;				//  Trade Zone Text String
+	Zone<ColonyCard> *colonyZone;		//  Colony Zone 
+	Zone<TradeCard>* tradeZone;		//  Trade Zone 
 	Icon** statistics;				//  Array for the statistic Icons
+	bool smallDisplay;
 
 public:
 	Player(ResourceManager<sf::Texture> &txtMgr, ResourceManager<sf::Font> &fntMgr, std::string name = "EMPTY", int num = -99);
@@ -42,20 +41,21 @@ public:
 
 	// getters and setters
 	Starship* getStarship() const {  return starship;  }
-	LinkedList<ColonyCard>* getColonyZone() const {	return ColonyZone;	}
-	LinkedList<TradeCard>* getTradeZone() const 	{	return TradeZone;	}
+	Zone<ColonyCard>* getColonyZone() const {	return colonyZone;	}
+	Zone<TradeCard>* getTradeZone() const 	{	return tradeZone;	}
 	int getStatQty(int num){ return statistics[num]->getQty(); }
 	void setStatQty(int stat, int num){ statistics[stat]->setQty(num); }
 
+
 	//  Misc Inline Functions
-	void update();
+	void updatePlayerIcon();
 	void draw(sf::RenderWindow &gWindow);
-	void drawCPlyrStats(sf::RenderWindow &gWindow);
 	void updateIcon(int type);
 	void expandColonyZone();
 	void expandTradeZone();
 	void makeBig();
 	void makeSmall();
+	bool zonesSmall(){ return smallDisplay; }
 	void subAstro(int num) {	statistics[astro]->setQty(statistics[astro]->getQty() - num); }
 	void addAstro(int num) { statistics[astro]->setQty(statistics[astro]->getQty() + num); }
 	bool canAfford(int num, std::string &statusUpdate)

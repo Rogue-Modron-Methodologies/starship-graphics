@@ -31,6 +31,9 @@ public:
 		this->vicPts = vicPts;
 	}
 	~ColonyCard() {}
+
+	friend bool sortBy(const ColonyCard *lhs, const ColonyCard *rhs){ return lhs->actNum < rhs->actNum; }
+	
 	// Getters and Setters
 	int getResource() const
 	{	return resource;	}

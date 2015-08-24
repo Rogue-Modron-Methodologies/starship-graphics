@@ -32,6 +32,9 @@ public:
 		this->pts = pts;
 	}
 	~TradeCard() {}
+	
+	friend bool sortBy(const TradeCard *lhs, const TradeCard *rhs){ return lhs->resource < rhs->resource; }
+
 	// Getters and Setters
 	int getResource() const
 		{  return resource; }
