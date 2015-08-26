@@ -14,12 +14,13 @@
 #include "Zone.h"
 #include "ColonyCard.h"
 #include "TradeCard.h"
+#include <iostream>
 
 enum Icons{ science, ore, fuel, tradeGood, wheat, carbon, astro, player, vicPt, frdPt, fmPt };
 const int STATNUM = 11;
-const std::string ICNFLE = "icons.png";		//  Source file name for trade/colony ships
+const std::string ICNFLE = "playerIcons.png";		//  Source file name for trade/colony ships
 const std::string SYM1FLE = "symbolsSmall.png";	//  Source file for Victory/Fame/Friendship Icons
-const std::string SY21FLE = "symbols2.png";		//  Source file for Hero/Friend of the People
+const std::string FRIENDHERO = "FriendHeroIcons.png";		//  Source file for Hero/Friend of the People
 const std::string SYMBFLE = "symbolsBig.png";
 const std::string RICNFLE = "ResourceIcons.png";	//  Source file for Resource File Icons
 const sf::Vector2f CSPOS = sf::Vector2f(20, 550);				//  Screen Position for Small Scale Colony Icon
@@ -35,9 +36,11 @@ private:
 	Zone<TradeCard>* tradeZone;		//  Trade Zone 
 	Icon** statistics;				//  Array for the statistic Icons
 	bool smallDisplay;
+	bool friendOfThePeople;
+	bool heroOfThePeople;
 
 public:
-	Player(ResourceManager<sf::Texture> &txtMgr, ResourceManager<sf::Font> &fntMgr, std::string name = "EMPTY", int num = -99);
+	Player(ResourceManager<sf::Texture> &txtMgr, ResourceManager<sf::Font> &fntMgr, std::string name, int num);
 	~Player();
 
 	// getters and setters
@@ -46,11 +49,16 @@ public:
 	Zone<TradeCard>* getTradeZone() const 	{	return tradeZone;	}
 	int getStatQty(int num){ return statistics[num]->getQty(); }
 	void setStatQty(int stat, int num){ statistics[stat]->setQty(num); }
-
-
+	
 	//  Misc Inline Functions
 	void updatePlayerIcon();
 	void draw(sf::RenderWindow &gWindow);
+	int getPlyrNum() const { return statistics[player]->getQty(); }
+	bool isHero() const { return heroOfThePeople; }
+	bool isFriend() const { return friendOfThePeople; }
+	
+	void addFamePt(){ statistics[fmPt]->setQty(statistics[fmPt]->getQty() + 1); }
+	void addFrdPt(){ statistics[frdPt]->setQty(statistics[frdPt]->getQty() + 1); }
 	void updateIcon(int type);
 	void expandColonyZone();
 	void expandTradeZone();
@@ -65,7 +73,29 @@ public:
 			return true;
 		statusUpdate = "Can not afford ";
 		return false;
-	}	
+	}		
+	void addVicPt(){
+		statistics[vicPt]->setQty(statistics[vicPt]->getQty() + 1); 
+		if (statistics[vicPt]->getQty() >= 10)
+			std::cout << "winner!!!!!!!!!!!!\n";
+
+	}
+	void toggleFriend(bool toggle)
+	{ 
+		friendOfThePeople = toggle; 
+		if (toggle)
+			statistics[vicPt]->setQty(statistics[vicPt]->getQty() + 1);
+		else
+			statistics[vicPt]->setQty(statistics[vicPt]->getQty() - 1);
+	}
+	void toggleHero(bool toggle)
+	{ 
+		friendOfThePeople = toggle; 
+		if (toggle)
+			statistics[vicPt]->setQty(statistics[vicPt]->getQty() + 1);
+		else
+			statistics[vicPt]->setQty(statistics[vicPt]->getQty() - 1);
+	}
 	
 };
 #endif // PLAYER_H

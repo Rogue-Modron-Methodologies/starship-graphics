@@ -22,7 +22,7 @@ const std::string SDIEFLE = "flightdie.png";
 const std::string TRDICN = "TradeMenuIcons.png";
 
 enum menuOptions { trdW, colIt, conFly, endFl };
-enum phases{ production, flight, trades, build };
+enum phases{ production, flight, tradeBuild };
 enum tradeIcons{plus, minus, check, cancel};
 
 const int FLAGNUM = 10;
@@ -59,6 +59,8 @@ private:
 	Icon *errorString;					//  Error Text String
 	Icon *tradeProgressString;			//  In Progress/Complete/Cancelled
 	Icon **menu;						//  
+	Icon *friendPeople;
+	Icon *heroPeople;
 	std::string statusUpdate;			//  Catches errors from called functions
 	int errorTimer;
 	int actionNum;						//  Current Action Num
@@ -113,8 +115,7 @@ private:
 	void productionPhaseListener(sf::RenderWindow &gWindow);
 	void flightPhaseListener(sf::RenderWindow &gWindow, int tempType);
 	void preFlightListener(sf::RenderWindow &gWindow, int &tempType);
-	void tradePhaseListener(sf::RenderWindow &gWindow);
-	void buildPhaseListener(sf::RenderWindow &gWindow);
+	void tradeBuildPhaseListener(sf::RenderWindow &gWindow);
 	void tradeMenuListener(sf::RenderWindow &gWindow, int tempType);
 	void drawFlightMenu(sf::RenderWindow &gWindow);
 	void updateFlightMenu(sf::RenderWindow &gWindow);
@@ -123,7 +124,9 @@ private:
 	void initTradeMenu(sf::RenderWindow &gWindow, int tempType);
 	bool tradeIconsTargeted(sf::RenderWindow &gWindow);
 	bool menuOptionTargeted(sf::RenderWindow &gWindow, int &num);
-	bool Game::resourcesAvailable(int resAvail[]);
+	bool resourcesAvailable(int resAvail[]);
+	void updateFriendOfThePeople(std::string &statusUpdate);
+	void updateHeroOfThePeople(std::string &statusUpdate);
 
 };
 

@@ -26,6 +26,11 @@ Game::Game()
 	P2 = new Player(txtMgr, fntMgr, "Player2", 2);		// Default names for bugtesting
 	cPlyr = P2;
 
+	friendPeople = new Icon(txtMgr.getResource(FRIENDHERO), sf::Vector2f{ 900, 840 }, 1, sf::Vector2u(200, 200), { 1, 0 });
+	friendPeople->setScale({ .3f, .3f });
+	heroPeople = new Icon(txtMgr.getResource(FRIENDHERO), sf::Vector2f{ 975, 840 }, 1, sf::Vector2u(200, 200), { 0, 0 });
+	heroPeople->setScale({ .3f, .3f });
+
 	cPlanet = new Icon(fntMgr.getResource(FNTFLE), { 835, 480 }, "Current Planet");
 
 	phaseNameString = new Icon(fntMgr.getResource(FNTFLE), { 200, 820 }, "Production Planet");	 
@@ -106,13 +111,13 @@ void Game::playerSetup()
 	ColonyCard* tempCard;
 	//M		colony	Carbon	1	N/A	0	1	Colony: Alioth VIII
 	//ColonyCard(const sf::Texture &texture, sf::Vector2u srcPos, int num, std::string name, int type, int resource, int actNum, int vicPts)
-	tempCard = new ColonyCard(txtMgr.getResource(STRFILE), { 0, 0 }, -1, "Colony: Alioth VIII", colony, Fuel, 1, 1);
+	tempCard = new ColonyCard(txtMgr.getResource(STRFILE), { 1, 0 }, -1, "Colony: Alioth VIII", colony, Carbon, 1, 1);
 	tempCard->setScale(CRDZNSCL);
 	tempCard->updateTextRect();
 	P1->getColonyZone()->push_back(tempCard);
 
 	//S		colony	Fuel		1	N/A	0	1	Colony: Megrez VII
-	tempCard = new ColonyCard(txtMgr.getResource(STRFILE), { 1, 0 }, -1, "Colony: Megrez VII", colony, Fuel, 1, 1);
+	tempCard = new ColonyCard(txtMgr.getResource(STRFILE), { 0, 0 }, -1, "Colony: Megrez VII", colony, Fuel, 1, 1);
 	tempCard->setScale(CRDZNSCL);
 	tempCard->updateTextRect();
 	P2->getColonyZone()->push_back(tempCard);
@@ -129,8 +134,8 @@ void Game::gameLoop()
 //	string choice = "";  // temp until win condition is set
 //	while (toupper(choice[0]) != 'Q')  // mimics the checkwin loop.
 //	{
-	cPlyr == P1 ? cPlyr = P2 : cPlyr = P1;	// toggles between players
-	cPlyr->updatePlayerIcon();
+	//cPlyr == P1 ? cPlyr = P2 : cPlyr = P1;	// toggles between players
+	//cPlyr->updatePlayerIcon();
 //		cout << "CheckWin will be here.\n";
 //		gameTurn();
 //		cout << "Q to Toggle Win Condition\n";
@@ -168,11 +173,8 @@ void Game::gameLoop()
 					if (flag[tradeInProgress])
 						tradeMenuListener(gWindow, tempNum);
 					break;
-				case trades:	
-					tradePhaseListener(gWindow);
-					break;
-				case build:	
-					buildPhaseListener(gWindow);
+				case tradeBuild:
+					tradeBuildPhaseListener(gWindow);
 					break;
 				}			
 			case sf::Event::MouseMoved:
@@ -188,9 +190,7 @@ void Game::gameLoop()
 					//		std::cout << "Sector " << tempNum + 1 << " Glows" << std::endl;
 					//}
 					break;
-				case trades:
-					break;
-				case build:
+				case tradeBuild:
 					//std::cout << std::endl;
 					//if (cPlyr->getStarship()->isTargeted(gWindow) && cPlyr->getStarship()->isSmall())
 					//	std::cout << "P1 Ship Glows" << std::endl;
@@ -283,18 +283,11 @@ void Game::phaseSetup()
 		specialString->setString("Select a Sector");
 		specialString->setTextPosition({ 425, 40 });
 		break;
-	case trades:
-		phaseNameString->setString("Trade Phase");
-		infoString->setString("Max Trades: 2");
+	case tradeBuild:
+		phaseNameString->setString("Trade & Build Phase");
+		infoString->setString("Trade & Build Phase");
 		cPlyr->makeBig();
-		cPlyr->expandTradeZone();
-		flag[phaseComplete] = true;		//  Only until there is an actual trade phase coded
-		break;
-	case build:
-		phaseNameString->setString("Build Phase");
-		infoString->setString("Build Phase");
-		cPlyr->makeBig();
-		flag[phaseComplete] = true;		//  Only until there is an actual build phase coded
+		flag[phaseComplete] = true;		//  Only until there is an actual phase coded
 		break;
 	}
 	flag[phaseSetupComplete] = true;
@@ -310,11 +303,8 @@ void Game::endPhase()
 {
 	specialString->clear();
 	cPhase++;
-	if (cPhase == 4)
-	{
-		std::cout << "Checkwin Here?" << std::endl;
+	if (cPhase == 3)
 		cPhase = 0;
-	}
 	flag[phaseSetupComplete] = false;		
 }
 
@@ -374,6 +364,11 @@ void Game::updateGameWindow(sf::RenderWindow &gWindow)
 	specialString->draw(gWindow);	
 	tradeProgressString->draw(gWindow);
 	cPlyr->draw(gWindow);	
+
+	if (cPlyr->isFriend())
+		friendPeople->draw(gWindow);
+	if (cPlyr->isHero())
+		heroPeople->draw(gWindow);
 
 	if (statusUpdate.length())
 		setError(statusUpdate);
@@ -552,6 +547,8 @@ void Game::flightPhaseListener(sf::RenderWindow &gWindow, int tempType){
 				//cPlyr->getStarship()->loseItem(tempType, statusUpdate);
 				cPlyr->getTradeZone()->push_back((TradeCard*)universe->getCurrentPlanet());
 				cPlyr->getTradeZone()->updateZone(cPlyr->getTradeZone()->getPosition(), cPlyr->getTradeZone()->getScale(), cPlyr->getTradeZone()->getIconOnly());
+				cPlyr->addFrdPt();
+				updateFriendOfThePeople(statusUpdate);
 				universe->replaceCurrentPlanet();
 				flag[justColonized] = true;
 				actionNum++;
@@ -560,6 +557,7 @@ void Game::flightPhaseListener(sf::RenderWindow &gWindow, int tempType){
 				//cPlyr->getStarship()->loseItem(tempType, statusUpdate);
 				cPlyr->getColonyZone()->push_back((ColonyCard*)universe->getCurrentPlanet());
 				cPlyr->getColonyZone()->updateZone(cPlyr->getColonyZone()->getPosition(), cPlyr->getColonyZone()->getScale(), cPlyr->getColonyZone()->getIconOnly());
+				cPlyr->addVicPt();
 				universe->replaceCurrentPlanet();
 				flag[justColonized] = true;
 				actionNum++;
@@ -589,49 +587,9 @@ void Game::flightPhaseListener(sf::RenderWindow &gWindow, int tempType){
 }
 
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
-//  Deals with Mouse Click actions in the Trade Phase
-// (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
-void Game::tradePhaseListener(sf::RenderWindow &gWindow)
-{
-	int tempType;
-	// Starship (Small) is clicked
-	if (cPlyr->getStarship()->isTargeted(gWindow) && cPlyr->getStarship()->isSmall()){
-		if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
-			cPlyr->makeBig();
-	}
-	// Starship (Large) is clicked
-	else if (cPlyr->getStarship()->isTargeted(gWindow) && !cPlyr->getStarship()->isSmall()){}	// Do Nothing this Phase
-	// Colony Zone (Large Icon) is clicked
-	else if (!cPlyr->zonesSmall() && cPlyr->getColonyZone()->getIconOnly() && cPlyr->getColonyZone()->isIconTargeted(gWindow)){
-		if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
-			cPlyr->expandColonyZone();
-		else if (sf::Mouse::isButtonPressed(sf::Mouse::Right))
-			cPlyr->makeBig();
-	}
-	// Trade Zone (Large Icon) is clicked
-	else if (!cPlyr->zonesSmall() && cPlyr->getTradeZone()->getIconOnly() && cPlyr->getTradeZone()->isIconTargeted(gWindow)){
-		if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
-			cPlyr->expandTradeZone();
-		else if (sf::Mouse::isButtonPressed(sf::Mouse::Right))
-			cPlyr->makeBig();
-	}
-	// Colony Zone (Large List) is clicked
-	else if (!cPlyr->zonesSmall() && !cPlyr->getColonyZone()->getIconOnly() && cPlyr->getColonyZone()->isZoneTargeted(gWindow, tempType)){}	// Do Nothing this Phase
-	// Trade Zone (Large List) is clicked
-	else if (!cPlyr->zonesSmall() && !cPlyr->getTradeZone()->getIconOnly() && cPlyr->getTradeZone()->isZoneTargeted(gWindow, tempType)){}		// Do Nothing this Phase
-	//  Starship (Large) && Empty Space is clicked
-	else if (!cPlyr->getStarship()->isTargeted(gWindow) && !cPlyr->getStarship()->isSmall())
-		cPlyr->makeSmall();
-	//  Starship (Large) && Empty Space is clicked
-	else if (!cPlyr->getStarship()->isTargeted(gWindow) && !cPlyr->getStarship()->isSmall())
-		cPlyr->makeSmall();
-
-}
-
-// (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
 //  Deals with Mouse Click actions in the Build Phase
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
-void Game::buildPhaseListener(sf::RenderWindow &gWindow)
+void Game::tradeBuildPhaseListener(sf::RenderWindow &gWindow)
 {
 	int tempType;
 	// Starship (Small) is clicked
@@ -894,4 +852,68 @@ bool Game::menuOptionTargeted(sf::RenderWindow &gWindow, int &num)
 		}
 	}
 	return false;
+}
+
+// (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
+//
+//  Checks for Friend of the people on both players
+//
+// (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
+void Game::updateFriendOfThePeople(std::string &statusUpdate)
+{
+	//  If current player has less than three friend points...
+	if (cPlyr->getStatQty(frdPt) < 3)
+		return;
+	int p1pts = getP1()->getStatQty(frdPt);
+	int p2pts = getP2()->getStatQty(frdPt);
+
+	if (p1pts == p2pts)
+	{
+		getP1()->toggleFriend(false);
+		getP2()->toggleFriend(false);
+		statusUpdate = "Friend of the People Lost";
+	}
+	else if (p1pts > p2pts)
+	{
+		getP1()->toggleFriend(true);
+		getP2()->toggleFriend(false);
+	}
+	else
+	{
+		getP1()->toggleFriend(false);
+		getP2()->toggleFriend(true);
+	}
+
+}
+
+// (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
+//
+//  Checks for Hero of the people on both players
+//
+// (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
+void Game::updateHeroOfThePeople(std::string &statusUpdate)
+{
+	//  If current player has less than three hero points...
+	if (cPlyr->getStatQty(fmPt) < 3)
+		return;
+	int p1pts = getP1()->getStatQty(fmPt);
+	int p2pts = getP2()->getStatQty(fmPt);
+
+	if (p1pts == p2pts)
+	{
+		getP1()->toggleFriend(false);
+		getP2()->toggleFriend(false);
+		statusUpdate = "Hero of the People Lost";
+	}
+	else if (p1pts > p2pts)
+	{
+		getP1()->toggleFriend(true);
+		getP2()->toggleFriend(false);
+	}
+	else
+	{
+		getP1()->toggleFriend(false);
+		getP2()->toggleFriend(true);
+	}
+
 }

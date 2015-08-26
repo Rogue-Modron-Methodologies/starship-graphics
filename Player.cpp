@@ -54,6 +54,9 @@ Player::Player(ResourceManager<sf::Texture> &txtMgr, ResourceManager<sf::Font> &
 
 	statistics[carbon] = new Icon(txtMgr.getResource(RICNFLE), { 820, 860 }, 1, { 35, 35 }, { 5, 0 });
 	statistics[carbon]->initString(fntMgr.getResource(FNTFLE), { 860, 855 });
+
+	bool friendOfThePeople = false;
+	bool heroOfThePeople = false;
 }
  
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
