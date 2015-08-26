@@ -13,10 +13,10 @@
 #include "Object.h"
 
 enum ShipComponents { Science, Ore, Fuel, TradeGood, Wheat, Carbon, B1, B2, B3, L1, L2, L3, H1, H2 };
-const std::string ARWFILE = "resources/board/arrows.png";		//  Source File name for resource arrows
-const std::string BSTFILE = "resources/board/boosters.png";		//  Source file name for boosters
-const std::string LSRFILE = "resources/board/lasers.png";		//  Source file name for lasers
-const std::string SHPFILE = "resources/board/ships.png";		//  Source file name for trade/colony
+const std::string ARWFILE = "arrows.png";		//  Source File name for resource arrows
+const std::string BSTFILE = "boosters.png";		//  Source file name for boosters
+const std::string LSRFILE = "lasers.png";		//  Source file name for lasers
+const std::string SHPFILE = "ships.png";		//  Source file name for trade/colony
 
 class ShipObject : public Object
 {

@@ -17,10 +17,11 @@
 
 enum Icons{ science, ore, fuel, tradeGood, wheat, carbon, astro, player, vicPt, frdPt, fmPt };
 const int STATNUM = 11;
-const std::string ICNFLE = "resources/board/icons.png";		//  Source file name for trade/colony ships
-const std::string SYM1FLE = "resources/board/symbolsSmall.png";	//  Source file for Victory/Fame/Friendship Icons
-const std::string SY21FLE = "resources/board/symbols2.png";		//  Source file for Hero/Friend of the People
-const std::string RICNFLE = "resources/board/ResourceIcons.png";	//  Source file for Resource File Icons
+const std::string ICNFLE = "icons.png";		//  Source file name for trade/colony ships
+const std::string SYM1FLE = "symbolsSmall.png";	//  Source file for Victory/Fame/Friendship Icons
+const std::string SY21FLE = "symbols2.png";		//  Source file for Hero/Friend of the People
+const std::string SYMBFLE = "symbolsBig.png";
+const std::string RICNFLE = "ResourceIcons.png";	//  Source file for Resource File Icons
 const sf::Vector2f CSPOS = sf::Vector2f(20, 550);				//  Screen Position for Small Scale Colony Icon
 const sf::Vector2f TSPOS = sf::Vector2f(130, 550);			//  Screen Position for Small Scale Trade Icon
 const sf::Vector2f CLPOS = sf::Vector2f(20, 610);				//  Screen Position for Large Scale Colony Icon

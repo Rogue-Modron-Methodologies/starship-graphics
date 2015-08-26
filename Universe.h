@@ -20,8 +20,8 @@
 const int MENUSIZE = 4;
 const int CARDLISTSIZE = 71;					//  number of cards in the deck
 const std::string CARDLIST = "starship.csv";
-
 const std::string ADVENTURELIST = "starship2.csv";
+const std::string BOARDFILE = "starrynight.png";
 
 class Universe{
 private:
@@ -33,7 +33,7 @@ private:
 	Card **SE;				//  Extra Cards waiting to be put into Sectors
 	Card **AD;				//  Adventure Deck
 	Card **cAdv;				//  Current Adventure????
-	Icon **flightSector;	
+	Icon **flightSector;
 	int currentMove;
 	int sectorNum;
 	int ExtraDeckPtr;

@@ -18,24 +18,24 @@
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
 Universe::Universe(ResourceManager<sf::Texture> &txtMgr, ResourceManager<sf::Font> &fntMgr)
 {
-	board = new Object(txtMgr.getResource("resources/board/starrynight.png"), sf::Vector2f(0, 0));
+	board = new Object(txtMgr.getResource(BOARDFILE), sf::Vector2f(0, 0));
 	board->setScale({ 3.1f, 3.6f });
 
 	flightSector = new Icon*[4];
 
-	flightSector[0] = new Icon(txtMgr.getResource("resources/cards/CardBackground.png"), sf::Vector2f(100, 150), 10, sf::Vector2u(200, 300));
+	flightSector[0] = new Icon(txtMgr.getResource(UNIVERSECARDIMAGES), sf::Vector2f(100, 150), 10, sf::Vector2u(200, 300), { 4, 13 });
 	flightSector[0]->initString(fntMgr.getResource(FNTFLE), { 175, 200 }, "1", sf::Text::Bold);
 	flightSector[0]->setTextScale({ 5, 5 });
 
-	flightSector[1] = new Icon(txtMgr.getResource("resources/cards/CardBackground.png"), sf::Vector2f(300, 150), 10, sf::Vector2u(200, 300));
+	flightSector[1] = new Icon(txtMgr.getResource(UNIVERSECARDIMAGES), sf::Vector2f(300, 150), 10, sf::Vector2u(200, 300), { 4, 13 });
 	flightSector[1]->initString(fntMgr.getResource(FNTFLE), { 360, 200 }, "2", sf::Text::Bold);
 	flightSector[1]->setTextScale({ 5, 5 });
 
-	flightSector[2] = new Icon(txtMgr.getResource("resources/cards/CardBackground.png"), sf::Vector2f(500, 150), 10, sf::Vector2u(200, 300));
+	flightSector[2] = new Icon(txtMgr.getResource(UNIVERSECARDIMAGES), sf::Vector2f(500, 150), 10, sf::Vector2u(200, 300), { 4, 13 });
 	flightSector[2]->initString(fntMgr.getResource(FNTFLE), { 560, 200 }, "3", sf::Text::Bold);
 	flightSector[2]->setTextScale({ 5, 5 });
 
-	flightSector[3] = new Icon(txtMgr.getResource("resources/cards/CardBackground.png"), sf::Vector2f(700, 150), 10, sf::Vector2u(200, 300));
+	flightSector[3] = new Icon(txtMgr.getResource(UNIVERSECARDIMAGES), sf::Vector2f(700, 150), 10, sf::Vector2u(200, 300), { 4, 13 });
 	flightSector[3]->initString(fntMgr.getResource(FNTFLE), { 760, 200 }, "4", sf::Text::Bold);
 	flightSector[3]->setTextScale({ 5, 5 });
 
@@ -390,13 +390,13 @@ void Universe::universeSetup(ResourceManager<sf::Texture> &txtMgr)
 		ss.clear();
 
 		if (type == 0)
-			tempCard = new TradeCard(txtMgr.getResource(CARDIMAGES), srcPos, deckNum, name, type, resource, value, transaction, limit, pts);
+			tempCard = new TradeCard(txtMgr.getResource(UNIVERSECARDIMAGES), srcPos, deckNum, name, type, resource, value, transaction, limit, pts);
 		else if (type == 1)
-			tempCard = new ColonyCard(txtMgr.getResource(CARDIMAGES), srcPos, deckNum, name, type, resource, value, pts);
+			tempCard = new ColonyCard(txtMgr.getResource(UNIVERSECARDIMAGES), srcPos, deckNum, name, type, resource, value, pts);
 		else if (type == 2)
-			tempCard = new Pirate(txtMgr.getResource(CARDIMAGES), srcPos, deckNum, name, type, resource, value, transaction, pts);
+			tempCard = new Pirate(txtMgr.getResource(UNIVERSECARDIMAGES), srcPos, deckNum, name, type, resource, value, transaction, pts);
 		else
-			tempCard = new Card(txtMgr.getResource(CARDIMAGES), srcPos, type, deckNum, name);
+			tempCard = new Card(txtMgr.getResource(UNIVERSECARDIMAGES), srcPos, type, deckNum, name);
 
 		switch (deckNum)
 		{

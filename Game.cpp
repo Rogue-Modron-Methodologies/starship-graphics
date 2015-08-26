@@ -16,6 +16,8 @@
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
 Game::Game()
 {
+	txtMgr.addDirectory("resources/");
+	fntMgr.addDirectory("resources/");
 	initCDie();
 	flightDie = new Icon(txtMgr.getResource(SDIEFLE), sf::Vector2f{ 350, 525 }, 1, sf::Vector2u(80, 80));
 	flightDie->initString(fntMgr.getResource(FNTFLE), { 440, 545 }, "", sf::Text::Bold);		
@@ -60,16 +62,16 @@ Game::Game()
 
 	menu = new Icon*[4];
 
-	menu[trdW] = new Icon(txtMgr.getResource("resources/board/SymbolsBig.png"), { 760, 610 }, 0, { 50, 50 }, { 3, 0 });
+	menu[trdW] = new Icon(txtMgr.getResource(SYMBFLE), { 760, 610 }, 0, { 50, 50 }, { 3, 0 });
 	menu[trdW]->initString(fntMgr.getResource(FNTFLE), { 520, 610 }, "Trade With Planet");
 
-	menu[colIt] = new Icon(txtMgr.getResource("resources/board/SymbolsBig.png"), sf::Vector2f(760, 660), 0, { 50, 50 }, { 1, 0 });
+	menu[colIt] = new Icon(txtMgr.getResource(SYMBFLE), sf::Vector2f(760, 660), 0, { 50, 50 }, { 1, 0 });
 	menu[colIt]->initString(fntMgr.getResource(FNTFLE), { 760, 660 }, "Colonize");
 
-	menu[conFly] = new Icon(txtMgr.getResource("resources/board/SymbolsBig.png"), sf::Vector2f(760, 710), 0, { 50, 50 }, { 4, 0 });
+	menu[conFly] = new Icon(txtMgr.getResource(SYMBFLE), sf::Vector2f(760, 710), 0, { 50, 50 }, { 4, 0 });
 	menu[conFly]->initString(fntMgr.getResource(FNTFLE), { 550, 710 }, "Continue Flying");
 
-	menu[endFl] = new Icon(txtMgr.getResource("resources/board/SymbolsBig.png"), sf::Vector2f(760, 760), 0, { 50, 50 }, { 5, 0 });
+	menu[endFl] = new Icon(txtMgr.getResource(SYMBFLE), sf::Vector2f(760, 760), 0, { 50, 50 }, { 5, 0 });
 	menu[endFl]->initString(fntMgr.getResource(FNTFLE), { 610, 760 }, "End Flight");
 
 	for (int i = 0; i < FLAGNUM; i++)
@@ -260,8 +262,7 @@ void Game::phaseSetup()
 				flag[phaseComplete] = true;
 			}
 		}
-		else
-		{
+		else{
 			tempString += " No Resources in Colony Zone";	
 			flag[phaseComplete] = true;
 		}	
@@ -400,8 +401,7 @@ void Game::setError(std::string error)
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
 //  rand(1-3) and updates the sprite to correct textureRect
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
-void Game::rollSpeedDie()
-{
+void Game::rollSpeedDie(){
 	int num = rand() % 3;
 	flightDie->setSrcPos(sf::Vector2u(num, 0));
 	flightDie->updateTextRect();
@@ -412,8 +412,7 @@ void Game::rollSpeedDie()
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
 //  Deals with Mouse Click actions in the Production Phase
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
-void Game::productionPhaseListener(sf::RenderWindow &gWindow)
-{
+void Game::productionPhaseListener(sf::RenderWindow &gWindow){
 	int tempType;
 	// Starship (Small) is clicked
 	if (cPlyr->getStarship()->isTargeted(gWindow) && cPlyr->getStarship()->isSmall()){
@@ -460,8 +459,7 @@ void Game::productionPhaseListener(sf::RenderWindow &gWindow)
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
 //  Flight Phase Sector Selection Listener
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
-void Game::preFlightListener(sf::RenderWindow &gWindow, int &tempType)
-{
+void Game::preFlightListener(sf::RenderWindow &gWindow, int &tempType){
 	// Starship (Small) is clicked
 	if (cPlyr->getStarship()->isTargeted(gWindow) && cPlyr->getStarship()->isSmall()){
 		if (sf::Mouse::isButtonPressed(sf::Mouse::Left)){
@@ -507,8 +505,7 @@ void Game::preFlightListener(sf::RenderWindow &gWindow, int &tempType)
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
 //  Deals with Mouse Click actions in the Flight Phase
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
-void Game::flightPhaseListener(sf::RenderWindow &gWindow, int tempType)
-{	
+void Game::flightPhaseListener(sf::RenderWindow &gWindow, int tempType){	
 	// Starship (Small) is clicked
 	if (cPlyr->getStarship()->isTargeted(gWindow) && cPlyr->getStarship()->isSmall()){
 		if (sf::Mouse::isButtonPressed(sf::Mouse::Left))

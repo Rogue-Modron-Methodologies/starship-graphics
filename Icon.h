@@ -64,6 +64,7 @@ public:
 	sf::Vector2f getIconPosition() const { return icon->getPosition(); }
 	sf::Vector2f getScale() const { return icon->getScale(); }
 
+
 	//  Initializes the string member variable	
 	void initString(const sf::Font &font, sf::Vector2f pos, std::string words = "XXX", int style = sf::Text::Regular)
 	{
@@ -77,8 +78,7 @@ public:
 	}
 
 	//  Draws to Window
-	void draw(sf::RenderWindow &window) 
-	{ 
+	void draw(sf::RenderWindow &window){ 
 		if (icon)
 			icon->draw(window); 
 		if (!text.getString().isEmpty())
