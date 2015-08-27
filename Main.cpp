@@ -11,7 +11,7 @@
 
 int main()
 {
-	srand(static_cast<int>(time(NULL)));
+	srand((int)(time(NULL)));
 	Game cGame;
 	cGame.startGame();
 

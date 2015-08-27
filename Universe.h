@@ -17,7 +17,7 @@
 #include "Icon.h"
 
 
-const int MENUSIZE = 4;
+
 const int CARDLISTSIZE = 71;					//  number of cards in the deck
 const std::string CARDLIST = "starship.csv";
 const std::string ADVENTURELIST = "starship2.csv";

@@ -19,13 +19,23 @@
 #include "SFML/Graphics.hpp"
 
 const std::string SDIEFLE = "resources/flightdie.png";
+const std::string CDIEFLE = "resources/combatdie.png";
 const std::string TRDICN = "resources/TradeMenuIcons.png";
+const int NUMRESOURCES = 7;
 
-enum menuOptions { trdW, colIt, conFly, endFl };
 enum phases{ production, flight, tradeBuild };
+enum combatParties{ply, prt};
+
+const int TRADEMENUSIZE = 4;
 enum tradeIcons{plus, minus, check, cancel};
 
-const int FLAGNUM = 10;
+const int FMENUSIZE = 4;
+enum menuOptions { trdW, colIt, conFly, endFl };
+
+const int PMENUSIZE = 2;
+enum pirateIcons{pay, fight};
+
+const int FLAGNUM = 14;
 enum flagTypes{
 	phaseSetupComplete,				//  Flag:  Phase Setup Complete
 	gainResource,					//  Flag:  Choose one resource
@@ -36,7 +46,10 @@ enum flagTypes{
 	visFlightMenu,					//  Flag:	 Display Flight Menu
 	tradeInProgress,				//  Flag:  Trade in Progress
 	justTraded,					//  Flag:  Traded Already
-	justColonized					//  Flag:	 Colonized/Established Post
+	justColonized,					//  Flag:	 Colonized/Established Post
+	pirateChoice,					//  Flag:  Choice to Pay or Fight Pirate
+	pirateAttack,					//  Flag:  Currently Being Attacked by Pirate
+	pirateResult					//  Flag:  Lost to pirate and losing something
 };
 
 class Game{
@@ -47,25 +60,26 @@ private:
 	sf::Vector2u screenSize;
 	ResourceManager<sf::Texture> txtMgr;
 	ResourceManager<sf::Font> fntMgr;
-	bool flag[9];						//  Will hold an array of flags for game decisions	
+	bool flag[FLAGNUM];					//  Will hold an array of flags for game decisions	
 	Icon **tradeSaveState;				//  Saves value of all six resources and astro in case of cancel 
 	Icon **tradeMenuIcons;				//  Icons for the Trade Menu
-	Icon *flightDie;	
+	Icon *flightDie;					//  Production/Flight Die
+	Icon **combatDie;					//  Combat Die for Player and Pirate
 	Icon *phaseNameString;				//  Phase Name Text String
 	Icon *endPhaseString;				//  For End of Phase Messages
 	Icon *specialString;				//  For special instructions
 	Icon *infoString;					//  Info Text String
-	Icon *cPlanet;						//  Current Planet Text String
+	Icon cPlanet;						//  Current Planet 
 	Icon *errorString;					//  Error Text String
-	Icon *tradeProgressString;			//  In Progress/Complete/Cancelled
-	Icon **menu;						//  
+	Icon *flightEventString;				//  In Progress/Complete/Cancelled
+	Icon **flightMenuIcons;				//  FlightMenu  
+	Icon **pirateMenuIcons;				//  PirateMenu
 	Icon *friendPeople;
 	Icon *heroPeople;
 	std::string statusUpdate;			//  Catches errors from called functions
 	int errorTimer;
 	int actionNum;						//  Current Action Num
 	int cPhase;						//  Current Phase Num
-	int combatDie[6];
 
 
 public:
@@ -76,22 +90,29 @@ public:
 		delete P2;
 		delete universe;
 		delete flightDie;
+		delete combatDie[ply];
+		delete combatDie[prt];
+		delete combatDie;
 		delete phaseNameString;
-		delete tradeProgressString;
+		delete flightEventString;
 		delete endPhaseString;
 		delete specialString;
 		delete infoString;
 		delete errorString;
-		delete cPlanet;
-		for (int i = 0; i < 4; i++)
+		delete heroPeople;
+		delete friendPeople;
+		for (int i = 0; i < TRADEMENUSIZE; i++)
 			delete tradeMenuIcons[i];
 		delete [] tradeMenuIcons;
-		for (int i = 0; i < 7; i++)
+		for (int i = 0; i < NUMRESOURCES; i++)
 			delete tradeSaveState[i];
 		delete [] tradeSaveState;
-		for (int i = 0; i < MENUSIZE; i++)
-			delete menu[i];
-		delete[] menu;
+		for (int i = 0; i < FMENUSIZE; i++)
+			delete flightMenuIcons[i];
+		delete[] flightMenuIcons;
+		for (int i = 0; i < PMENUSIZE; i++)
+			delete pirateMenuIcons[i];
+		delete[] pirateMenuIcons;
 	}
 
 	// getters and setters
@@ -100,18 +121,17 @@ public:
 	Universe* getUniverse() const { return universe; }
 
 	//  Misc Inline Functions
-	int rollCombatDie() { return combatDie[rand() % 6]; }
 	void startGame() { gameLoop(); };
 
 private:	
 	void gameLoop();
 	void playerSetup();	
-	void initCDie();
 	void phaseSetup();
 	void updateGameWindow(sf::RenderWindow &gWindow);
 	void endPhase();
 	void setError(std::string error);
 	void rollSpeedDie();
+	void rollCombatDie(int party);
 	void productionPhaseListener(sf::RenderWindow &gWindow);
 	void flightPhaseListener(sf::RenderWindow &gWindow, int tempType);
 	void preFlightListener(sf::RenderWindow &gWindow, int &tempType);
@@ -120,13 +140,15 @@ private:
 	void drawFlightMenu(sf::RenderWindow &gWindow);
 	void updateFlightMenu(sf::RenderWindow &gWindow);
 	void drawFlightPath(sf::RenderWindow &gWindow);
-	void drawCurrentPlanet(sf::RenderWindow &gWindow);
 	void initTradeMenu(sf::RenderWindow &gWindow, int tempType);
 	bool tradeIconsTargeted(sf::RenderWindow &gWindow);
 	bool menuOptionTargeted(sf::RenderWindow &gWindow, int &num);
 	bool resourcesAvailable(int resAvail[]);
-	void updateFriendOfThePeople(std::string &statusUpdate);
-	void updateHeroOfThePeople(std::string &statusUpdate);
+	void updateFriendOfThePeople();
+	void updateHeroOfThePeople();
+	void pirateMenu(sf::RenderWindow &gWindow);
+	void pirateFight(sf::RenderWindow &gWindow);
+	void pirateMenuListener(sf::RenderWindow &gWindow);
 
 };
 

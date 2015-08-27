@@ -57,7 +57,7 @@ public:
 	bool isHero() const { return heroOfThePeople; }
 	bool isFriend() const { return friendOfThePeople; }
 	
-	void addFamePt(){ statistics[fmPt]->setQty(statistics[fmPt]->getQty() + 1); }
+	void addFmPt(){ statistics[fmPt]->setQty(statistics[fmPt]->getQty() + 1); }
 	void addFrdPt(){ statistics[frdPt]->setQty(statistics[frdPt]->getQty() + 1); }
 	void updateIcon(int type);
 	void expandColonyZone();
@@ -74,7 +74,8 @@ public:
 		statusUpdate = "Can not afford ";
 		return false;
 	}		
-	void addVicPt(){
+	void addVicPt()
+	{
 		statistics[vicPt]->setQty(statistics[vicPt]->getQty() + 1); 
 		if (statistics[vicPt]->getQty() >= 10)
 			std::cout << "winner!!!!!!!!!!!!\n";
