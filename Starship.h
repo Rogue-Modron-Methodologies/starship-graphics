@@ -25,7 +25,7 @@ const sf::Vector2f SMLPOS = sf::Vector2f(20, 700);		//  Screen Position for Stan
 const sf::Vector2f SMLSCL = sf::Vector2f(.25f, .25f);		//  Standard Scale for Starship;
 const sf::Vector2f LRGPOS = sf::Vector2f(40, 100);		//  Screen Position for Large Scale Starship
 const sf::Vector2f LRGSCL = sf::Vector2f(1.0f, 1.0f);		//  Large Scale for Starship
-const std::string SRCFILE = "ship.png";	//  Source File name for StarShip
+const std::string SRCFILE = "resources/ship.png";	//  Source File name for StarShip
 const int CLKNUM = 14;								//  Number of clickable objects on the starship
 
 

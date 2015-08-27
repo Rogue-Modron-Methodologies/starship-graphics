@@ -17,7 +17,7 @@
 
 enum direction { Down, Left, Right, Up };
 enum cTypes{ trade, colony, pirate, adventure, lost };
-const std::string FNTFLE = "unique.ttf";		//  Source file name for Font
+const std::string FNTFLE = "resources/unique.ttf";		//  Source file name for Font
 
 class Object 
 {

@@ -18,8 +18,8 @@
 #include <sstream>
 #include "SFML/Graphics.hpp"
 
-const std::string SDIEFLE = "flightdie.png";
-const std::string TRDICN = "TradeMenuIcons.png";
+const std::string SDIEFLE = "resources/flightdie.png";
+const std::string TRDICN = "resources/TradeMenuIcons.png";
 
 enum menuOptions { trdW, colIt, conFly, endFl };
 enum phases{ production, flight, tradeBuild };

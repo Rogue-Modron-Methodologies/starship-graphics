@@ -16,8 +16,6 @@
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
 Game::Game()
 {
-	txtMgr.addDirectory("resources/");
-	fntMgr.addDirectory("resources/");
 	initCDie();
 	flightDie = new Icon(txtMgr.getResource(SDIEFLE), sf::Vector2f{ 350, 525 }, 1, sf::Vector2u(80, 80));
 	flightDie->initString(fntMgr.getResource(FNTFLE), { 440, 545 }, "", sf::Text::Bold);		

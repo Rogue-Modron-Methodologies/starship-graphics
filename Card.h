@@ -12,7 +12,7 @@
 
 #include "Object.h"
 
-const std::string UNIVERSECARDIMAGES = "UniverseCards.png";
+const std::string UNIVERSECARDIMAGES = "resources/UniverseCards.png";
 const sf::Vector2u CSRCSZE = { 200, 300 };
 const sf::Vector2f CRDSSCL = sf::Vector2f(.45f, .45f);		//  Card Small Scale for Icons
 const sf::Vector2f CRDZNSCL = sf::Vector2f(.70f, .70f);	//  Card Scale for when in Colony or Trade Zone

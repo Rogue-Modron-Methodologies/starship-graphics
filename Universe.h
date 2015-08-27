@@ -21,7 +21,7 @@ const int MENUSIZE = 4;
 const int CARDLISTSIZE = 71;					//  number of cards in the deck
 const std::string CARDLIST = "starship.csv";
 const std::string ADVENTURELIST = "starship2.csv";
-const std::string BOARDFILE = "starrynight.png";
+const std::string BOARDFILE = "resources/starrynight.png";
 
 class Universe{
 private:
