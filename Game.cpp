@@ -241,7 +241,7 @@ void Game::phaseSetup()
 
 		if (cPlyr->getColonyZone()->findResource(flightDie->getQty(), resAvail)){
 			tempString += " Resource(s) in Colony Zone Found!";
-			if (resourcesAvailable(resAvail)){
+			if (resourcesInListAvailable(resAvail)){
 				specialString->setString(+"Chose a colony resource");			
 				flag[gainResource] = true;
 			}
@@ -346,13 +346,26 @@ void Game::updateDrawGameWindow()
 				{
 					for (int i = 0; i < 6; i++)
 						tradeSaveState[i]->draw(gWindow);	//  Prints the resource icons available	
-					if (gainOneResource())
+					if (resourcesAvailable())			//  If there are no available resources
 					{
-						std::cout << "Pirate being pushed into the zone " << universe->getCurrentPlanet()->getName() << std::endl;
-						cPlyr->getPirateZone()->push_back((Pirate*)universe->getCurrentPlanet());
-						universe->replaceCurrentPlanet();
+						if (gainOneResource())
+						{
+							flightEventString->setString("Resources Gained");
+							flag[pirateAttack] = false;
+							flag[visFlightMenu] = true;
+							cPlyr->getPirateZone()->push_back((Pirate*)universe->getCurrentPlanet());
+							universe->replaceCurrentPlanet();
+						}
+					}
+					//  If there are no available resources
+					else
+					{
+						statusUpdate = "No Resources Available";
+						flightEventString->setString("No Resources\nAvailable");
 						flag[gainResource] = false;
-					}			
+						flag[pirateAttack] = false;
+						flag[visFlightMenu] = true;
+					}
 				}
 				//  When Loser of Pirate Attack (Lose a part of your ship)  Implement with build phase
 				else if (flag[pirateAttack] && flag[pirateResult])
@@ -987,10 +1000,25 @@ void Game::updateHeroOfThePeople()
 //  in the holds of the startship
 //
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
-bool Game::resourcesAvailable(int resAvail[])
+bool Game::resourcesInListAvailable(int resAvail[])
 {
 	for (int i = 0; i < 6; i++){
 		if (resAvail[i] && !cPlyr->getStarship()->holdFull(i)){
+			return true;
+		}
+	}
+	return false;
+}
+
+// (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
+//
+//  Checks to see if a any resources available 
+//
+// (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
+bool Game::resourcesAvailable()
+{
+	for (int i = 0; i < 6; i++){
+		if (!cPlyr->getStarship()->holdFull(i)){
 			return true;
 		}
 	}
@@ -1005,41 +1033,24 @@ bool Game::resourcesAvailable(int resAvail[])
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
 bool Game::gainOneResource()
 {
-	int resAvail[6] = { 1, 1, 1, 1, 1, 1 };		
 	for (int i = 0; i < 6; i++)
 	{
 		tradeSaveState[i]->unGreyOut();
 		if(cPlyr->getStarship()->holdFull(i))			
 			tradeSaveState[i]->greyOut();
 	}
-	//  If there are available resources
-	if (resourcesAvailable(resAvail))
+
+	for (int i = 0; i < 6; i++)
 	{
-		for (int i = 0; i < 6; i++)
+		if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && tradeSaveState[i]->isTargeted(gWindow))
 		{
-			if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && tradeSaveState[i]->isTargeted(gWindow))
+			if (cPlyr->getStarship()->gainItem(i, statusUpdate))
 			{
-				if (cPlyr->getStarship()->gainItem(i, statusUpdate))
-				{
-					cPlyr->updateIcon(i);
-					flightEventString->setString("Resources Gained");
-					flag[gainResource] = false;
-					flag[pirateAttack] = false;
-					flag[visFlightMenu] = true;
-					return true;
-				}
+				cPlyr->updateIcon(i);
+				flag[gainResource] = false;
+				return true;
 			}
 		}
-	}
-	//  If there are no available resources
-	else
-	{
-		statusUpdate = "No Resources Available";
-		flightEventString->setString("No Resources\nAvailable");
-		flag[gainResource] = false;
-		flag[pirateAttack] = false;
-		flag[visFlightMenu] = true;
-		return true;
 	}
 	return false;
 }

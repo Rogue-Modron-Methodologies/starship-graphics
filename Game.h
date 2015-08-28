@@ -140,7 +140,8 @@ private:
 	void initTradeMenu(int tempType);
 	bool tradeIconsTargeted();
 	bool flightMenuOptionTargeted(int &num);
-	bool resourcesAvailable(int resAvail[]);
+	bool resourcesInListAvailable(int resAvail[]);
+	bool resourcesAvailable();
 	bool gainOneResource();
 	void updateFriendOfThePeople();
 	void updateHeroOfThePeople();
