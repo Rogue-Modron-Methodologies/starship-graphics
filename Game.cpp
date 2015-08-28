@@ -632,7 +632,8 @@ void Game::flightPhaseListener(int tempType){
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
 void Game::tradeMenuListener()
 {	
-	int cost = universe->getCurrentPlanet()->getCost();	
+	int cost = universe->getCurrentPlanet()->getCost();
+	int limit = universe->getCurrentPlanet()->getLimit();
 	//  If player has option to chose resource but hasn't yet done so
 	if (flag[choosingResource] && !flag[resourceChosen])
 	{
@@ -665,11 +666,17 @@ void Game::tradeMenuListener()
 	//  If resource has been chosen and the plus icon has been selected
 	if (flag[resourceChosen] && sf::Mouse::isButtonPressed(sf::Mouse::Left) && tradeMenuIcons[plus]->isTargeted(gWindow))
 	{
-		if (cPlyr->canAfford(cost, statusUpdate) && cPlyr->getStarship()->gainItem(cTradeResource, statusUpdate))
+		if (!limit || cTradeNum < limit)
 		{
-			cPlyr->updateIcon(cTradeResource);
-			cPlyr->subAstro(cost);				
+			if (cPlyr->canAfford(cost, statusUpdate) && cPlyr->getStarship()->gainItem(cTradeResource, statusUpdate))
+			{
+				cPlyr->updateIcon(cTradeResource);
+				cPlyr->subAstro(cost);
+				cTradeNum++;
+			}
 		}
+		else
+			statusUpdate = "Max Trades Reached";
 	}
 	//  If resource has NOT been chosen and the plus icon has been selected
 	else if (!flag[resourceChosen] && sf::Mouse::isButtonPressed(sf::Mouse::Left) && tradeMenuIcons[plus]->isTargeted(gWindow))
@@ -679,11 +686,17 @@ void Game::tradeMenuListener()
 	//  If resource has been chosen and the plus minus has been selected
 	else if (flag[resourceChosen] && sf::Mouse::isButtonPressed(sf::Mouse::Left) && tradeMenuIcons[minus]->isTargeted(gWindow))
 	{
-		if (cPlyr->getStarship()->loseItem(cTradeResource, statusUpdate))
+		if (!limit || cTradeNum < limit)
 		{
-			cPlyr->updateIcon(cTradeResource);
-			cPlyr->addAstro(cost);
+			if (cPlyr->getStarship()->loseItem(cTradeResource, statusUpdate))
+			{
+				cPlyr->updateIcon(cTradeResource);
+				cPlyr->addAstro(cost);
+				cTradeNum++;
+			}
 		}
+		else
+			statusUpdate = "Max Trades Reached";
 	}
 	//  If resource has NOT been chosen and the minus icon has been selected
 	else if (flag[resourceChosen] && sf::Mouse::isButtonPressed(sf::Mouse::Left) && tradeMenuIcons[minus]->isTargeted(gWindow))
@@ -855,15 +868,14 @@ void Game::tradeBuildPhaseListener()
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
 void Game::initTradeMenu(int &tempType)
 {
+	cTradeNum = 0;
 	int cResource = universe->getCurrentPlanet()->getResource();
-
 	if (cResource == 6)
 	{
 		flag[choosingResource] = true;
 		flag[resourceChosen] = false;
 	}
-
-		
+	
 	flag[showflightMenu] = false;
 	flag[tradeInProgress] = true;
 	flightEventString.setString("Trade In Progress");
@@ -895,11 +907,6 @@ void Game::initTradeMenu(int &tempType)
 		tradeMenuIcons[plus]->unGreyOut();
 		tradeMenuIcons[minus]->unGreyOut();
 	}
-	if (cResource == 6)
-	{
-		flag[choosingResource] = true;
-		flag[gainResource] = true;
-	}	
 }
 
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 

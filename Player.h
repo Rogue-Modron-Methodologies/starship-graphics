@@ -32,7 +32,7 @@ private:
 	Starship* starship;
 	Zone<ColonyCard> *colonyZone;		//  Colony Zone 
 	Zone<TradeCard>* tradeZone;		//  Trade Zone 
-	Zone<Pirate> *pirateZone;			//  Zone to hold Pirates that have been defeated  (to be used to create logs.)	
+	Zone<Pirate> *pirateZone;		//  Zone to hold Pirates that have been defeated  (to be used to create logs.)	
 	Icon** statistics;				//  Array for the statistic Icons
 	bool smallDisplay;
 	bool friendOfThePeople;
@@ -57,8 +57,8 @@ public:
 	bool isHero() const { return heroOfThePeople; }
 	bool isFriend() const { return friendOfThePeople; }
 	
-	void addFmPt(){ statistics[fmPt]->setQty(statistics[fmPt]->getQty() + 1); }
-	void addFrdPt(){ statistics[frdPt]->setQty(statistics[frdPt]->getQty() + 1); }
+	void addFmPt(int num = 1){ statistics[fmPt]->setQty(statistics[fmPt]->getQty() + num ); }
+	void addFrdPt(int num = 1){ statistics[frdPt]->setQty(statistics[frdPt]->getQty() + num ); }
 	void updateIcon(int type);
 	void expandColonyZone();
 	void expandTradeZone();
@@ -74,9 +74,9 @@ public:
 		statusUpdate = "Can not afford ";
 		return false;
 	}		
-	void addVicPt()
+	void addVicPt(int num = 1)
 	{
-		statistics[vicPt]->setQty(statistics[vicPt]->getQty() + 1); 
+		statistics[vicPt]->setQty(statistics[vicPt]->getQty() + num ); 
 		if (statistics[vicPt]->getQty() >= 10)
 			std::cout << "winner!!!!!!!!!!!!\n";
 
