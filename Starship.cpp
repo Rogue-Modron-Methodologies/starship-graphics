@@ -25,13 +25,13 @@ Starship::Starship(ResourceManager<sf::Texture> &txtMgr, ResourceManager<sf::Fon
 	shipObjects[Wheat] = new Resource(txtMgr.getResource(ARWFILE), sf::Vector2f{ 472, 318 }, sf::Vector2u(55, 55), 1, "Wheat");
 	shipObjects[Carbon] = new Resource(txtMgr.getResource(ARWFILE), sf::Vector2f{ 606, 318 }, sf::Vector2u(55, 55), 1, "Carbon");
 
-	shipObjects[B1] = new BoosterLaser(txtMgr.getResource(BSTFILE), sf::Vector2f{ 0, 110 }, 1, sf::Vector2u(105, 63));
-	shipObjects[B2] = new BoosterLaser(txtMgr.getResource(BSTFILE), sf::Vector2f{ 0, 180 }, 0, sf::Vector2u(105, 63));
-	shipObjects[B3] = new BoosterLaser(txtMgr.getResource(BSTFILE), sf::Vector2f{ 0, 250 }, 1, sf::Vector2u(105, 63));
+	shipObjects[B1] = new BoosterLaser(txtMgr.getResource(BSTFILE), sf::Vector2f{ 0, 110 }, 2, sf::Vector2u(105, 63));
+	shipObjects[B2] = new BoosterLaser(txtMgr.getResource(BSTFILE), sf::Vector2f{ 0, 180 }, 2, sf::Vector2u(105, 63));
+	shipObjects[B3] = new BoosterLaser(txtMgr.getResource(BSTFILE), sf::Vector2f{ 0, 250 }, 2, sf::Vector2u(105, 63));
 
-	shipObjects[L1] = new BoosterLaser(txtMgr.getResource(LSRFILE), sf::Vector2f{ 770, 110 }, 0, sf::Vector2u(105, 63));
-	shipObjects[L2] = new BoosterLaser(txtMgr.getResource(LSRFILE), sf::Vector2f{ 770, 180 }, 1, sf::Vector2u(105, 63));
-	shipObjects[L3] = new BoosterLaser(txtMgr.getResource(LSRFILE), sf::Vector2f{ 770, 250 }, 0, sf::Vector2u(105, 63));
+	shipObjects[L1] = new BoosterLaser(txtMgr.getResource(LSRFILE), sf::Vector2f{ 770, 110 }, 2, sf::Vector2u(105, 63));
+	shipObjects[L2] = new BoosterLaser(txtMgr.getResource(LSRFILE), sf::Vector2f{ 770, 180 }, 2, sf::Vector2u(105, 63));
+	shipObjects[L3] = new BoosterLaser(txtMgr.getResource(LSRFILE), sf::Vector2f{ 770, 250 }, 2, sf::Vector2u(105, 63));
 
 	shipObjects[H1] = new HangarShips(txtMgr.getResource(SHPFILE), sf::Vector2f{ 131, 161 }, sf::Vector2u(85, 50), 1, colonyShip, sf::Vector2u(0, 0));	
 	shipObjects[H2] = new HangarShips(txtMgr.getResource(SHPFILE), sf::Vector2f{ 131, 212 }, sf::Vector2u(85, 50), 1, tradeShip, sf::Vector2u(1, 0));	

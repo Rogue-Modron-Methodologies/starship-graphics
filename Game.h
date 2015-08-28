@@ -127,28 +127,26 @@ private:
 	void gameLoop();
 	void playerSetup();	
 	void phaseSetup();
-	void updateGameWindow(sf::RenderWindow &gWindow);
+	void updateDrawGameWindow();
 	void endPhase();
-	void setError(std::string error);
 	void rollSpeedDie();
 	void rollCombatDie(int party);
-	void productionPhaseListener(sf::RenderWindow &gWindow);
-	void flightPhaseListener(sf::RenderWindow &gWindow, int tempType);
-	void preFlightListener(sf::RenderWindow &gWindow, int &tempType);
-	void tradeBuildPhaseListener(sf::RenderWindow &gWindow);
-	void tradeMenuListener(sf::RenderWindow &gWindow, int tempType);
-	void drawFlightMenu(sf::RenderWindow &gWindow);
-	void updateFlightMenu(sf::RenderWindow &gWindow);
-	void drawFlightPath(sf::RenderWindow &gWindow);
-	void initTradeMenu(sf::RenderWindow &gWindow, int tempType);
-	bool tradeIconsTargeted(sf::RenderWindow &gWindow);
-	bool menuOptionTargeted(sf::RenderWindow &gWindow, int &num);
+	void productionPhaseListener();
+	void flightPhaseListener(int tempType);
+	void preFlightListener(int &tempType);
+	void tradeBuildPhaseListener();
+	void tradeMenuListener(int tempType);
+	void updateFlightMenu();
+	void initTradeMenu(int tempType);
+	bool tradeIconsTargeted();
+	bool menuOptionTargeted(int &num);
 	bool resourcesAvailable(int resAvail[]);
+	void gainOneResource();
 	void updateFriendOfThePeople();
 	void updateHeroOfThePeople();
-	void pirateMenu(sf::RenderWindow &gWindow);
-	void pirateFight(sf::RenderWindow &gWindow);
-	void pirateMenuListener(sf::RenderWindow &gWindow);
+	void initPirateMenu();
+	void pirateMenuListener();
+
 
 };
 
