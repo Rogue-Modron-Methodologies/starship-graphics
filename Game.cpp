@@ -38,22 +38,39 @@ Game::Game() : cPlanet(txtMgr.getResource(UNIVERSECARDIMAGES), { 825, 520 }, 0, 
 
 	cPlanet.initString(fntMgr.getResource(FNTFLE), { 835, 480 }, "Current Planet");
 
-	phaseNameString = new Icon(fntMgr.getResource(FNTFLE), { 200, 820 }, "Production Planet");	 
+	phaseNameString.setFont(fntMgr.getResource(FNTFLE));
+	phaseNameString.setPosition({ 200, 820 });
+	phaseNameString.setString("Production Planet");
 	
-	errorString = new Icon(fntMgr.getResource(FNTFLE), { 550, 820 }, "", sf::Text::Bold);
+	errorString.setFont(fntMgr.getResource(FNTFLE));
+	errorString.setPosition({ 550, 820 });
+	errorString.setString("");
+	errorString.setStyle(sf::Text::Bold);
 	errorTimer = 255;
 	
-	infoString = new Icon(fntMgr.getResource(FNTFLE), { 40, 30 }, "", sf::Text::Bold);
+	infoString.setFont(fntMgr.getResource(FNTFLE));
+	infoString.setPosition({ 40, 30 });
+	infoString.setString("");
+	infoString.setStyle(sf::Text::Bold);
 	
-	endPhaseString = new Icon(fntMgr.getResource(FNTFLE), { 825, 25 }, "End of Phase\n(Press Enter)", sf::Text::Bold);
-	endPhaseString->setTextScale({ 2, 2 });
-	endPhaseString->setTextColor(sf::Color::Red);
+	endPhaseString.setFont(fntMgr.getResource(FNTFLE));
+	endPhaseString.setPosition({ 825, 25 });
+	endPhaseString.setString("End of Phase\n(Press Enter)");
+	endPhaseString.setStyle(sf::Text::Bold);
+	endPhaseString.setScale({ 2, 2 });
+	endPhaseString.setColor(sf::Color::Red);
 
-	specialString = new Icon(fntMgr.getResource(FNTFLE), { 650, 30 }, "", sf::Text::Bold);
-	specialString->setTextColor(sf::Color::Green);
+	specialString.setFont(fntMgr.getResource(FNTFLE));
+	specialString.setColor(sf::Color::Green);
+	specialString.setPosition({ 650, 30 });
+	specialString.setString("");
+	specialString.setStyle(sf::Text::Bold);
 
-	flightEventString = new Icon(fntMgr.getResource(FNTFLE), { 580, 525 }, "");
-	flightEventString->setTextColor(sf::Color::Green);
+	flightEventString.setFont(fntMgr.getResource(FNTFLE));
+	flightEventString.setColor(sf::Color::Green);
+	flightEventString.setPosition({ 500, 525 });
+	flightEventString.setString("");
+	flightEventString.setStyle(sf::Text::Bold);
 
 	tradeSaveState = new Icon*[NUMRESOURCES];
 	tradeSaveState[astro] = new Icon(txtMgr.getResource(SYM1FLE), { 780, 562 }, 25, { 35, 35 }, { 3, 0 });
@@ -231,22 +248,22 @@ void Game::phaseSetup()
 	switch (cPhase)
 	{
 	case production:
-		phaseNameString->setString("Production Phase");
+		phaseNameString.setString("Production Phase");
 		cPlyr->makeBig();
 		cPlyr->expandColonyZone();		
 		rollSpeedDie();
 		cPlyr->getStarship()->calcMaxDistance(flightDie->getQty());
 		tempString.clear();
-		specialString->setTextPosition({ 525, 30 });
+		specialString.setPosition({ 525, 30 });
 
 		if (cPlyr->getColonyZone()->findResource(flightDie->getQty(), resAvail)){
 			tempString += " Resource(s) in Colony Zone Found!";
 			if (resourcesInListAvailable(resAvail)){
-				specialString->setString(+"Chose a colony resource");			
+				specialString.setString(+"Chose a colony resource");			
 				flag[gainResource] = true;
 			}
 			else{
-				specialString->setString(+"No Choices Available");
+				specialString.setString(+"No Choices Available");
 				flag[phaseComplete] = true;
 			}
 		}
@@ -255,10 +272,10 @@ void Game::phaseSetup()
 			flag[phaseComplete] = true;
 		}	
 
-		infoString->setString(tempString);			
+		infoString.setString(tempString);			
 		break;
 	case flight:
-		phaseNameString->setString("Flight Phase");
+		phaseNameString.setString("Flight Phase");
 		cPlyr->makeSmall();
 		actionNum = 0;
 		flag[visSectors] = true;
@@ -268,14 +285,14 @@ void Game::phaseSetup()
 		flag[justColonized] = false;
 		flag[pirateAttack] = false;
 		flag[pirateChoice] = false;
-		infoString->setString("Flight: 0 / " + std::to_string(cPlyr->getStarship()->getMaxDistance()) + "\nMax Actions: 0 / " + 
+		infoString.setString("Flight: 0 / " + std::to_string(cPlyr->getStarship()->getMaxDistance()) + "\nMax Actions: 0 / " + 
 			std::to_string(cPlyr->getStarship()->getMaxActions()));
-		specialString->setString("Select a Sector");
-		specialString->setTextPosition({ 425, 40 });
+		specialString.setString("Select a Sector");
+		specialString.setPosition({ 425, 40 });
 		break;
 	case tradeBuild:
-		phaseNameString->setString("Trade & Build Phase");
-		infoString->setString("Trade & Build Phase");
+		phaseNameString.setString("Trade & Build Phase");
+		infoString.setString("Trade & Build Phase");
 		cPlyr->makeBig();
 		flag[phaseComplete] = true;		//  Only until there is an actual phase coded
 		break;
@@ -321,7 +338,7 @@ void Game::updateDrawGameWindow()
 			//  Flight Phase - phase is not complete and player hasn't reached max actions
 			if (!flag[phaseComplete] && actionNum < cPlyr->getStarship()->getMaxActions())
 			{
-				infoString->setString("Flight: " + std::to_string(universe->getCurrentMove()) + " / " + std::to_string(cPlyr->getStarship()->getMaxDistance())
+				infoString.setString("Flight: " + std::to_string(universe->getCurrentMove()) + " / " + std::to_string(cPlyr->getStarship()->getMaxDistance())
 					+ "\nMax Actions: " + std::to_string(actionNum) + " / " + std::to_string(cPlyr->getStarship()->getMaxActions()));
 
 				//  When flight menu is active	
@@ -330,10 +347,7 @@ void Game::updateDrawGameWindow()
 					updateFlightMenu();
 					// Draw the Flight Menu
 					for (int i = 0; i < FMENUSIZE; i++)
-					{
-						if (flightMenuIcons[i]->getQty() == 1)
 							flightMenuIcons[i]->draw(gWindow);
-					}
 				}
 				//  When pirate menu is active ( Bribe/Flight Choice )
 				else if (flag[pirateAttack] && !flag[pirateChoice])
@@ -350,7 +364,7 @@ void Game::updateDrawGameWindow()
 					{
 						if (gainOneResource())
 						{
-							flightEventString->setString("Resources Gained");
+							flightEventString.setString("Resources Gained");
 							flag[pirateAttack] = false;
 							flag[visFlightMenu] = true;
 							cPlyr->getPirateZone()->push_back((Pirate*)universe->getCurrentPlanet());
@@ -361,7 +375,7 @@ void Game::updateDrawGameWindow()
 					else
 					{
 						statusUpdate = "No Resources Available";
-						flightEventString->setString("No Resources\nAvailable");
+						flightEventString.setString("No Resources\nAvailable");
 						flag[gainResource] = false;
 						flag[pirateAttack] = false;
 						flag[visFlightMenu] = true;
@@ -384,7 +398,7 @@ void Game::updateDrawGameWindow()
 			//  When the flight phase is complete
 			else
 			{     
-				specialString->setString("Flight Complete");
+				specialString.setString("Flight Complete");
 				flag[phaseComplete] = true;
 			}
 		}
@@ -393,10 +407,10 @@ void Game::updateDrawGameWindow()
 		break;
 	}
 	// Non Phase Specific Drawables
-	phaseNameString->draw(gWindow);
-	infoString->draw(gWindow);	
-	specialString->draw(gWindow);	
-	flightEventString->draw(gWindow);
+	gWindow.draw(phaseNameString);
+	gWindow.draw(infoString);
+	gWindow.draw(specialString);
+	gWindow.draw(flightEventString);
 	cPlyr->draw(gWindow);	
 
 	if (cPlyr->isFriend())
@@ -407,17 +421,17 @@ void Game::updateDrawGameWindow()
 	if (statusUpdate.length())
 	{
 		errorTimer = 2550;
-		errorString->setString(statusUpdate);
+		errorString.setString(statusUpdate);
 	}
 	statusUpdate.clear();
 
 	if (errorTimer){
-		errorString->setTextColor(sf::Color(255, 0, 0, errorTimer / 10));
-		errorString->draw(gWindow);		
+		errorString.setColor(sf::Color(255, 0, 0, errorTimer / 10));
+		gWindow.draw(errorString);		
 		errorTimer--;
 	}
 	if (flag[phaseComplete]){
-		endPhaseString->draw(gWindow);
+		gWindow.draw(endPhaseString);
 	}
 }
 
@@ -457,7 +471,7 @@ void Game::productionPhaseListener(){
 		if (flag[gainResource] && sf::Mouse::isButtonPressed(sf::Mouse::Left))
 			if (cPlyr->getColonyZone()->resourceMatchesActNum(tempType, flightDie->getQty()) && cPlyr->getStarship()->gainItem(tempType, statusUpdate)){
 				cPlyr->updateIcon(tempType);
-				specialString->setString("Resource Gained");
+				specialString.setString("Resource Gained");
 				flag[gainResource] = false;
 				flag[phaseComplete] = true;
 			}
@@ -505,7 +519,7 @@ void Game::preFlightListener(int &tempType){
 	else if (!cPlyr->zonesSmall() && !cPlyr->getTradeZone()->getIconOnly() && cPlyr->getTradeZone()->isZoneTargeted(gWindow, tempType)){}		// Do Nothing this Phase
 	//  Sector is Clicked
 	else if (universe->sectorsTargeted(gWindow, tempType) && cPlyr->getStarship()->isSmall()){
-		infoString->setString("Flight: 1 / " + std::to_string(cPlyr->getStarship()->getMaxDistance()) + "\nMax Actions: 0 / " + std::to_string(cPlyr->getStarship()->getMaxActions()));
+		infoString.setString("Flight: 1 / " + std::to_string(cPlyr->getStarship()->getMaxDistance()) + "\nMax Actions: 0 / " + std::to_string(cPlyr->getStarship()->getMaxActions()));
 		flag[visSectors] = false;
 		flag[sectorSelected] = true;
 		universe->initializeFlightPath(tempType);
@@ -588,7 +602,7 @@ void Game::flightPhaseListener(int tempType){
 				flag[justColonized] = true;
 				actionNum++;
 			}
-			infoString->setString(statusUpdate);
+			infoString.setString(statusUpdate);
 			break;			
 		case trdW:	//  Trade with Planet
 			initTradeMenu(tempType);
@@ -599,12 +613,12 @@ void Game::flightPhaseListener(int tempType){
 			flag[justColonized] = false;
 			flag[pirateAttack] = false;
 			flag[pirateChoice] = false;
-			flightEventString->clear();
-			specialString->setString("Flight Sector: " + std::to_string(universe->getCurrentSectorNum() + 1));
+			flightEventString.setString("");
+			specialString.setString("Flight Sector: " + std::to_string(universe->getCurrentSectorNum() + 1));
 			break;
 		case endFl:	//  End Flight
 			flag[phaseComplete] = true;
-			flightEventString->clear();
+			flightEventString.setString("");
 			break;
 		}
 	}
@@ -648,10 +662,10 @@ void Game::tradeMenuListener(int tempType)
 		{
 			actionNum++;		
 			flag[justTraded] = true;
-			flightEventString->setString("Trade Complete");
+			flightEventString.setString("Trade Complete");
 		}
 		else
-			flightEventString->setString("No Trade");
+			flightEventString.setString("No Trade");
 
 	}
 	else if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && tradeMenuIcons[cancel]->isTargeted(gWindow))
@@ -665,7 +679,7 @@ void Game::tradeMenuListener(int tempType)
 		}
 		cPlyr->setStatQty(astro, tradeSaveState[astro]->getQty());
 		cPlyr->getStarship()->updateShipIcons();
-		flightEventString->setString("Trade Cancelled");
+		flightEventString.setString("Trade Cancelled");
 	}
 }
 
@@ -680,10 +694,10 @@ void Game::pirateMenuListener(){
 			if (cPlyr->canAfford(universe->getCurrentPlanet()->getCost(), statusUpdate))
 			{
 				cPlyr->subAstro(universe->getCurrentPlanet()->getCost());
-				specialString->clear();
+				specialString.setString("");
 				cPlanet.setSrcPos(universe->getCurrentPlanet()->getSrcPos());
 				cPlanet.updateTextRect();
-				flightEventString->setString("Bribe Payed");
+				flightEventString.setString("Bribe Payed");
 				flag[pirateChoice] = true;
 				flag[pirateAttack] = false;
 				flag[visFlightMenu] = true;
@@ -701,27 +715,27 @@ void Game::pirateMenuListener(){
 			if (plyRes >= pirRes)			//  If the player wins
 			{
 				flag[gainResource] = true;
-				flightEventString->setString("Choose a resource");
-				specialString->setString("VICTORY!!! Gain a resource and a fame point");
+				flightEventString.setString("Choose a resource");
+				specialString.setString("VICTORY!!! Gain a resource and a fame point");
 				cPlyr->addFmPt();
 				updateFriendOfThePeople();
 			}
 			else                              	//  If the pirate wins
 			{
-				specialString->setString("Flight Complete");
+				specialString.setString("Flight Complete");
 				if (universe->getCurrentPlanet()->getResult() == "N/A")
 				{
 					flag[pirateResult] = false;
 					flag[gainResource] = false;
 					flag[phaseComplete] = true;
 					flag[visFlightMenu] = true;
-					flightEventString->setString("DEFEAT!\n\nRESULT: Flight Ends");
+					flightEventString.setString("DEFEAT!\n\nRESULT: Flight Ends");
 				}
 				else
 				{
 					std::cout << "RESULT: " << universe->getCurrentPlanet()->getResult() << std::endl;
 					std::cout << "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" << std::endl; //  Implement this
-					flightEventString->setString("DEFEAT!\n\nRESULT:");
+					flightEventString.setString("DEFEAT!\n\nRESULT:");
 				}
 			}
 			//  Reveal the Pirate
@@ -804,7 +818,7 @@ void Game::initTradeMenu(int tempType)
 {
 	flag[visFlightMenu] = false;
 	flag[tradeInProgress] = true;
-	flightEventString->setString("Trade In Progress");
+	flightEventString.setString("Trade In Progress");
 	int cResource = universe->getCurrentPlanet()->getResource();
 	for (int i = 0; i < NUMRESOURCES; i++)
 	{
@@ -840,8 +854,8 @@ void Game::initPirateMenu()
 	flag[visFlightMenu] = false;
 	cPlanet.setSrcPos({ 4, 13 });				//  Card Back
 	cPlanet.updateTextRect();
-	specialString->setString("There is a Pirate Here!  They demand " + std::to_string(universe->getCurrentPlanet()->getCost()) + " astro!");
-	flightEventString->setString("Bribe / Fight");
+	specialString.setString("There is a Pirate Here!  They demand " + std::to_string(universe->getCurrentPlanet()->getCost()) + " astro!");
+	flightEventString.setString("Bribe / Fight");
 }
 
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
@@ -852,7 +866,7 @@ void Game::initPirateMenu()
 void Game::updateFlightMenu()
 {
 	for (int i = 0; i < FMENUSIZE; i++)
-		flightMenuIcons[i]->setQty(0, false);
+		flightMenuIcons[i]->hide();
 
 	if (universe->getCurrentPlanet()->getType() == 2 && !flag[justColonized] && !flag[pirateChoice])			//  PIRATE'S CHOICE
 		initPirateMenu();
@@ -860,20 +874,20 @@ void Game::updateFlightMenu()
 	{
 		cPlanet.setSrcPos(universe->getCurrentPlanet()->getSrcPos());
 		cPlanet.updateTextRect();
-		flightMenuIcons[endFl]->setQty(1, false);
+		flightMenuIcons[endFl]->unhide();
 		if (universe->getCurrentMove() < cPlyr->getStarship()->getMaxDistance()) 
-			flightMenuIcons[conFly]->setQty(1, false);
+			flightMenuIcons[conFly]->unhide();
 		if (universe->getCurrentPlanet()->getType() == 0)							//  Trade Planet
 		{
 			if (!flag[justTraded] && !flag[justColonized])
-				flightMenuIcons[trdW]->setQty(1, false);
+				flightMenuIcons[trdW]->unhide();
 			if (universe->getCurrentPlanet()->getPts() == 1 && !flag[justColonized])	//  Can be colonized
 			{
 				flightMenuIcons[colIt]->setString("Establish Trade Post");
 				flightMenuIcons[colIt]->setSrcPos({ 1, 0 });
 				flightMenuIcons[colIt]->updateTextRect();
 				flightMenuIcons[colIt]->setTextPosition({ 480, 660 });
-				flightMenuIcons[colIt]->setQty(1, false);
+				flightMenuIcons[colIt]->unhide();
 			}
 		}
 		else if (universe->getCurrentPlanet()->getType() == 1 && !flag[justColonized])	//  Colony Planet
@@ -882,7 +896,7 @@ void Game::updateFlightMenu()
 			flightMenuIcons[colIt]->setTextPosition({ 500, 660 });
 			flightMenuIcons[colIt]->setSrcPos({ 0, 0 });
 			flightMenuIcons[colIt]->updateTextRect();
-			flightMenuIcons[colIt]->setQty(1, false);
+			flightMenuIcons[colIt]->unhide();
 		}
 		else                                                             //  Everything else
 		{
@@ -921,7 +935,7 @@ bool Game::flightMenuOptionTargeted(int &num)
 {
 	for (int i = 0; i < FMENUSIZE; i++)
 	{
-		if (flightMenuIcons[i]->getQty() == 1 && flightMenuIcons[i]->isTargeted(gWindow))
+		if (flightMenuIcons[i]->isTargeted(gWindow))
 		{
 			num = i;
 			return true;
@@ -1106,8 +1120,8 @@ void Game::rollCombatDie(int party)
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
 void Game::endPhase()
 {
-	specialString->clear();
-	flightEventString->clear();
+	specialString.setString("");
+	flightEventString.setString("");
 	cPhase++;
 	if (cPhase == 3)
 		cPhase = 0;

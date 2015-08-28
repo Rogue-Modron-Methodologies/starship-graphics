@@ -51,17 +51,18 @@ public:
 	void setTexture(const sf::Texture &texture){ sprite->setTexture(texture); }
 	sf::Vector2f getPosition() const { return sprite->getPosition(); }
 	sf::Vector2f getScale() const { return sprite->getScale(); }
-	bool getVisible() const { return visible; }
-	bool setVisible(bool toggle){ visible = toggle; }
-	bool getClickable() const { return clickable; }
-	bool setClickable(bool toggle){ clickable = toggle; }
+	bool isVisible() const { return visible; }
+	//bool setVisible(bool toggle){ visible = toggle; }
+	//bool getClickable() const { return clickable; }
+	//bool setClickable(bool toggle){ clickable = toggle; }
 
 	// Misc Inline Functions
 	bool isSmall() const  { 	return smallDisplay; }
 	
 	// Prototypes
 	virtual void updateTextRect();
-	virtual void draw(sf::RenderWindow &window) { window.draw(*sprite); }
+	virtual void draw(sf::RenderWindow &window) 
+	{ if(visible)window.draw(*sprite); }
 	bool isTargeted(sf::RenderWindow &gWindow);	
 	sf::Vector2f convertCoord(sf::RenderWindow &gWindow);
 	void unGreyOut();

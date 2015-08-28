@@ -65,22 +65,21 @@ private:
 	Icon **tradeMenuIcons;				//  Icons for the Trade Menu
 	Icon *flightDie;					//  Production/Flight Die
 	Icon **combatDie;					//  Combat Die for Player and Pirate
-	Icon *phaseNameString;				//  Phase Name Text String
-	Icon *endPhaseString;				//  For End of Phase Messages
-	Icon *specialString;				//  For special instructions
-	Icon *infoString;					//  Info Text String
 	Icon cPlanet;						//  Current Planet 
-	Icon *errorString;					//  Error Text String
-	Icon *flightEventString;				//  In Progress/Complete/Cancelled
 	Icon **flightMenuIcons;				//  FlightMenu  
 	Icon **pirateMenuIcons;				//  PirateMenu
 	Icon *friendPeople;
 	Icon *heroPeople;
 	std::string statusUpdate;			//  Catches errors from called functions
-	int errorTimer;
+	sf::Text phaseNameString;			//  Phase Name Text String
+	sf::Text endPhaseString;				//  For End of Phase Messages
+	sf::Text specialString;				//  For special instructions
+	sf::Text infoString;				//  Info Text String
+	sf::Text errorString;				//  Error Text String	
+	sf::Text flightEventString;			//  In Progress/Complete/Cancelled	
 	int actionNum;						//  Current Action Num
 	int cPhase;						//  Current Phase Num
-
+	int errorTimer;
 
 public:
 	Game();
@@ -93,12 +92,6 @@ public:
 		delete combatDie[ply];
 		delete combatDie[prt];
 		delete combatDie;
-		delete phaseNameString;
-		delete flightEventString;
-		delete endPhaseString;
-		delete specialString;
-		delete infoString;
-		delete errorString;
 		delete heroPeople;
 		delete friendPeople;
 		for (int i = 0; i < TRADEMENUSIZE; i++)

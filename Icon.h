@@ -81,11 +81,11 @@ public:
 	}
 
 	//  Draws to Window
-	void draw(sf::RenderWindow &window){ 
-		if (icon)
-			icon->draw(window); 
-		if (!text.getString().isEmpty())
-			window.draw(text);
+	void draw(sf::RenderWindow &window)
+	{ 
+		icon->draw(window); 		
+		if (icon->isVisible() && !text.getString().isEmpty())
+				window.draw(text);
 	}
 	void updateTextRect()
 	{
