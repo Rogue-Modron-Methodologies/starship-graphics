@@ -14,7 +14,9 @@
 //  Player Name Setup
 //
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
-Game::Game() : cPlanet(txtMgr.getResource(UNIVERSECARDIMAGES), { 825, 520 }, 0, { 200, 300 }, { 4, 13 })
+Game::Game() : cPlanet(txtMgr.getResource(UNIVERSECARDIMAGES), { 825, 520 }, 0, { 200, 300 }, { 4, 13 }),
+			friendPeople(txtMgr.getResource(FRIENDHERO), sf::Vector2f{ 900, 840 }, 1, sf::Vector2u(200, 200), { 1, 0 }),		
+			heroPeople(txtMgr.getResource(FRIENDHERO), sf::Vector2f{ 975, 840 }, 1, sf::Vector2u(200, 200), { 0, 0 })		
 {
 	flightDie = new Icon(txtMgr.getResource(SDIEFLE), sf::Vector2f{ 350, 525 }, 1, sf::Vector2u(80, 80));
 	flightDie->initString(fntMgr.getResource(FNTFLE), { 440, 545 }, "", sf::Text::Bold);		
@@ -31,10 +33,8 @@ Game::Game() : cPlanet(txtMgr.getResource(UNIVERSECARDIMAGES), { 825, 520 }, 0, 
 	P2 = new Player(txtMgr, fntMgr, "Player2", 2);		// Default names for bugtesting
 	cPlyr = P2;
 
-	friendPeople = new Icon(txtMgr.getResource(FRIENDHERO), sf::Vector2f{ 900, 840 }, 1, sf::Vector2u(200, 200), { 1, 0 });
-	friendPeople->setScale({ .3f, .3f });
-	heroPeople = new Icon(txtMgr.getResource(FRIENDHERO), sf::Vector2f{ 975, 840 }, 1, sf::Vector2u(200, 200), { 0, 0 });
-	heroPeople->setScale({ .3f, .3f });
+	friendPeople.setScale({ .3f, .3f });				//  Will resize images if I don't need the icons for anything else
+	heroPeople.setScale({ .3f, .3f });					//  Will resize images if I don't need the icons for anything else
 
 	cPlanet.initString(fntMgr.getResource(FNTFLE), { 835, 480 }, "Current Planet");
 
@@ -97,23 +97,23 @@ Game::Game() : cPlanet(txtMgr.getResource(UNIVERSECARDIMAGES), { 825, 520 }, 0, 
 
 	flightMenuIcons = new Icon*[FMENUSIZE];
 
-	flightMenuIcons[trdW] = new Icon(txtMgr.getResource(SYMBFLE), { 760, 610 }, 0, { 50, 50 }, { 3, 0 });
-	flightMenuIcons[trdW]->initString(fntMgr.getResource(FNTFLE), { 520, 610 }, "Trade With Planet");
+	flightMenuIcons[trdW] = new Icon(txtMgr.getResource(SYMBFLE), { 710, 610 }, 0, { 50, 50 }, { 3, 0 });
+	flightMenuIcons[trdW]->initString(fntMgr.getResource(FNTFLE), { 480, 610 }, "Trade With Planet");
 
-	flightMenuIcons[colIt] = new Icon(txtMgr.getResource(SYMBFLE), sf::Vector2f(760, 660), 0, { 50, 50 }, { 1, 0 });
-	flightMenuIcons[colIt]->initString(fntMgr.getResource(FNTFLE), { 760, 660 }, "Colonize");
+	flightMenuIcons[colIt] = new Icon(txtMgr.getResource(SYMBFLE), sf::Vector2f(710, 660), 0, { 50, 50 }, { 1, 0 });
+	flightMenuIcons[colIt]->initString(fntMgr.getResource(FNTFLE), { 500, 660 }, "Colonize/Trade");
 
-	flightMenuIcons[conFly] = new Icon(txtMgr.getResource(SYMBFLE), sf::Vector2f(760, 710), 0, { 50, 50 }, { 4, 0 });
-	flightMenuIcons[conFly]->initString(fntMgr.getResource(FNTFLE), { 550, 710 }, "Continue Flying");
+	flightMenuIcons[conFly] = new Icon(txtMgr.getResource(SYMBFLE), sf::Vector2f(710, 710), 0, { 50, 50 }, { 4, 0 });
+	flightMenuIcons[conFly]->initString(fntMgr.getResource(FNTFLE), { 500, 710 }, "Continue Flying");
 
-	flightMenuIcons[endFl] = new Icon(txtMgr.getResource(SYMBFLE), sf::Vector2f(760, 760), 0, { 50, 50 }, { 5, 0 });
-	flightMenuIcons[endFl]->initString(fntMgr.getResource(FNTFLE), { 610, 760 }, "End Flight");
+	flightMenuIcons[endFl] = new Icon(txtMgr.getResource(SYMBFLE), sf::Vector2f(710, 760), 0, { 50, 50 }, { 5, 0 });
+	flightMenuIcons[endFl]->initString(fntMgr.getResource(FNTFLE), { 570, 760 }, "End Flight");
 
 	for (int i = 0; i < FLAGNUM; i++)
 		flag[i] = false;
-	flag[visFlightPath] = true;
-	flag[visSectors] = true;
-	flag[visFlightMenu] = true;
+	flag[showFlightPath] = true;
+	flag[showSectors] = true;
+	flag[showflightMenu] = true;
 
 	universe = new Universe(txtMgr, fntMgr);
 	screenSize = sf::Vector2u(1200, 900);
@@ -201,7 +201,7 @@ void Game::gameLoop()
 					if (flag[sectorSelected])
 						flightPhaseListener(tempNum);
 					if (flag[tradeInProgress])
-						tradeMenuListener(tempNum);
+						tradeMenuListener();
 					break;
 				case tradeBuild:
 					tradeBuildPhaseListener();
@@ -278,11 +278,10 @@ void Game::phaseSetup()
 		phaseNameString.setString("Flight Phase");
 		cPlyr->makeSmall();
 		actionNum = 0;
-		flag[visSectors] = true;
+		flag[showSectors] = true;
 		flag[sectorSelected] = false;		
-		flag[visFlightMenu] = true;
-		flag[justTraded] = false;
-		flag[justColonized] = false;
+		flag[showflightMenu] = true;
+		flag[justActed] = false;
 		flag[pirateAttack] = false;
 		flag[pirateChoice] = false;
 		infoString.setString("Flight: 0 / " + std::to_string(cPlyr->getStarship()->getMaxDistance()) + "\nMax Actions: 0 / " + 
@@ -314,13 +313,13 @@ void Game::updateDrawGameWindow()
 		flightDie->draw(gWindow);
 		break;
 	case flight:
-		if (!flag[sectorSelected] && flag[visSectors])
+		if (!flag[sectorSelected] && flag[showSectors])
 			universe->drawSectors(gWindow);
-		else if (!flag[sectorSelected] && !flag[visSectors])
+		else if (!flag[sectorSelected] && !flag[showSectors])
 			break;
 		else{
 			// Draw Flight Path
-			if (flag[visFlightPath]) 
+			if (flag[showFlightPath])
 			{
 				float xPos = 50;
 				float yPos = 200;
@@ -342,11 +341,10 @@ void Game::updateDrawGameWindow()
 					+ "\nMax Actions: " + std::to_string(actionNum) + " / " + std::to_string(cPlyr->getStarship()->getMaxActions()));
 
 				//  When flight menu is active	
-				if (flag[visFlightMenu])
+				if (flag[showflightMenu])
 				{
 					updateFlightMenu();
-					// Draw the Flight Menu
-					for (int i = 0; i < FMENUSIZE; i++)
+					for (int i = 0; i < FMENUSIZE; i++)				// Draw the Flight Menu
 							flightMenuIcons[i]->draw(gWindow);
 				}
 				//  When pirate menu is active ( Bribe/Flight Choice )
@@ -359,26 +357,23 @@ void Game::updateDrawGameWindow()
 				else if (flag[pirateAttack] && flag[pirateChoice] && flag[gainResource])
 				{
 					for (int i = 0; i < 6; i++)
-						tradeSaveState[i]->draw(gWindow);	//  Prints the resource icons available	
-					if (resourcesAvailable())			//  If there are no available resources
+						tradeSaveState[i]->draw(gWindow);						//  Prints the resource icons available	
+					if (!areAnyResourcesAvailable() || gainOneResource())			//  If there are no available resources
 					{
-						if (gainOneResource())
+						if (flag[gainResource])
 						{
-							flightEventString.setString("Resources Gained");
-							flag[pirateAttack] = false;
-							flag[visFlightMenu] = true;
-							cPlyr->getPirateZone()->push_back((Pirate*)universe->getCurrentPlanet());
-							universe->replaceCurrentPlanet();
+							statusUpdate = "No Resources Available";
+							flightEventString.setString("No Resources\nAvailable");
+							flag[gainResource] = false;
 						}
-					}
-					//  If there are no available resources
-					else
-					{
-						statusUpdate = "No Resources Available";
-						flightEventString.setString("No Resources\nAvailable");
-						flag[gainResource] = false;
+						else
+							flightEventString.setString("Resources Gained");
+
 						flag[pirateAttack] = false;
-						flag[visFlightMenu] = true;
+						flag[showflightMenu] = true;
+						flag[justActed] = true;
+						cPlyr->getPirateZone()->push_back((Pirate*)universe->getCurrentPlanet());
+						universe->replaceCurrentPlanet();
 					}
 				}
 				//  When Loser of Pirate Attack (Lose a part of your ship)  Implement with build phase
@@ -414,9 +409,9 @@ void Game::updateDrawGameWindow()
 	cPlyr->draw(gWindow);	
 
 	if (cPlyr->isFriend())
-		friendPeople->draw(gWindow);
+		friendPeople.draw(gWindow);
 	if (cPlyr->isHero())
-		heroPeople->draw(gWindow);
+		heroPeople.draw(gWindow);
 
 	if (statusUpdate.length())
 	{
@@ -494,7 +489,7 @@ void Game::preFlightListener(int &tempType){
 	if (cPlyr->getStarship()->isTargeted(gWindow) && cPlyr->getStarship()->isSmall()){
 		if (sf::Mouse::isButtonPressed(sf::Mouse::Left)){
 			cPlyr->makeBig();
-			flag[visSectors] = false;	
+			flag[showSectors] = false;
 		}
 	}
 	// Starship (Large) is clicked
@@ -520,15 +515,17 @@ void Game::preFlightListener(int &tempType){
 	//  Sector is Clicked
 	else if (universe->sectorsTargeted(gWindow, tempType) && cPlyr->getStarship()->isSmall()){
 		infoString.setString("Flight: 1 / " + std::to_string(cPlyr->getStarship()->getMaxDistance()) + "\nMax Actions: 0 / " + std::to_string(cPlyr->getStarship()->getMaxActions()));
-		flag[visSectors] = false;
+		flag[showSectors] = false;
 		flag[sectorSelected] = true;
 		universe->initializeFlightPath(tempType);
+		cPlanet.setSrcPos(universe->getCurrentPlanet()->getSrcPos());
+		cPlanet.updateTextRect();
 		return;
 	}
 	//  Starship (Large) && Empty Space is clicked
 	else if (!cPlyr->getStarship()->isTargeted(gWindow) && !cPlyr->getStarship()->isSmall()){
 		cPlyr->makeSmall();
-		flag[visSectors] = true;
+		flag[showSectors] = true;
 	}
 }
 
@@ -546,7 +543,7 @@ void Game::flightPhaseListener(int tempType){
 		if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
 		{
 			cPlyr->makeBig();
-			flag[visFlightPath] = false;
+			flag[showFlightPath] = false;
 		}
 	}
 	// Starship (Large) is clicked
@@ -570,16 +567,16 @@ void Game::flightPhaseListener(int tempType){
 	// Trade Zone (Large List) is clicked
 	else if (!cPlyr->zonesSmall() && !cPlyr->getTradeZone()->getIconOnly() && cPlyr->getTradeZone()->isZoneTargeted(gWindow, tempType)){}		// Do Nothing this Phase
 	// Objects in the FlightPath are clicked but not the current planet
-	else if (!flag[phaseComplete] && flag[visFlightPath] && universe->flightPathTargeted(gWindow, tempType) && tempType != universe->getCurrentMove() - 1){
+	else if (!flag[phaseComplete] && flag[showFlightPath] && universe->flightPathTargeted(gWindow, tempType) && tempType != universe->getCurrentMove() - 1){
 		std::cout << "Flight Path Object " << tempType << " Clicked" << std::endl;
 	}
 	// Current Planet in the FlightPath is clicked
-	else if (!flag[phaseComplete] && flag[visFlightMenu] && universe->getCurrentPlanet()->isTargeted(gWindow)){
+	else if (!flag[phaseComplete] && flag[showflightMenu] && universe->getCurrentPlanet()->isTargeted(gWindow)){
 		std::cout << "Current Planet Clicked" << std::endl;
 		std::cout << "Resource " << universe->getCurrentPlanet()->getResource() << std::endl;
 	}
 	//  Current Planet's Menu in the FlightPath is clicked
-	else if (!flag[phaseComplete] && flag[visFlightMenu] && flightMenuOptionTargeted(tempType)){
+	else if (!flag[phaseComplete] && flag[showflightMenu] && flightMenuOptionTargeted(tempType)){
 		switch (tempType)
 		{
 		case colIt:	//  Colonize/Establish Post
@@ -590,7 +587,7 @@ void Game::flightPhaseListener(int tempType){
 				cPlyr->addFrdPt();
 				updateFriendOfThePeople();
 				universe->replaceCurrentPlanet();
-				flag[justColonized] = true;
+				flag[justActed] = true;
 				actionNum++;
 			}
 			else if (universe->getCurrentPlanet()->getType() == colonyShip &&cPlyr->getStarship()->shipAvailable(colonyShip, tempType, statusUpdate)){
@@ -599,7 +596,7 @@ void Game::flightPhaseListener(int tempType){
 				cPlyr->getColonyZone()->updateZone(cPlyr->getColonyZone()->getPosition(), cPlyr->getColonyZone()->getScale(), cPlyr->getColonyZone()->getIconOnly());
 				cPlyr->addVicPt();
 				universe->replaceCurrentPlanet();
-				flag[justColonized] = true;
+				flag[justActed] = true;
 				actionNum++;
 			}
 			infoString.setString(statusUpdate);
@@ -609,8 +606,9 @@ void Game::flightPhaseListener(int tempType){
 			break;
 		case conFly:	// Continue Flight
 			universe->continueFlight();
-			flag[justTraded] = false;
-			flag[justColonized] = false;
+			cPlanet.setSrcPos(universe->getCurrentPlanet()->getSrcPos());
+			cPlanet.updateTextRect();
+			flag[justActed] = false;
 			flag[pirateAttack] = false;
 			flag[pirateChoice] = false;
 			flightEventString.setString("");
@@ -625,53 +623,96 @@ void Game::flightPhaseListener(int tempType){
 	//  Starship (Large) && Empty Space is clicked
 	else if (!cPlyr->getStarship()->isTargeted(gWindow) && !cPlyr->getStarship()->isSmall() && !tradeIconsTargeted()){
 		cPlyr->makeSmall();
-		flag[visFlightPath] = true;
+		flag[showFlightPath] = true;
 	}
 }
 
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
 //  Deals with Mouse Click actions when the tradeMenu is displayed
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
-void Game::tradeMenuListener(int tempType)
-{
-	tempType = universe->getCurrentPlanet()->getResource();
-	int cost = universe->getCurrentPlanet()->getCost();
-
-	if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && tradeMenuIcons[plus]->isTargeted(gWindow))
+void Game::tradeMenuListener()
+{	
+	int cost = universe->getCurrentPlanet()->getCost();	
+	//  If player has option to chose resource but hasn't yet done so
+	if (flag[choosingResource] && !flag[resourceChosen])
 	{
-		if (cPlyr->canAfford(cost, statusUpdate) && cPlyr->getStarship()->gainItem(tempType, statusUpdate))
+		for (int i = 0; i < 6; i++)				//  Greys out any resources that are maxed
 		{
-			cPlyr->updateIcon(tempType);
+			tradeSaveState[i]->unGreyOut();
+			if (cPlyr->getStarship()->holdFull(i))
+				tradeSaveState[i]->greyOut();
+		}
+		for (int i = 0; i < 6; i++)				//  checks if a resource has been chosen
+		{
+			if (tradeSaveState[i]->isTargeted(gWindow))
+			{
+				cTradeResource = i;
+				for (int j = 0; j < 6; j++)
+					tradeSaveState[j]->greyOut();
+				tradeSaveState[cTradeResource]->unGreyOut();
+				flag[resourceChosen] = true;
+				break;
+			}
+		}
+	}
+	//  If player doesn't have the option to chose resource (auto chooses the resource)
+	else if (!flag[choosingResource])
+	{
+		flag[resourceChosen] = true;
+		cTradeResource = universe->getCurrentPlanet()->getResource();
+	}	
+
+	//  If resource has been chosen and the plus icon has been selected
+	if (flag[resourceChosen] && sf::Mouse::isButtonPressed(sf::Mouse::Left) && tradeMenuIcons[plus]->isTargeted(gWindow))
+	{
+		if (cPlyr->canAfford(cost, statusUpdate) && cPlyr->getStarship()->gainItem(cTradeResource, statusUpdate))
+		{
+			cPlyr->updateIcon(cTradeResource);
 			cPlyr->subAstro(cost);				
 		}
 	}
-	else if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && tradeMenuIcons[minus]->isTargeted(gWindow))
+	//  If resource has NOT been chosen and the plus icon has been selected
+	else if (!flag[resourceChosen] && sf::Mouse::isButtonPressed(sf::Mouse::Left) && tradeMenuIcons[plus]->isTargeted(gWindow))
 	{
-		if (cPlyr->getStarship()->loseItem(tempType, statusUpdate))
+		statusUpdate = "Choose a resource";
+	}
+	//  If resource has been chosen and the plus minus has been selected
+	else if (flag[resourceChosen] && sf::Mouse::isButtonPressed(sf::Mouse::Left) && tradeMenuIcons[minus]->isTargeted(gWindow))
+	{
+		if (cPlyr->getStarship()->loseItem(cTradeResource, statusUpdate))
 		{
-			cPlyr->updateIcon(tempType);
+			cPlyr->updateIcon(cTradeResource);
 			cPlyr->addAstro(cost);
 		}
 	}
+	//  If resource has NOT been chosen and the minus icon has been selected
+	else if (flag[resourceChosen] && sf::Mouse::isButtonPressed(sf::Mouse::Left) && tradeMenuIcons[minus]->isTargeted(gWindow))
+	{
+		statusUpdate = "Choose a resource";
+	}
+	//  If the Check Icon has been selected
 	else if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && tradeMenuIcons[check]->isTargeted(gWindow))
 	{
 		flag[tradeInProgress] = false;
-		flag[visFlightMenu] = true;
+		flag[showflightMenu] = true;
 
 		if (tradeSaveState[astro]->getQty() != cPlyr->getStatQty(astro))
 		{
-			actionNum++;		
-			flag[justTraded] = true;
+			actionNum++;
+			flag[justActed] = true;
 			flightEventString.setString("Trade Complete");
 		}
 		else
 			flightEventString.setString("No Trade");
 
 	}
+	//  If the Cancel Icon has been selected
 	else if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && tradeMenuIcons[cancel]->isTargeted(gWindow))
 	{
 		flag[tradeInProgress] = false;
-		flag[visFlightMenu] = true;		
+		flag[showflightMenu] = true;
+		flag[choosingResource] = false;
+		flag[resourceChosen] = false;
 		for (int i = 0; i < 6; i++)							// restores the saveState for all resource and astro values
 		{
 			cPlyr->setStatQty(i, tradeSaveState[i]->getQty());
@@ -695,12 +736,10 @@ void Game::pirateMenuListener(){
 			{
 				cPlyr->subAstro(universe->getCurrentPlanet()->getCost());
 				specialString.setString("");
-				cPlanet.setSrcPos(universe->getCurrentPlanet()->getSrcPos());
-				cPlanet.updateTextRect();
 				flightEventString.setString("Bribe Payed");
 				flag[pirateChoice] = true;
 				flag[pirateAttack] = false;
-				flag[visFlightMenu] = true;
+				flag[showflightMenu] = true;
 			}
 		}
 		else	if (pirateMenuIcons[fight]->isTargeted(gWindow))	// If the player decides to fight
@@ -718,7 +757,7 @@ void Game::pirateMenuListener(){
 				flightEventString.setString("Choose a resource");
 				specialString.setString("VICTORY!!! Gain a resource and a fame point");
 				cPlyr->addFmPt();
-				updateFriendOfThePeople();
+				updateHeroOfThePeople();
 			}
 			else                              	//  If the pirate wins
 			{
@@ -728,7 +767,7 @@ void Game::pirateMenuListener(){
 					flag[pirateResult] = false;
 					flag[gainResource] = false;
 					flag[phaseComplete] = true;
-					flag[visFlightMenu] = true;
+					flag[showflightMenu] = true;
 					flightEventString.setString("DEFEAT!\n\nRESULT: Flight Ends");
 				}
 				else
@@ -814,18 +853,31 @@ void Game::tradeBuildPhaseListener()
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
 //  Sets up and maintains tradeMenu Details
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
-void Game::initTradeMenu(int tempType)
+void Game::initTradeMenu(int &tempType)
 {
-	flag[visFlightMenu] = false;
+	int cResource = universe->getCurrentPlanet()->getResource();
+
+	if (cResource == 6)
+	{
+		flag[choosingResource] = true;
+		flag[resourceChosen] = false;
+	}
+
+		
+	flag[showflightMenu] = false;
 	flag[tradeInProgress] = true;
 	flightEventString.setString("Trade In Progress");
-	int cResource = universe->getCurrentPlanet()->getResource();
+
+	for (int i = 0; i < TRADEMENUSIZE; i++)						//  Brings back any Icons that may have been hidden
+		tradeMenuIcons[i]->unhide();
+
 	for (int i = 0; i < NUMRESOURCES; i++)
 	{
 		tradeSaveState[i]->setQty(cPlyr->getStatQty(i));			//  saves the current resource and astro values
-		tradeSaveState[i]->greyOut();							
+		tradeSaveState[i]->greyOut();							//  makes all items unavailable
 	}
-	tradeSaveState[cResource]->unGreyOut();
+	if (cResource > 0 && cResource < 6)
+		tradeSaveState[cResource]->unGreyOut();
 
 	std::string type = universe->getCurrentPlanet()->getTransaction();
 	if (type == "Buy")			//  Can only buy at this trade post
@@ -843,6 +895,11 @@ void Game::initTradeMenu(int tempType)
 		tradeMenuIcons[plus]->unGreyOut();
 		tradeMenuIcons[minus]->unGreyOut();
 	}
+	if (cResource == 6)
+	{
+		flag[choosingResource] = true;
+		flag[gainResource] = true;
+	}	
 }
 
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
@@ -851,7 +908,7 @@ void Game::initTradeMenu(int tempType)
 void Game::initPirateMenu()
 {
 	flag[pirateAttack] = true;
-	flag[visFlightMenu] = false;
+	flag[showflightMenu] = false;
 	cPlanet.setSrcPos({ 4, 13 });				//  Card Back
 	cPlanet.updateTextRect();
 	specialString.setString("There is a Pirate Here!  They demand " + std::to_string(universe->getCurrentPlanet()->getCost()) + " astro!");
@@ -868,32 +925,31 @@ void Game::updateFlightMenu()
 	for (int i = 0; i < FMENUSIZE; i++)
 		flightMenuIcons[i]->hide();
 
-	if (universe->getCurrentPlanet()->getType() == 2 && !flag[justColonized] && !flag[pirateChoice])			//  PIRATE'S CHOICE
+	if (universe->getCurrentPlanet()->getType() == 2 && !flag[justActed] && !flag[pirateChoice])			//  PIRATE'S CHOICE
 		initPirateMenu();
 	else  //  NOT PIRATE
 	{
-		cPlanet.setSrcPos(universe->getCurrentPlanet()->getSrcPos());
-		cPlanet.updateTextRect();
+
 		flightMenuIcons[endFl]->unhide();
 		if (universe->getCurrentMove() < cPlyr->getStarship()->getMaxDistance()) 
 			flightMenuIcons[conFly]->unhide();
-		if (universe->getCurrentPlanet()->getType() == 0)							//  Trade Planet
+		if (universe->getCurrentPlanet()->getType() == 0)						//  Trade Planet
 		{
-			if (!flag[justTraded] && !flag[justColonized])
+			if (!flag[justActed])
 				flightMenuIcons[trdW]->unhide();
-			if (universe->getCurrentPlanet()->getPts() == 1 && !flag[justColonized])	//  Can be colonized
+			if (universe->getCurrentPlanet()->getPts() == 1 && !flag[justActed])	//  Can be colonized
 			{
 				flightMenuIcons[colIt]->setString("Establish Trade Post");
 				flightMenuIcons[colIt]->setSrcPos({ 1, 0 });
 				flightMenuIcons[colIt]->updateTextRect();
-				flightMenuIcons[colIt]->setTextPosition({ 480, 660 });
+				flightMenuIcons[colIt]->setTextPosition({ 430, 660 });
 				flightMenuIcons[colIt]->unhide();
 			}
 		}
-		else if (universe->getCurrentPlanet()->getType() == 1 && !flag[justColonized])	//  Colony Planet
+		else if (universe->getCurrentPlanet()->getType() == 1 && !flag[justActed])	//  Colony Planet
 		{
 			flightMenuIcons[colIt]->setString("Colonize the Planet");
-			flightMenuIcons[colIt]->setTextPosition({ 500, 660 });
+			flightMenuIcons[colIt]->setTextPosition({ 450, 660 });
 			flightMenuIcons[colIt]->setSrcPos({ 0, 0 });
 			flightMenuIcons[colIt]->updateTextRect();
 			flightMenuIcons[colIt]->unhide();
@@ -991,19 +1047,19 @@ void Game::updateHeroOfThePeople()
 
 	if (p1pts == p2pts)
 	{
-		getP1()->toggleFriend(false);
-		getP2()->toggleFriend(false);
+		getP1()->toggleHero(false);
+		getP2()->toggleHero(false);
 		statusUpdate = "Hero of the People Lost";
 	}
 	else if (p1pts > p2pts)
 	{
-		getP1()->toggleFriend(true);
-		getP2()->toggleFriend(false);
+		getP1()->toggleHero(true);
+		getP2()->toggleHero(false);
 	}
 	else
 	{
-		getP1()->toggleFriend(false);
-		getP2()->toggleFriend(true);
+		getP1()->toggleHero(false);
+		getP2()->toggleHero(true);
 	}
 
 }
@@ -1029,7 +1085,7 @@ bool Game::resourcesInListAvailable(int resAvail[])
 //  Checks to see if a any resources available 
 //
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
-bool Game::resourcesAvailable()
+bool Game::areAnyResourcesAvailable()
 {
 	for (int i = 0; i < 6; i++){
 		if (!cPlyr->getStarship()->holdFull(i)){
@@ -1045,7 +1101,7 @@ bool Game::resourcesAvailable()
 //  player to chose one that is available.
 //
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
-bool Game::gainOneResource()
+bool Game::gainOneResource(int cost)
 {
 	for (int i = 0; i < 6; i++)
 	{
@@ -1058,7 +1114,7 @@ bool Game::gainOneResource()
 	{
 		if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && tradeSaveState[i]->isTargeted(gWindow))
 		{
-			if (cPlyr->getStarship()->gainItem(i, statusUpdate))
+			if (cPlyr->canAfford(cost, statusUpdate) && cPlyr->getStarship()->gainItem(i, statusUpdate))
 			{
 				cPlyr->updateIcon(i);
 				flag[gainResource] = false;

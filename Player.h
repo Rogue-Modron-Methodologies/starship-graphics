@@ -91,7 +91,7 @@ public:
 	}
 	void toggleHero(bool toggle)
 	{ 
-		friendOfThePeople = toggle; 
+		heroOfThePeople = toggle; 
 		if (toggle)
 			statistics[vicPt]->setQty(statistics[vicPt]->getQty() + 1);
 		else

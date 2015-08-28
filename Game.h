@@ -39,14 +39,15 @@ const int FLAGNUM = 14;
 enum flagTypes{
 	phaseSetupComplete,				//  Flag:  Phase Setup Complete
 	gainResource,					//  Flag:  Choose one resource
-	visFlightPath,					//  Flag:  Display flightPath
-	visSectors,					//  Flag:  Display Sectors
+	showFlightPath,				//  Flag:  Display flightPath
+	showSectors,					//  Flag:  Display Sectors
 	sectorSelected,				//  Flag:  Sector Selection Complete
 	phaseComplete,					//  Flag:  Phase Complete
-	visFlightMenu,					//  Flag:	 Display Flight Menu
+	showflightMenu,				//  Flag:	 Display Flight Menu
+	choosingResource,				//  Flag;  In process of choosing Resource
+	resourceChosen,				//  Flag:  Resource Chosen
 	tradeInProgress,				//  Flag:  Trade in Progress
-	justTraded,					//  Flag:  Traded Already
-	justColonized,					//  Flag:	 Colonized/Established Post
+	justActed,					//  Flag:  Performed and action on this planet
 	pirateChoice,					//  Flag:  Choice to Pay or Fight Pirate
 	pirateAttack,					//  Flag:  Currently Being Attacked by Pirate
 	pirateResult					//  Flag:  Lost to pirate and losing something
@@ -68,8 +69,8 @@ private:
 	Icon cPlanet;						//  Current Planet 
 	Icon **flightMenuIcons;				//  FlightMenu  
 	Icon **pirateMenuIcons;				//  PirateMenu
-	Icon *friendPeople;
-	Icon *heroPeople;
+	Icon friendPeople;
+	Icon heroPeople;
 	std::string statusUpdate;			//  Catches errors from called functions
 	sf::Text phaseNameString;			//  Phase Name Text String
 	sf::Text endPhaseString;				//  For End of Phase Messages
@@ -80,6 +81,7 @@ private:
 	int actionNum;						//  Current Action Num
 	int cPhase;						//  Current Phase Num
 	int errorTimer;
+	int cTradeResource;					//  Current Traded Resource
 
 public:
 	Game();
@@ -92,8 +94,6 @@ public:
 		delete combatDie[ply];
 		delete combatDie[prt];
 		delete combatDie;
-		delete heroPeople;
-		delete friendPeople;
 		for (int i = 0; i < TRADEMENUSIZE; i++)
 			delete tradeMenuIcons[i];
 		delete [] tradeMenuIcons;
@@ -128,14 +128,14 @@ private:
 	void flightPhaseListener(int tempType);
 	void preFlightListener(int &tempType);
 	void tradeBuildPhaseListener();
-	void tradeMenuListener(int tempType);
+	void tradeMenuListener();
 	void updateFlightMenu();
-	void initTradeMenu(int tempType);
+	void initTradeMenu(int &tempType);
 	bool tradeIconsTargeted();
 	bool flightMenuOptionTargeted(int &num);
 	bool resourcesInListAvailable(int resAvail[]);
-	bool resourcesAvailable();
-	bool gainOneResource();
+	bool areAnyResourcesAvailable();
+	bool gainOneResource(int cost = 0);
 	void updateFriendOfThePeople();
 	void updateHeroOfThePeople();
 	void initPirateMenu();
