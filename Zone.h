@@ -11,7 +11,10 @@
 #define ZONE_H
 
 #include "Icon.h"
-#include "Card.h"
+#include "ColonyCard.h"
+#include "Pirate.h"
+#include "TradeCard.h"
+#include "AdventureCard.h"
 
 template <class T>
 class Zone

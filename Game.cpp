@@ -346,9 +346,15 @@ void Game::updateDrawGameWindow()
 				{
 					for (int i = 0; i < 6; i++)
 						tradeSaveState[i]->draw(gWindow);	//  Prints the resource icons available	
-					gainOneResource();
+					if (gainOneResource())
+					{
+						std::cout << "Pirate being pushed into the zone " << universe->getCurrentPlanet()->getName() << std::endl;
+						cPlyr->getPirateZone()->push_back((Pirate*)universe->getCurrentPlanet());
+						universe->replaceCurrentPlanet();
+						flag[gainResource] = false;
+					}			
 				}
-				//  When Winner of Pirate Attack (Gain a resource)
+				//  When Loser of Pirate Attack (Lose a part of your ship)  Implement with build phase
 				else if (flag[pirateAttack] && flag[pirateResult])
 				{
 					; //  Implement
@@ -408,7 +414,8 @@ void Game::updateDrawGameWindow()
 void Game::productionPhaseListener(){
 	int tempType;
 	// Starship (Small) is clicked
-	if (cPlyr->getStarship()->isTargeted(gWindow) && cPlyr->getStarship()->isSmall()){
+	if (cPlyr->getStarship()->isTargeted(gWindow) && cPlyr->getStarship()->isSmall())
+	{
 		if (sf::Mouse::isButtonPressed(sf::Mouse::Left)){
 			cPlyr->makeBig();
 			flightDie->setIconPosition({ 350, 525 });
@@ -416,20 +423,23 @@ void Game::productionPhaseListener(){
 		}
 	}
 	// Colony Zone (Large Icon) is clicked
-	else if (!cPlyr->zonesSmall() && cPlyr->getColonyZone()->getIconOnly() && cPlyr->getColonyZone()->isIconTargeted(gWindow)){
+	else if (!cPlyr->zonesSmall() && cPlyr->getColonyZone()->getIconOnly() && cPlyr->getColonyZone()->isIconTargeted(gWindow))
+	{
 		if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
 			cPlyr->expandColonyZone();
 		else if (sf::Mouse::isButtonPressed(sf::Mouse::Right))
 			cPlyr->makeBig();
 	}
-	else if (!cPlyr->zonesSmall() && cPlyr->getTradeZone()->getIconOnly() && cPlyr->getTradeZone()->isIconTargeted(gWindow)){
+	else if (!cPlyr->zonesSmall() && cPlyr->getTradeZone()->getIconOnly() && cPlyr->getTradeZone()->isIconTargeted(gWindow))
+	{
 		if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
 			cPlyr->expandTradeZone();
 		else if (sf::Mouse::isButtonPressed(sf::Mouse::Right))
 			cPlyr->makeBig();
 	}
 	// Colony Zone (Large List) is clicked and player is entitled to a production resource
-	else if (!cPlyr->zonesSmall() && !cPlyr->getColonyZone()->getIconOnly() && cPlyr->getColonyZone()->isZoneTargeted(gWindow, tempType)){
+	else if (!cPlyr->zonesSmall() && !cPlyr->getColonyZone()->getIconOnly() && cPlyr->getColonyZone()->isZoneTargeted(gWindow, tempType))
+	{
 		
 		if (flag[gainResource] && sf::Mouse::isButtonPressed(sf::Mouse::Left))
 			if (cPlyr->getColonyZone()->resourceMatchesActNum(tempType, flightDie->getQty()) && cPlyr->getStarship()->gainItem(tempType, statusUpdate)){
@@ -542,7 +552,7 @@ void Game::flightPhaseListener(int tempType){
 		std::cout << "Resource " << universe->getCurrentPlanet()->getResource() << std::endl;
 	}
 	//  Current Planet's Menu in the FlightPath is clicked
-	else if (!flag[phaseComplete] && flag[visFlightMenu] && menuOptionTargeted(tempType)){
+	else if (!flag[phaseComplete] && flag[visFlightMenu] && flightMenuOptionTargeted(tempType)){
 		switch (tempType)
 		{
 		case colIt:	//  Colonize/Establish Post
@@ -682,7 +692,6 @@ void Game::pirateMenuListener(){
 				specialString->setString("VICTORY!!! Gain a resource and a fame point");
 				cPlyr->addFmPt();
 				updateFriendOfThePeople();
-
 			}
 			else                              	//  If the pirate wins
 			{
@@ -789,7 +798,24 @@ void Game::initTradeMenu(int tempType)
 		tradeSaveState[i]->setQty(cPlyr->getStatQty(i));			//  saves the current resource and astro values
 		tradeSaveState[i]->greyOut();							
 	}
-	tradeSaveState[cResource]->setColor();
+	tradeSaveState[cResource]->unGreyOut();
+
+	std::string type = universe->getCurrentPlanet()->getTransaction();
+	if (type == "Buy")			//  Can only buy at this trade post
+	{
+		tradeMenuIcons[plus]->unGreyOut();
+		tradeMenuIcons[minus]->greyOut();
+	}
+	else if (type == "Sell")		//  Can only sell at this trade post
+	{
+		tradeMenuIcons[plus]->greyOut();
+		tradeMenuIcons[minus]->unGreyOut();
+	}
+	else                          //  Can buy or sell at this trade post
+	{
+		tradeMenuIcons[plus]->unGreyOut();
+		tradeMenuIcons[minus]->unGreyOut();
+	}
 }
 
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
@@ -878,7 +904,7 @@ bool Game::tradeIconsTargeted()
 //  Checks if any current Menu Options are chosen
 //
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
-bool Game::menuOptionTargeted(int &num)
+bool Game::flightMenuOptionTargeted(int &num)
 {
 	for (int i = 0; i < FMENUSIZE; i++)
 	{
@@ -977,19 +1003,18 @@ bool Game::resourcesAvailable(int resAvail[])
 //  player to chose one that is available.
 //
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
-void Game::gainOneResource()
+bool Game::gainOneResource()
 {
 	int resAvail[6] = { 1, 1, 1, 1, 1, 1 };		
 	for (int i = 0; i < 6; i++)
 	{
-		tradeSaveState[i]->setColor();
+		tradeSaveState[i]->unGreyOut();
 		if(cPlyr->getStarship()->holdFull(i))			
 			tradeSaveState[i]->greyOut();
 	}
 	//  If there are available resources
 	if (resourcesAvailable(resAvail))
 	{
-
 		for (int i = 0; i < 6; i++)
 		{
 			if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && tradeSaveState[i]->isTargeted(gWindow))
@@ -1001,7 +1026,7 @@ void Game::gainOneResource()
 					flag[gainResource] = false;
 					flag[pirateAttack] = false;
 					flag[visFlightMenu] = true;
-					return;
+					return true;
 				}
 			}
 		}
@@ -1014,8 +1039,9 @@ void Game::gainOneResource()
 		flag[gainResource] = false;
 		flag[pirateAttack] = false;
 		flag[visFlightMenu] = true;
-
+		return true;
 	}
+	return false;
 }
 
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 

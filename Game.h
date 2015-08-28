@@ -139,9 +139,9 @@ private:
 	void updateFlightMenu();
 	void initTradeMenu(int tempType);
 	bool tradeIconsTargeted();
-	bool menuOptionTargeted(int &num);
+	bool flightMenuOptionTargeted(int &num);
 	bool resourcesAvailable(int resAvail[]);
-	void gainOneResource();
+	bool gainOneResource();
 	void updateFriendOfThePeople();
 	void updateHeroOfThePeople();
 	void initPirateMenu();

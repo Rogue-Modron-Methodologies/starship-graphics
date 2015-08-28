@@ -12,8 +12,6 @@
 
 #include "Starship.h"
 #include "Zone.h"
-#include "ColonyCard.h"
-#include "TradeCard.h"
 #include <iostream>
 
 enum Icons{ science, ore, fuel, tradeGood, wheat, carbon, astro, player, vicPt, frdPt, fmPt };
@@ -34,6 +32,7 @@ private:
 	Starship* starship;
 	Zone<ColonyCard> *colonyZone;		//  Colony Zone 
 	Zone<TradeCard>* tradeZone;		//  Trade Zone 
+	Zone<Pirate> *pirateZone;			//  Zone to hold Pirates that have been defeated  (to be used to create logs.)	
 	Icon** statistics;				//  Array for the statistic Icons
 	bool smallDisplay;
 	bool friendOfThePeople;
@@ -47,6 +46,7 @@ public:
 	Starship* getStarship() const {  return starship;  }
 	Zone<ColonyCard>* getColonyZone() const {	return colonyZone;	}
 	Zone<TradeCard>* getTradeZone() const 	{	return tradeZone;	}
+	Zone<Pirate>* getPirateZone() const { return pirateZone; }
 	int getStatQty(int num){ return statistics[num]->getQty(); }
 	void setStatQty(int stat, int num){ statistics[stat]->setQty(num); }
 	

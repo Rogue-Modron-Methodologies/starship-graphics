@@ -56,13 +56,16 @@ public:
 	void setTextColor(sf::Color color) { text.setColor(color); }
 	void setSrcPos(sf::Vector2u source) { icon->setSrcPos(source); }
 	void setPosition(sf::Vector2f pos) { std::cout << "ERROR: Icon setPostion function should never be called\n"; }
-	void greyOut(){ icon->greyOut(); }
-	void setColor(sf::Color color = sf::Color::White){ icon->setColor(color); }
+	//void setColor(sf::Color color = sf::Color::White){ icon->setColor(color); }
 	void clear(){ text.setString(""); }
 	const sf::Texture* getTexture() { return icon->getTexture(); }
 	void setTexture(const sf::Texture &texture){ icon->setTexture(texture); }
 	sf::Vector2f getIconPosition() const { return icon->getPosition(); }
 	sf::Vector2f getScale() const { return icon->getScale(); }
+	void unGreyOut(){ icon->unGreyOut(); }
+	void greyOut(){ icon->greyOut(); }
+	void hide(){ icon->hide(); }
+	void unhide(){ icon->unhide(); }
 
 
 	//  Initializes the string member variable	

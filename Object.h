@@ -29,6 +29,8 @@ protected:
 	sf::Vector2u srcSize;		// file source size
 	sf::Vector2u srcPos;		// file source position
 	bool smallDisplay;
+	bool visible;
+	bool clickable;
 
 public:	
 	Object(){};
@@ -44,22 +46,28 @@ public:
 	sf::Vector2u getSrcPos() const { return srcPos; }
 	void setQty(int num){ this->qty = num; }
 	int getQty() const { return qty; }
-	void setColor(sf::Color color = sf::Color::White){ sprite->setColor(color); }
+	//void setColor(sf::Color color = sf::Color::White){ sprite->setColor(color); }
 	const sf::Texture* getTexture() { return sprite->getTexture(); }
 	void setTexture(const sf::Texture &texture){ sprite->setTexture(texture); }
 	sf::Vector2f getPosition() const { return sprite->getPosition(); }
 	sf::Vector2f getScale() const { return sprite->getScale(); }
+	bool getVisible() const { return visible; }
+	bool setVisible(bool toggle){ visible = toggle; }
+	bool getClickable() const { return clickable; }
+	bool setClickable(bool toggle){ clickable = toggle; }
 
 	// Misc Inline Functions
 	bool isSmall() const  { 	return smallDisplay; }
-	void greyOut(){ sprite->setColor(sf::Color(255, 255, 255, 100)); }
-
+	
 	// Prototypes
 	virtual void updateTextRect();
 	virtual void draw(sf::RenderWindow &window) { window.draw(*sprite); }
 	bool isTargeted(sf::RenderWindow &gWindow);	
 	sf::Vector2f convertCoord(sf::RenderWindow &gWindow);
-
+	void unGreyOut();
+	void greyOut();
+	void hide();
+	void unhide();
 };
 
 #endif  // OBJECT_H

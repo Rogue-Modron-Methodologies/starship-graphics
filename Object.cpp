@@ -27,6 +27,8 @@ Object::Object(const sf::Texture &texture, sf::Vector2f pos, int num, sf::Vector
 		updateTextRect();
 	sprite->setPosition(pos);
 	this->qty = num;
+	clickable = true;
+	visible = true;
 }
 
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
@@ -48,7 +50,8 @@ bool Object::isTargeted(sf::RenderWindow &gWindow)
 	if (temp.x <sprite->getPosition().x + sprite->getGlobalBounds().width
 		&& temp.y > sprite->getPosition().y
 		&& temp.x > sprite->getPosition().x
-		&& temp.y < sprite->getPosition().y + sprite->getGlobalBounds().height)
+		&& temp.y < sprite->getPosition().y + sprite->getGlobalBounds().height
+		&& clickable && visible)
 	{
 		return true;
 	}	
@@ -64,4 +67,48 @@ bool Object::isTargeted(sf::RenderWindow &gWindow)
 void Object::updateTextRect()
 {
 	sprite->setTextureRect(sf::IntRect(srcPos.x * srcSize.x, srcPos.y * srcSize.y, srcSize.x, srcSize.y));
+}
+
+// (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
+//
+//  Greys out Object so it's still visible but makes it unclickable
+// 
+// (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
+void Object::greyOut()
+{ 
+	sprite->setColor(sf::Color(255, 255, 255, 50)); 
+	clickable = false;
+}
+
+// (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
+// 
+//  Restores full color to an object and makes it clickable
+// 
+// (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
+void Object::unGreyOut()
+{
+	sprite->setColor(sf::Color::White);
+	clickable = true;
+}
+
+// (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
+// 
+//  Toggles visible and Clickable to false
+// 
+// (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
+void Object::hide()
+{
+	visible = false;
+	clickable = false;
+}
+
+// (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
+// 
+//  Toggles visible and Clickable to false
+// 
+// (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
+void Object::unhide()
+{
+	visible = true;
+	clickable = true;
 }

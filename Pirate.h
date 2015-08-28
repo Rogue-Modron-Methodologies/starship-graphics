@@ -30,6 +30,9 @@ public:
 		this->pts = pts;
 	}
 	~Pirate() {}
+
+	friend bool sortBy(const Pirate *lhs, const Pirate *rhs){ return lhs->cannons < rhs->cannons; }
+
 	// Getters and Setters
 	std::string getResult() const
 	{	return result;	}
