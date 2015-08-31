@@ -109,6 +109,14 @@ Game::Game() : cPlanet(txtMgr.getResource(UNIVERSECARDIMAGES), { 825, 520 }, 0, 
 	flightMenuIcons[endFl] = new Icon(txtMgr.getResource(SYMBFLE), sf::Vector2f(710, 760), 0, { 50, 50 }, { 5, 0 });
 	flightMenuIcons[endFl]->initString(fntMgr.getResource(FNTFLE), { 570, 760 }, "End Flight");
 
+	flightPathActions = new Icon*[FLIGHTACTIONS];
+	for (int i = 0; i < FLIGHTACTIONS; i++)
+	{
+		flightPathActions[i] = new Icon(txtMgr.getResource(SYMBFLE), { 710, 610 }, 0, { 50, 50 }, { 6, 0 });
+		flightPathActions[i]->setPosition(sf::Vector2f{ 70.0f + i * 100, 350 });
+	}
+
+
 	for (int i = 0; i < FLAGNUM; i++)
 		flag[i] = false;
 	flag[showFlightPath] = true;
@@ -331,6 +339,7 @@ void Game::updateDrawGameWindow()
 					universe->getCurrentSector()[i]->setScale(CRDSSCL);
 					universe->getCurrentSector()[i]->setPosition({ xPos + i * 100, yPos });
 					universe->getCurrentSector()[i]->draw(gWindow);
+					flightPathActions[i]->draw(gWindow);
 				}
 			}
 			cPlanet.draw(gWindow);
@@ -520,6 +529,10 @@ void Game::preFlightListener(int &tempType){
 		universe->initializeFlightPath(tempType);
 		cPlanet.setSrcPos(universe->getCurrentPlanet()->getSrcPos());
 		cPlanet.updateTextRect();
+		for (int i = 0; i < FLIGHTACTIONS; i++)
+		{
+			flightPathActions[i]->setSrcPosX(6);
+		}
 		return;
 	}
 	//  Starship (Large) && Empty Space is clicked
@@ -585,8 +598,10 @@ void Game::flightPhaseListener(int tempType){
 				cPlyr->getTradeZone()->push_back((TradeCard*)universe->getCurrentPlanet());
 				cPlyr->getTradeZone()->updateZone(cPlyr->getTradeZone()->getPosition(), cPlyr->getTradeZone()->getScale(), cPlyr->getTradeZone()->getIconOnly());
 				cPlyr->addFrdPt();
-				updateFriendOfThePeople();
+				updateFriendOfThePeople();	
 				universe->replaceCurrentPlanet();
+				flightPathActions[universe->getCurrentMove() - 1]->setSrcPosX(1);
+				flightPathActions[universe->getCurrentMove() - 1]->updateTextRect();
 				flag[justActed] = true;
 				actionNum++;
 			}
@@ -595,6 +610,8 @@ void Game::flightPhaseListener(int tempType){
 				cPlyr->getColonyZone()->push_back((ColonyCard*)universe->getCurrentPlanet());
 				cPlyr->getColonyZone()->updateZone(cPlyr->getColonyZone()->getPosition(), cPlyr->getColonyZone()->getScale(), cPlyr->getColonyZone()->getIconOnly());
 				cPlyr->addVicPt();
+				flightPathActions[universe->getCurrentMove() - 1]->setSrcPosX(0);
+				flightPathActions[universe->getCurrentMove() - 1]->updateTextRect();
 				universe->replaceCurrentPlanet();
 				flag[justActed] = true;
 				actionNum++;
@@ -605,6 +622,11 @@ void Game::flightPhaseListener(int tempType){
 			initTradeMenu(tempType);
 			break;
 		case conFly:	// Continue Flight
+			if (!flag[justActed])
+			{
+				flightPathActions[universe->getCurrentMove() - 1]->setSrcPosX(4);
+				flightPathActions[universe->getCurrentMove() - 1]->updateTextRect();
+			}			
 			universe->continueFlight();
 			cPlanet.setSrcPos(universe->getCurrentPlanet()->getSrcPos());
 			cPlanet.updateTextRect();
@@ -713,6 +735,8 @@ void Game::tradeMenuListener()
 		{
 			actionNum++;
 			flag[justActed] = true;
+			flightPathActions[universe->getCurrentMove() - 1]->setSrcPosX(3);
+			flightPathActions[universe->getCurrentMove() - 1]->updateTextRect();
 			flightEventString.setString("Trade Complete");
 		}
 		else
@@ -750,6 +774,8 @@ void Game::pirateMenuListener(){
 				cPlyr->subAstro(universe->getCurrentPlanet()->getCost());
 				specialString.setString("");
 				flightEventString.setString("Bribe Payed");
+				flightPathActions[universe->getCurrentMove() - 1]->setSrcPosX(3);
+				flightPathActions[universe->getCurrentMove() - 1]->updateTextRect();
 				flag[pirateChoice] = true;
 				flag[pirateAttack] = false;
 				flag[showflightMenu] = true;
@@ -771,6 +797,8 @@ void Game::pirateMenuListener(){
 				specialString.setString("VICTORY!!! Gain a resource and a fame point");
 				cPlyr->addFmPt();
 				updateHeroOfThePeople();
+				flightPathActions[universe->getCurrentMove() - 1]->setSrcPosX(2);
+				flightPathActions[universe->getCurrentMove() - 1]->updateTextRect();
 			}
 			else                              	//  If the pirate wins
 			{

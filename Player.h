@@ -31,7 +31,7 @@ class Player
 private:	
 	Starship* starship;
 	Zone<ColonyCard> *colonyZone;		//  Colony Zone 
-	Zone<TradeCard>* tradeZone;		//  Trade Zone 
+	Zone<TradeCard> *tradeZone;		//  Trade Zone 
 	Zone<Pirate> *pirateZone;		//  Zone to hold Pirates that have been defeated  (to be used to create logs.)	
 	Icon** statistics;				//  Array for the statistic Icons
 	bool smallDisplay;

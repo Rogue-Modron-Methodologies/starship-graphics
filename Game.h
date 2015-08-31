@@ -22,6 +22,7 @@ const std::string SDIEFLE = "resources/flightdie.png";
 const std::string CDIEFLE = "resources/combatdie.png";
 const std::string TRDICN = "resources/TradeMenuIcons.png";
 const int NUMRESOURCES = 7;
+const int FLIGHTACTIONS = 10;
 
 enum phases{ production, flight, tradeBuild };
 enum combatParties{ply, prt};
@@ -69,6 +70,7 @@ private:
 	Icon cPlanet;						//  Current Planet 
 	Icon **flightMenuIcons;				//  FlightMenu  
 	Icon **pirateMenuIcons;				//  PirateMenu
+	Icon **flightPathActions;			//  Displays actions by the Current Player during flight
 	Icon friendPeople;
 	Icon heroPeople;
 	std::string statusUpdate;			//  Catches errors from called functions
@@ -95,6 +97,8 @@ public:
 		delete combatDie[ply];
 		delete combatDie[prt];
 		delete combatDie;
+		for (int i = 0; i < FLIGHTACTIONS; i++)
+			delete flightPathActions[i];
 		for (int i = 0; i < TRADEMENUSIZE; i++)
 			delete tradeMenuIcons[i];
 		delete [] tradeMenuIcons;

@@ -55,7 +55,9 @@ public:
 	void setTextScale(sf::Vector2f scale){ text.setScale(scale); }
 	void setTextColor(sf::Color color) { text.setColor(color); }
 	void setSrcPos(sf::Vector2u source) { icon->setSrcPos(source); }
-	void setPosition(sf::Vector2f pos) { std::cout << "ERROR: Icon setPostion function should never be called\n"; }
+	void setSrcPosX(unsigned num){ icon->setSrcPosX(num); }
+	void setPosition(sf::Vector2f pos) { icon->setPosition(pos); }
+	sf::Vector2f getPosition(){ return icon->getPosition(); }
 	//void setColor(sf::Color color = sf::Color::White){ icon->setColor(color); }
 	void clear(){ text.setString(""); }
 	const sf::Texture* getTexture() { return icon->getTexture(); }
