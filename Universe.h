@@ -16,9 +16,7 @@
 #include "AdventureCard.h"
 #include "Icon.h"
 
-
-
-const int CARDLISTSIZE = 71;					//  number of cards in the deck
+const int CARDLISTSIZE = 71;							//  number of cards in the universe deck
 const std::string CARDLIST = "starship.csv";
 const std::string ADVENTURELIST = "starship2.csv";
 const std::string BOARDFILE = "resources/starrynight.png";
@@ -31,8 +29,8 @@ private:
 	Card **S3;				//  Sector 3
 	Card **S4;				//  Sector 4
 	Card **SE;				//  Extra Cards waiting to be put into Sectors
-	Card **AD;				//  Adventure Deck
-	Card **cAdv;				//  Current Adventure????
+	AdventureCard **AD;			//  Adventure Deck (Extra Cards)
+	AdventureCard **cAdv;		//  Available Adventures (will be three of them)
 	Icon **flightSector;
 	int currentMove;
 	int sectorNum;
@@ -46,21 +44,23 @@ public:
 	Card** getSector(int num);
 	int getCurrentSectorNum(){ return sectorNum; }
 	Card** getCurrentSector(){ return getSector(sectorNum);}
-	Card* getAdvCard(int i);
+	AdventureCard* getAdvCard(int i);
 	Object *getBoard() const { return board; }
 	int getCurrentMove(){ return currentMove; }
 	Card* getCurrentPlanet(){ return getSector(sectorNum)[currentMove - 1]; }
-	void printCurrentAdventure(sf::RenderWindow &gWindow);
+	bool isCurrentAdventureTargeted(sf::RenderWindow &gWindow, int &temp);
+	void drawCurrentAdventures(sf::RenderWindow &gWindow);
 	void drawSectors(sf::RenderWindow &gWindow);
 	bool sectorsTargeted(sf::RenderWindow &gWindow, int &num);
 	bool flightPathTargeted(sf::RenderWindow &gWindow, int &num);
 	void initializeFlightPath(int tempType);
 	void continueFlight(){ currentMove++; }
 	void replaceCurrentPlanet();
+	void makeAdventuresAvailable();
+	bool atAdventurePlanet();
 
 private:
 	void universeSetup(ResourceManager<sf::Texture> &txtMgr);
-	void adventureDeckSetup();
 	void addCardtoAdvDeck(int i);		
 	void shuffleDeck(Card* list[], int size);
 	void addCardtoSector(int secNum, int i);

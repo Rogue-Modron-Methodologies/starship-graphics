@@ -44,10 +44,9 @@ Universe::Universe(ResourceManager<sf::Texture> &txtMgr, ResourceManager<sf::Fon
 	S3 = new Card*[10];
 	S4 = new Card*[10];
 	SE = new Card*[28];
-	AD = new Card*[9];
-	cAdv = new Card*[3];
+	AD = new AdventureCard*[9];
+	cAdv = new AdventureCard*[3];
 	universeSetup(txtMgr);
-	adventureDeckSetup();
 	ExtraDeckPtr = 0;
 	advPtr = 0;
 }
@@ -172,13 +171,10 @@ void Universe::addCardtoAdvDeck(int i)
 //  Prints the current adventures available
 //
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
-void Universe::printCurrentAdventure(sf::RenderWindow &gWindow)
+void Universe::drawCurrentAdventures(sf::RenderWindow &gWindow)
 {
 	for (int i = 0; i < 3; i++)
-	{
-		std::cout << "Adventure Card " << i + 1 << std::endl;
 		cAdv[i]->draw(gWindow);
-	}
 }
 
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
@@ -186,9 +182,51 @@ void Universe::printCurrentAdventure(sf::RenderWindow &gWindow)
 //  Prints the current adventures available
 //
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
-Card* Universe::getAdvCard(int i)
+AdventureCard* Universe::getAdvCard(int i)
 {
 	return cAdv[i];
+}
+
+// (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
+//
+//  Makes the three current adventures available to be chosen
+//
+// (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
+void Universe::makeAdventuresAvailable()
+{
+	for (int i = 0; i < 3; i++)
+		cAdv[i]->setAvailable(true);
+}
+
+// (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
+//
+// Returns true if current planet is in the current adventure stack
+//
+// (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
+bool Universe::atAdventurePlanet()
+{
+	for (int i = 0; i < 3; i++)
+		if (getCurrentPlanet()->getName() == cAdv[i]->getName())
+			return true;
+	return false;
+}
+
+// (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
+//
+//  Listener to see if one of the current adventures are targeted
+//
+// (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
+bool Universe::isCurrentAdventureTargeted(sf::RenderWindow &gWindow, int &temp)
+{
+	for (int i = 0; i < 3; i++)
+	{			
+		if (cAdv[i]->isTargeted(gWindow))
+		{
+			temp = i;
+			return true;
+		}
+	}
+	return false;
 }
 
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
@@ -256,105 +294,20 @@ void Universe::replaceCurrentPlanet()
 
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
 //
-//  Sets up the adventure deck
-//
-// (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
-void Universe::adventureDeckSetup()
-{
-	std::stringstream ss;
-	std::string name, buffer, mission, requirement, temp;
-	int deckNum, astro, fame, resourceNum, vicPts;
-	AdventureCard* tempCard = 0;
-	int ctr2 = 0, ctr3 = 0, ctr4 = 0;
-	AdventureCard* tAry2[3]; AdventureCard* tAry3[3]; AdventureCard* tAry4[3];
-
-	std::ifstream inputFile(ADVENTURELIST.c_str());
-	if (!inputFile)
-	{
-		std::cout << ADVENTURELIST.c_str() << " failed to open.  Terminating Program\n";
-		exit(EXIT_FAILURE);
-	}
-	getline(inputFile, buffer); // Title Line
-
-	for (int i = 0; i < 12; i++)
-	{
-		getline(inputFile, buffer);
-		ss << buffer;
-		/*A*/	getline(ss, temp, ',');
-		deckNum = stoi(temp);
-		/*B*/	getline(ss, name, ',');
-		/*C*/	getline(ss, mission, ',');
-		/*D*/	getline(ss, requirement, ',');
-		/*E*/	getline(ss, temp, ',');
-		resourceNum = stoi(temp);
-		/*F*/	getline(ss, temp, ',');
-		astro = stoi(temp);
-		/*G*/	getline(ss, temp, ',');
-		fame = stoi(temp);
-		/*H*/	getline(ss, temp, ',');
-		vicPts = stoi(temp);
-		ss.clear();
-
-		tempCard = new AdventureCard(deckNum, name, -1, mission, requirement, resourceNum, astro, fame, vicPts);
-		switch (deckNum)
-		{
-		case 1:							// 3 cards will be in the initial Array
-			cAdv[i] = tempCard;
-			break;
-		case 2:							// 3 cards will be in the initial Array
-			tAry2[ctr2] = tempCard;
-			ctr2++;
-			break;
-		case 3:							// 3 cards will be in the initial Array
-			tAry3[ctr3] = tempCard;
-			ctr3++;
-			break;
-		case 4:							// 3 cards will be in the initial Array
-			tAry4[ctr4] = tempCard;
-			ctr4++;
-			break;
-		default:
-			std::cout << "Default Adventure Deck Setup...  should never print\n" << std::endl;
-			break;
-		}
-	}
-
-	//	shuffleDeck(tAry2, ctr2);
-	//	shuffleDeck(tAry3, ctr3);
-	//	shuffleDeck(tAry4, ctr4);
-
-	int count = 0;
-	for (int i = 0; i < 3; i++)
-	{
-		AD[count] = tAry2[i];
-		count++;
-	}
-	for (int i = 0; i < 3; i++)
-	{
-		AD[count] = tAry3[i];
-		count++;
-	}
-	for (int i = 0; i < 3; i++)
-	{
-		AD[count] = tAry4[i];
-		count++;
-	}
-}
-
-// (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
-//
 //  Setting up the Flight Zone
 //
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
 void Universe::universeSetup(ResourceManager<sf::Texture> &txtMgr)
 {
 	std::stringstream ss;
-	std::string name, buffer, transaction, temp;
-	int deckNum, value, pts, resource, limit, type, srcX, srcY;
+	std::string name, buffer, transaction, temp, mission;
+	int deckNum, value, pts, resource, limit, type, srcX, srcY, astro, fame, resourceNum, vicPts, req1Qty, req1Type, req2Qty, req2Type;
 	int ctr0 = 0, ctr1 = 0, ctr2 = 0, ctr3 = 0, ctr4 = 0;
 	Card* list0[40]; Card* list1[7]; Card* list2[7]; Card* list3[7]; Card* list4[7];
 	Card* tempCard = 0;
+	AdventureCard* advTempCard = 0;
 	sf::Vector2u srcPos;
+	AdventureCard* tAry2[3]; AdventureCard* tAry3[3]; AdventureCard* tAry4[3];
 
 	std::ifstream inputFile(CARDLIST.c_str());
 	if (!inputFile)
@@ -364,9 +317,11 @@ void Universe::universeSetup(ResourceManager<sf::Texture> &txtMgr)
 	}
 	getline(inputFile, buffer); // Title Line
 
-	while (getline(inputFile, buffer))
+	//  UNIVERSE CARD SETUP
+
+	for (int i = 0; i < 68; i++)
 	{
-	
+		getline(inputFile, buffer);
 		ss << buffer;
 /*A*/	getline(ss, temp, ','); 
 		deckNum = stoi(temp);
@@ -384,9 +339,13 @@ void Universe::universeSetup(ResourceManager<sf::Texture> &txtMgr)
 /*H*/	getline(ss, name, ',');
 /*I*/	getline(ss, temp, ',');
 		srcY = stoi(temp);
-/*I*/	getline(ss, temp, ',');
+/*J*/	getline(ss, temp, ',');
 		srcX = stoi(temp);
+/*K*/	getline(ss, temp, ',');
+/*L*/	getline(ss, temp, ',');
+/*M*/	getline(ss, temp, ',');
 		srcPos = sf::Vector2u(srcX, srcY);
+
 		ss.clear();
 
 		if (type == 0)
@@ -463,6 +422,94 @@ void Universe::universeSetup(ResourceManager<sf::Texture> &txtMgr)
 
 	for (int i = 0; i < ctr4; i++, count++)
 		setSector(list4[i], 5, count);
+
+	ss.clear();
+	
+	//  ADVENTURE CARD SETUP
+
+	ctr0 = 0, ctr1 = 0, ctr2 = 0, ctr3 = 0, ctr4 = 0;
+
+	for (int i = 0; i < 12; i++)
+	{
+		getline(inputFile, buffer);
+		ss << buffer;
+		/*A*/	getline(ss, temp, ',');
+		deckNum = stoi(temp);
+		/*B*/	getline(ss, name, ',');
+		/*C*/	getline(ss, mission, ',');
+		/*D*/	getline(ss, temp, ',');
+		req1Qty = stoi(temp);
+		/*E*/	getline(ss, temp, ',');
+		req1Type = stoi(temp);
+		/*F*/	getline(ss, temp, ',');
+		req2Qty = stoi(temp);
+		/*G*/	getline(ss, temp, ',');
+		req2Type = stoi(temp);
+		/*H*/	getline(ss, temp, ',');
+		resourceNum = stoi(temp);
+		/*I*/	getline(ss, temp, ',');
+		astro = stoi(temp);
+		/*J*/	getline(ss, temp, ',');
+		fame = stoi(temp);
+		/*K*/	getline(ss, temp, ',');
+		vicPts = stoi(temp);
+		/*L*/	getline(ss, temp, ',');
+		srcY = stoi(temp);
+		/*M*/	getline(ss, temp, ',');
+		srcX = stoi(temp);
+		srcPos = sf::Vector2u(srcX, srcY);
+		ss.clear();
+
+		advTempCard = new AdventureCard(txtMgr.getResource(UNIVERSECARDIMAGES), srcPos, deckNum, name, -1, mission, req1Qty, req1Type, req2Qty, req2Type, resourceNum, astro, fame, vicPts);
+		advTempCard->setScale(CRDZNSCL);
+		switch (deckNum)
+		{
+		case 1:							// 3 cards will be in the initial Array
+			cAdv[ctr1] = advTempCard;
+			ctr1++;
+			break;
+		case 2:							// 3 cards will be in the initial Array
+			tAry2[ctr2] = advTempCard;
+			ctr2++;
+			break;
+		case 3:							// 3 cards will be in the initial Array
+			tAry3[ctr3] = advTempCard;
+			ctr3++;
+			break;
+		case 4:							// 3 cards will be in the initial Array
+			tAry4[ctr4] = advTempCard;
+			ctr4++;
+			break;
+		default:
+			std::cout << "Default Adventure Deck Setup...  should never print\n" << std::endl;
+			break;
+		}
+	}
+
+		//shuffleDeck(tAry2, ctr2);
+		//shuffleDeck(tAry3, ctr3);
+		//shuffleDeck(tAry4, ctr4);
+
+	 count = 0;
+	for (int i = 0; i < 3; i++)
+	{
+		AD[count] = tAry2[i];
+		count++;
+	}
+	for (int i = 0; i < 3; i++)
+	{
+		AD[count] = tAry3[i];
+		count++;
+	}
+	for (int i = 0; i < 3; i++)
+	{
+		AD[count] = tAry4[i];
+		count++;
+	}
+
+	cAdv[0]->setPosition({ 1050, 200 });
+	cAdv[1]->setPosition({ 1050, 420 });
+	cAdv[2]->setPosition({ 1050, 640 });
 
 	inputFile.close();
 }

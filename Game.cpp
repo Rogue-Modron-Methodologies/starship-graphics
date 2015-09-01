@@ -333,7 +333,7 @@ void Game::updateDrawGameWindow()
 				float yPos = 200;
 				int cMove = universe->getCurrentMove();
 				int numToDisplay = flag[pirateAttack] ? cMove - 1 : cMove;
-				//  Draws the flightPath taken so far
+				//  Draws the flightPath and actionPath taken so far
 				for (int i = 0; i < numToDisplay; i++)
 				{
 					universe->getCurrentSector()[i]->setScale(CRDSSCL);
@@ -341,6 +341,7 @@ void Game::updateDrawGameWindow()
 					universe->getCurrentSector()[i]->draw(gWindow);
 					flightPathActions[i]->draw(gWindow);
 				}
+				universe->drawCurrentAdventures(gWindow);
 			}
 			cPlanet.draw(gWindow);
 			//  Flight Phase - phase is not complete and player hasn't reached max actions
@@ -521,14 +522,16 @@ void Game::preFlightListener(int &tempType){
 	else if (!cPlyr->zonesSmall() && !cPlyr->getColonyZone()->getIconOnly() && cPlyr->getColonyZone()->isZoneTargeted(gWindow, tempType)){}	// Do Nothing this Phase
 	// Trade Zone (Large List) is clicked
 	else if (!cPlyr->zonesSmall() && !cPlyr->getTradeZone()->getIconOnly() && cPlyr->getTradeZone()->isZoneTargeted(gWindow, tempType)){}		// Do Nothing this Phase
-	//  Sector is Clicked
-	else if (universe->sectorsTargeted(gWindow, tempType) && cPlyr->getStarship()->isSmall()){
+	//  Sector is Clicked  (Initializes upcoming Flight Phase)
+	else if (universe->sectorsTargeted(gWindow, tempType) && cPlyr->getStarship()->isSmall())
+	{
 		infoString.setString("Flight: 1 / " + std::to_string(cPlyr->getStarship()->getMaxDistance()) + "\nMax Actions: 0 / " + std::to_string(cPlyr->getStarship()->getMaxActions()));
 		flag[showSectors] = false;
 		flag[sectorSelected] = true;
 		universe->initializeFlightPath(tempType);
 		cPlanet.setSrcPos(universe->getCurrentPlanet()->getSrcPos());
 		cPlanet.updateTextRect();
+		universe->makeAdventuresAvailable();
 		for (int i = 0; i < FLIGHTACTIONS; i++)
 		{
 			flightPathActions[i]->setSrcPosX(6);
@@ -580,7 +583,8 @@ void Game::flightPhaseListener(int tempType){
 	// Trade Zone (Large List) is clicked
 	else if (!cPlyr->zonesSmall() && !cPlyr->getTradeZone()->getIconOnly() && cPlyr->getTradeZone()->isZoneTargeted(gWindow, tempType)){}		// Do Nothing this Phase
 	// Objects in the FlightPath are clicked but not the current planet
-	else if (!flag[phaseComplete] && flag[showFlightPath] && universe->flightPathTargeted(gWindow, tempType) && tempType != universe->getCurrentMove() - 1){
+	else if (!flag[phaseComplete] && flag[showFlightPath] && universe->flightPathTargeted(gWindow, tempType) && tempType != universe->getCurrentMove() - 1)
+	{
 		std::cout << "Flight Path Object " << tempType << " Clicked" << std::endl;
 	}
 	// Current Planet in the FlightPath is clicked
@@ -589,11 +593,13 @@ void Game::flightPhaseListener(int tempType){
 		std::cout << "Resource " << universe->getCurrentPlanet()->getResource() << std::endl;
 	}
 	//  Current Planet's Menu in the FlightPath is clicked
-	else if (!flag[phaseComplete] && flag[showflightMenu] && flightMenuOptionTargeted(tempType)){
+	else if (!flag[phaseComplete] && flag[showflightMenu] && flightMenuOptionTargeted(tempType))
+	{
 		switch (tempType)
 		{
 		case colIt:	//  Colonize/Establish Post
-			if (universe->getCurrentPlanet()->getType() == tradeShip && cPlyr->getStarship()->shipAvailable(tradeShip, tempType, statusUpdate)){
+			if (universe->getCurrentPlanet()->getType() == tradeShip && cPlyr->getStarship()->shipAvailable(tradeShip, tempType, statusUpdate))
+			{
 				//cPlyr->getStarship()->loseItem(tempType, statusUpdate);
 				cPlyr->getTradeZone()->push_back((TradeCard*)universe->getCurrentPlanet());
 				cPlyr->getTradeZone()->updateZone(cPlyr->getTradeZone()->getPosition(), cPlyr->getTradeZone()->getScale(), cPlyr->getTradeZone()->getIconOnly());
@@ -605,7 +611,8 @@ void Game::flightPhaseListener(int tempType){
 				flag[justActed] = true;
 				actionNum++;
 			}
-			else if (universe->getCurrentPlanet()->getType() == colonyShip &&cPlyr->getStarship()->shipAvailable(colonyShip, tempType, statusUpdate)){
+			else if (universe->getCurrentPlanet()->getType() == colonyShip &&cPlyr->getStarship()->shipAvailable(colonyShip, tempType, statusUpdate))
+			{
 				//cPlyr->getStarship()->loseItem(tempType, statusUpdate);
 				cPlyr->getColonyZone()->push_back((ColonyCard*)universe->getCurrentPlanet());
 				cPlyr->getColonyZone()->updateZone(cPlyr->getColonyZone()->getPosition(), cPlyr->getColonyZone()->getScale(), cPlyr->getColonyZone()->getIconOnly());
@@ -642,11 +649,51 @@ void Game::flightPhaseListener(int tempType){
 			break;
 		}
 	}
+	else if (universe->isCurrentAdventureTargeted(gWindow, tempType))
+	{
+		if (universe->getCurrentPlanet()->getName() == universe->getAdvCard(tempType)->getName())
+		{
+			if (universe->getAdvCard(tempType)->isAvailable())
+			{
+				//adventureListener(tempType);
+			}
+			else
+				statusUpdate = "Adventure Not Available yet";
+		}
+		else
+			statusUpdate = "Adventure Only Available on " + universe->getAdvCard(tempType)->getName();
+	}
 	//  Starship (Large) && Empty Space is clicked
-	else if (!cPlyr->getStarship()->isTargeted(gWindow) && !cPlyr->getStarship()->isSmall() && !tradeIconsTargeted()){
+	else if (!cPlyr->getStarship()->isTargeted(gWindow) && !cPlyr->getStarship()->isSmall() && !tradeIconsTargeted())
+	{
 		cPlyr->makeSmall();
 		flag[showFlightPath] = true;
 	}
+}
+
+// (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
+//  Deals with Mouse Click actions when an active adventure is available
+// (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
+void Game::adventureListener(int tempType)
+{
+
+	//if (universe->isCurrentAdventureTargeted(gWindow, tempType))
+	//{
+	//	if (universe->getCurrentPlanet()->getName() == universe->getAdvCard(tempType)->getName())
+	//	{
+	//		if (universe->getAdvCard(tempType)->isAvailable())
+	//		{
+	//			adventureListener(tempType);
+	//		}
+	//		else
+	//			statusUpdate = "Adventure Not Available yet";
+	//	}
+
+	//	else
+	//		statusUpdate = "Adventure Only Available on " + universe->getAdvCard(tempType)->getName();
+	//}
+	//flightEventString.setString(universe->getAdvCard(tempType)->getMission());
+
 }
 
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
@@ -964,7 +1011,6 @@ void Game::updateFlightMenu()
 		initPirateMenu();
 	else  //  NOT PIRATE
 	{
-
 		flightMenuIcons[endFl]->unhide();
 		if (universe->getCurrentMove() < cPlyr->getStarship()->getMaxDistance()) 
 			flightMenuIcons[conFly]->unhide();
@@ -988,6 +1034,14 @@ void Game::updateFlightMenu()
 			flightMenuIcons[colIt]->setSrcPos({ 0, 0 });
 			flightMenuIcons[colIt]->updateTextRect();
 			flightMenuIcons[colIt]->unhide();
+		}
+		else if (universe->getCurrentPlanet()->getType() == 3)					//  Adventure Planet
+		{
+			if (universe->atAdventurePlanet())
+			{
+				flightEventString.setString("Adventures Available");
+			}
+
 		}
 		else                                                             //  Everything else
 		{

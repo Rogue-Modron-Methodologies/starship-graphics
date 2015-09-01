@@ -145,6 +145,7 @@ private:
 	void updateHeroOfThePeople();
 	void initPirateMenu();
 	void pirateMenuListener();
+	void adventureListener(int tempType);
 
 
 };

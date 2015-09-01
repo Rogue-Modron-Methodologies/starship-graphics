@@ -84,22 +84,22 @@ public:
 		switch (type)
 		{
 		case 0:
-			tempName = "Carbon";
-			break;
-		case 1:
-			tempName = "Fuel";
-			break;
-		case 2:
-			tempName = "Ore";
-			break;
-		case 3:
 			tempName = "Science";
 			break;
+		case 1:
+			tempName = "Ore";
+			break;
+		case 2:
+			tempName = "Fuel";
+			break;
+		case 3:
+			tempName = "Trade Goods";
+			break;
 		case 4:
-			tempName = "TradeGood";
+			tempName = "Wheat";
 			break;
 		case 5:
-			tempName = "Wheat";
+			tempName = "Carbon";
 			break;
 		default:
 			tempName = "Any";
