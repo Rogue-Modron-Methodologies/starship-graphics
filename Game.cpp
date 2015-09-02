@@ -109,6 +109,9 @@ Game::Game() : cPlanet(txtMgr.getResource(UNIVERSECARDIMAGES), { 825, 520 }, 0, 
 	flightMenuIcons[endFl] = new Icon(txtMgr.getResource(SYMBFLE), sf::Vector2f(710, 760), 0, { 50, 50 }, { 5, 0 });
 	flightMenuIcons[endFl]->initString(fntMgr.getResource(FNTFLE), { 570, 760 }, "End Flight");
 
+	flightMenuIcons[adv] = new Icon(txtMgr.getResource(SYMBFLE), sf::Vector2f(710, 660), 0, { 50, 50 }, { 9, 0 });
+	flightMenuIcons[adv]->initString(fntMgr.getResource(FNTFLE), { 450, 660 }, "Complete Adventure");
+
 	flightPathActions = new Icon*[FLIGHTACTIONS];
 	for (int i = 0; i < FLIGHTACTIONS; i++)
 	{
@@ -548,8 +551,8 @@ void Game::preFlightListener(int &tempType){
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
 //  Deals with Mouse Click actions in the Flight Phase
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
-void Game::flightPhaseListener(int tempType){	
-
+void Game::flightPhaseListener(int tempType)
+{	
 	//  If Pirate Attack is 
 	if (flag[pirateAttack]){
 		pirateMenuListener();
@@ -606,6 +609,11 @@ void Game::flightPhaseListener(int tempType){
 			flag[showflightMenu] = true;
 		}
 	}
+	// Current Planet (Large Icon) clicked
+	else if (cPlanet.isTargeted(gWindow))
+	{
+		std::cout << cPlanet.getSrcPos().x << " " << cPlanet.getSrcPos().y << std::endl;
+	}
 	//  Current Planet's Menu in the FlightPath is clicked
 	else if (!flag[phaseComplete] && flag[showflightMenu] && flightMenuOptionTargeted(tempType))
 	{
@@ -659,12 +667,16 @@ void Game::flightPhaseListener(int tempType){
 			flightEventString.setString("");
 			specialString.setString("Flight Sector: " + std::to_string(universe->getCurrentSectorNum() + 1));
 			break;
+		case adv:
+
+			break;
 		case endFl:	//  End Flight
 			flag[phaseComplete] = true;
 			flightEventString.setString("");
 			break;
 		}
 	}
+	//  Adventure Card is Clicked
 	else if (universe->isCurrentAdventureTargeted(gWindow, tempType))
 	{
 		if (!flag[pirateAttack])
@@ -672,15 +684,10 @@ void Game::flightPhaseListener(int tempType){
 			cPlanet.setSrcPos(universe->getAdvCard(tempType)->getSrcPos());
 			cPlanet.updateTextRect();
 			cPlanet.setString("Adventure Planet");
-			flag[showflightMenu] = false;
 		}
 		if (universe->getCurrentPlanet()->getName() == universe->getAdvCard(tempType)->getName())
 		{
-			if (universe->getAdvCard(tempType)->isAvailable())
-			{
-				//adventureListener(tempType);
-			}
-			else
+			if (!universe->getAdvCard(tempType)->isAvailable())
 				statusUpdate = "Adventure Not Available yet";
 		}
 		else
@@ -699,7 +706,7 @@ void Game::flightPhaseListener(int tempType){
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
 void Game::adventureListener(int tempType)
 {
-
+	std::cout << "Adventure Menu here\n";
 	//if (universe->isCurrentAdventureTargeted(gWindow, tempType))
 	//{
 	//	if (universe->getCurrentPlanet()->getName() == universe->getAdvCard(tempType)->getName())
@@ -711,7 +718,6 @@ void Game::adventureListener(int tempType)
 	//		else
 	//			statusUpdate = "Adventure Not Available yet";
 	//	}
-
 	//	else
 	//		statusUpdate = "Adventure Only Available on " + universe->getAdvCard(tempType)->getName();
 	//}
@@ -1063,8 +1069,8 @@ void Game::updateFlightMenu()
 			if (universe->atAdventurePlanet())
 			{
 				flightEventString.setString("Adventures Available");
+				flightMenuIcons[adv]->unhide();
 			}
-
 		}
 		else                                                             //  Everything else
 		{

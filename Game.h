@@ -30,8 +30,8 @@ enum combatParties{ply, prt};
 const int TRADEMENUSIZE = 4;
 enum tradeIcons{plus, minus, check, cancel};
 
-const int FMENUSIZE = 4;
-enum menuOptions { trdW, colIt, conFly, endFl };
+const int FMENUSIZE = 5;
+enum menuOptions { trdW, colIt, conFly, endFl, adv };
 
 const int PMENUSIZE = 2;
 enum pirateIcons{pay, fight};
