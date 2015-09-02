@@ -585,12 +585,26 @@ void Game::flightPhaseListener(int tempType){
 	// Objects in the FlightPath are clicked but not the current planet
 	else if (!flag[phaseComplete] && flag[showFlightPath] && universe->flightPathTargeted(gWindow, tempType) && tempType != universe->getCurrentMove() - 1)
 	{
-		std::cout << "Flight Path Object " << tempType << " Clicked" << std::endl;
+		//std::cout << "Flight Path Object " << tempType << " Clicked" << std::endl;
+		if (!flag[pirateAttack])
+		{
+			cPlanet.setSrcPos(universe->getFlightPathPlanet(tempType)->getSrcPos());
+			cPlanet.updateTextRect();
+			cPlanet.setString("Previous Planet");
+			flag[showflightMenu] = false;
+		}
 	}
 	// Current Planet in the FlightPath is clicked
-	else if (!flag[phaseComplete] && flag[showflightMenu] && universe->getCurrentPlanet()->isTargeted(gWindow)){
+	else if (!flag[phaseComplete] && universe->getCurrentPlanet()->isTargeted(gWindow)){
 		std::cout << "Current Planet Clicked" << std::endl;
-		std::cout << "Resource " << universe->getCurrentPlanet()->getResource() << std::endl;
+		std::cout << "Resource " << universe->getCurrentPlanet()->getResource() << std::endl;		
+		if (!flag[pirateAttack])
+		{
+			cPlanet.setSrcPos(universe->getCurrentPlanet()->getSrcPos());		
+			cPlanet.updateTextRect();
+			cPlanet.setString("Current Planet");
+			flag[showflightMenu] = true;
+		}
 	}
 	//  Current Planet's Menu in the FlightPath is clicked
 	else if (!flag[phaseComplete] && flag[showflightMenu] && flightMenuOptionTargeted(tempType))
@@ -634,12 +648,14 @@ void Game::flightPhaseListener(int tempType){
 				flightPathActions[universe->getCurrentMove() - 1]->setSrcPosX(4);
 				flightPathActions[universe->getCurrentMove() - 1]->updateTextRect();
 			}			
+			cPlanet.setString("Current Planet");
 			universe->continueFlight();
 			cPlanet.setSrcPos(universe->getCurrentPlanet()->getSrcPos());
 			cPlanet.updateTextRect();
 			flag[justActed] = false;
 			flag[pirateAttack] = false;
 			flag[pirateChoice] = false;
+			flag[showflightMenu] = true;
 			flightEventString.setString("");
 			specialString.setString("Flight Sector: " + std::to_string(universe->getCurrentSectorNum() + 1));
 			break;
@@ -651,6 +667,13 @@ void Game::flightPhaseListener(int tempType){
 	}
 	else if (universe->isCurrentAdventureTargeted(gWindow, tempType))
 	{
+		if (!flag[pirateAttack])
+		{
+			cPlanet.setSrcPos(universe->getAdvCard(tempType)->getSrcPos());
+			cPlanet.updateTextRect();
+			cPlanet.setString("Adventure Planet");
+			flag[showflightMenu] = false;
+		}
 		if (universe->getCurrentPlanet()->getName() == universe->getAdvCard(tempType)->getName())
 		{
 			if (universe->getAdvCard(tempType)->isAvailable())

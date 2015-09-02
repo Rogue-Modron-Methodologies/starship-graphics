@@ -48,6 +48,7 @@ public:
 	Object *getBoard() const { return board; }
 	int getCurrentMove(){ return currentMove; }
 	Card* getCurrentPlanet(){ return getSector(sectorNum)[currentMove - 1]; }
+	Card* getFlightPathPlanet(int num){ return getSector(sectorNum)[num]; }
 	bool isCurrentAdventureTargeted(sf::RenderWindow &gWindow, int &temp);
 	void drawCurrentAdventures(sf::RenderWindow &gWindow);
 	void drawSectors(sf::RenderWindow &gWindow);
