@@ -51,7 +51,7 @@ bool Object::isTargeted(sf::RenderWindow &gWindow)
 		&& temp.y > sprite->getPosition().y
 		&& temp.x > sprite->getPosition().x
 		&& temp.y < sprite->getPosition().y + sprite->getGlobalBounds().height
-		&& clickable && visible)
+		&& clickable)
 	{
 		return true;
 	}	
