@@ -44,11 +44,8 @@ sf::Vector2f Object::convertCoord(sf::RenderWindow &gWindow)
 bool Object::isTargeted(sf::RenderWindow &gWindow)
 {
 	sf::Vector2f temp = convertCoord(gWindow);
-	if (sprite->getGlobalBounds().contains(temp))
-	{
+	if (sprite->getGlobalBounds().contains(temp) && clickable)
 		return true;
-	}
-	
 	else
 		return false;
 }
