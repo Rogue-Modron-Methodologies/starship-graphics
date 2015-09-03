@@ -86,7 +86,6 @@ Player::~Player()
 void Player::updatePlayerIcon()
 {
 	statistics[player]->setSrcPosX(statistics[player]->getQty() - 1);
-	statistics[player]->updateTextRect();
 }
 
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 

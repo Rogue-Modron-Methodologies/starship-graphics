@@ -40,10 +40,10 @@ public:
 	//  Getters/Setters
 	void setScale(sf::Vector2f scale) { sprite->setScale(scale); }
 	void setPosition(sf::Vector2f pos) { sprite->setPosition(pos); }
-	void setSrcPos(sf::Vector2u source) { this->srcPos = source; }
-	void setSrcPosX(unsigned num){ this->srcPos.x = num; }	
-	void setSrcPosY(unsigned num){ this->srcPos.y = num; }
-	sf::Vector2u getSrcPos() const { return srcPos; }
+	void setSrcPos(sf::Vector2u source) { this->srcPos = source; updateTextRect(); }
+	void setSrcPosX(unsigned num){ this->srcPos.x = num; updateTextRect(); }
+	void setSrcPosY(unsigned num){ this->srcPos.y = num; updateTextRect(); }
+	sf::Vector2u getSrcPos() const { return srcPos;  }
 	void setQty(int num){ this->qty = num; }
 	int getQty() const { return qty; }
 	//void setColor(sf::Color color = sf::Color::White){ sprite->setColor(color); }
@@ -52,9 +52,8 @@ public:
 	sf::Vector2f getPosition() const { return sprite->getPosition(); }
 	sf::Vector2f getScale() const { return sprite->getScale(); }
 	bool isVisible() const { return visible; }
-	//bool setVisible(bool toggle){ visible = toggle; }
-	//bool getClickable() const { return clickable; }
-	//bool setClickable(bool toggle){ clickable = toggle; }
+	void setVisible(bool toggle){ visible = toggle; }
+
 
 	// Misc Inline Functions
 	bool isSmall() const  { 	return smallDisplay; }
@@ -62,13 +61,13 @@ public:
 	// Prototypes
 	virtual void updateTextRect();
 	virtual void draw(sf::RenderWindow &window) 
-	{ if(visible)window.draw(*sprite); }
+	{ if(visible) window.draw(*sprite); }
 	bool isTargeted(sf::RenderWindow &gWindow);	
 	sf::Vector2f convertCoord(sf::RenderWindow &gWindow);
-	void unGreyOut();
-	void greyOut();
-	void hide();
-	void unhide();
+	void unGreyOut();			//  Visible, unmuted and fully visible
+	void greyOut();			//  Visible, muted and unclickable
+	void hide();				//  Invisible and unclickable
+	void unhide();				//  Visible and clickable
 };
 
 #endif  // OBJECT_H

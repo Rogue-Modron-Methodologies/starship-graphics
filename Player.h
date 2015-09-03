@@ -74,6 +74,7 @@ public:
 		statusUpdate = "Can not afford ";
 		return false;
 	}		
+
 	void addVicPt(int num = 1)
 	{
 		statistics[vicPt]->setQty(statistics[vicPt]->getQty() + num ); 

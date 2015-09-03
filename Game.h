@@ -27,6 +27,9 @@ const int FLIGHTACTIONS = 10;
 enum phases{ production, flight, tradeBuild };
 enum combatParties{ply, prt};
 
+const int BUILDICONSIZE = 6;
+enum BuildIcons{ BLVL1, BLVL2, LLVL1, LLVL2, COLSHIP, TRDSHIP };
+
 const int TRADEMENUSIZE = 4;
 enum tradeIcons{plus, minus, check, cancel};
 
@@ -71,6 +74,7 @@ private:
 	Icon **flightMenuIcons;				//  FlightMenu  
 	Icon **pirateMenuIcons;				//  PirateMenu
 	Icon **flightPathActions;			//  Displays actions by the Current Player during flight
+	Icon **buildMenuIcons;				//  Clickable objects for build phase
 	Icon friendPeople;
 	Icon heroPeople;
 	std::string statusUpdate;			//  Catches errors from called functions
@@ -110,6 +114,8 @@ public:
 		delete[] flightMenuIcons;
 		for (int i = 0; i < PMENUSIZE; i++)
 			delete pirateMenuIcons[i];
+		for (int i = 0; i < BUILDICONSIZE; i++)
+			delete buildMenuIcons[i];
 		delete[] pirateMenuIcons;
 	}
 
@@ -137,8 +143,10 @@ private:
 	void updateFlightMenu();
 	void initTradeMenu(int &tempType);
 	bool tradeIconsTargeted();
+	bool buildIconsTargeted(int &tempType);
 	bool flightMenuOptionTargeted(int &num);
-	bool resourcesInListAvailable(int resAvail[]);
+	bool anyResourcesInListAvailable(int resAvail[]);
+	bool allResourcesInListAvailable(int resAvail[]);
 	bool areAnyResourcesAvailable();
 	bool gainOneResource(int cost = 0);
 	void updateFriendOfThePeople();
@@ -146,6 +154,7 @@ private:
 	void initPirateMenu();
 	void pirateMenuListener();
 	void adventureListener(int tempType);
+	void buyItem(int item);
 
 
 };

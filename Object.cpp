@@ -9,10 +9,7 @@
 
 #include "Object.h"
 
-
-
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
-// Constructor -
 // Creates the sprite for the object.  
 // Sets the inital scale, source position, and screen position.
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
@@ -47,22 +44,17 @@ sf::Vector2f Object::convertCoord(sf::RenderWindow &gWindow)
 bool Object::isTargeted(sf::RenderWindow &gWindow)
 {
 	sf::Vector2f temp = convertCoord(gWindow);
-	if (temp.x <sprite->getPosition().x + sprite->getGlobalBounds().width
-		&& temp.y > sprite->getPosition().y
-		&& temp.x > sprite->getPosition().x
-		&& temp.y < sprite->getPosition().y + sprite->getGlobalBounds().height
-		&& clickable && visible)
+	if (sprite->getGlobalBounds().contains(temp))
 	{
 		return true;
-	}	
+	}
+	
 	else
 		return false;
 }
 
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
-// Update Funtion -
-// Currently updates the TextureRect to new position when called
-// 
+//  Updates the TextureRect to new position 
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
 void Object::updateTextRect()
 {
@@ -70,9 +62,7 @@ void Object::updateTextRect()
 }
 
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
-//
 //  Greys out Object so it's still visible but makes it unclickable
-// 
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
 void Object::greyOut()
 { 
@@ -81,9 +71,7 @@ void Object::greyOut()
 }
 
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
-// 
 //  Restores full color to an object and makes it clickable
-// 
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
 void Object::unGreyOut()
 {
@@ -92,9 +80,7 @@ void Object::unGreyOut()
 }
 
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
-// 
 //  Toggles visible and Clickable to false
-// 
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
 void Object::hide()
 {
@@ -103,9 +89,7 @@ void Object::hide()
 }
 
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
-// 
 //  Toggles visible and Clickable to false
-// 
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
 void Object::unhide()
 {

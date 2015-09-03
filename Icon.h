@@ -20,19 +20,10 @@ private:
 	Object *icon;					//  Clickable image 
 
 public:
-	Icon(){};
-	//  Constructor for initializing the Icon (preferred)
+
+	//  Constructor for initializing the Icon
 	Icon(const sf::Texture &texture, sf::Vector2f pos, int num = 1, sf::Vector2u srcSize = { 0, 0 }, sf::Vector2u srcPos = { 0, 0 })
 	{ icon = new Object(texture, pos, num, srcSize, srcPos); }
-
-	//  Constructor for initializing the text with a string
-	Icon(const sf::Font &font, sf::Vector2f pos, std::string words, int style = sf::Text::Regular ) { initString(font, pos, words); }
-
-	//  Constructor for initializing the text with a num
-	Icon(const sf::Font &font, sf::Vector2f pos, int num, int style = sf::Text::Regular) { initString(font, pos, std::to_string(num)); }
-
-	//  Constructor for initializing the text with default qty of icon
-	Icon(const sf::Font &font, sf::Vector2f pos, int style = sf::Text::Regular) { initString(font, pos, std::to_string(icon->getQty())); }
 
 	~Icon() {	delete icon; }
 
@@ -45,6 +36,8 @@ public:
 		if (changeQty)
 			refreshStringQty();
 	}
+	bool isVisible() const { return icon->isVisible(); }
+	void setVisible(bool toggle){ icon->setVisible(toggle); }
 
 	//  Misc Inline Functions
 	void setString(std::string words) { text.setString(words); 	}				//  Sets text field with a string

@@ -63,7 +63,7 @@ public:
 	void update(ShipObject *o, sf::Vector2f scale = { 1, 1 });	
 	bool gainItem(int type, std::string &statusUpdate);
 	bool loseItem(int type, std::string &statusUpdate);
-	void updateShipIcons();
+	void updateShipIcons();							//  Used when Trade is Cancelled to reset icons back to pre-trade status
 	
 };
 
