@@ -89,6 +89,7 @@ private:
 	int errorTimer;
 	int cTradeResource;					//  Current Traded Resource
 	int cTradeNum;						//  Current Number of Trades
+	int numPlntsTrd;
 
 public:
 	Game();

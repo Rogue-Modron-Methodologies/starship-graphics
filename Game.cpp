@@ -22,7 +22,6 @@ Game::Game() : cPlanet(txtMgr.getResource(UNIVERSECARDIMAGES), { 825, 520 }, 0, 
 	flightDie->initString(fntMgr.getResource(FNTFLE), { 440, 545 }, "", sf::Text::Bold);		
 
 	combatDie = new Icon*[2];
-
 	combatDie[ply] = new Icon(txtMgr.getResource(CDIEFLE), sf::Vector2f{ 350, 525 }, 1, sf::Vector2u(200, 200));
 	combatDie[ply]->initString(fntMgr.getResource(FNTFLE), { 440, 545 }, "", sf::Text::Bold);
 
@@ -309,8 +308,9 @@ void Game::phaseSetup()
 		break;
 	case tradeBuild:
 		phaseNameString.setString("Trade & Build Phase");
-		infoString.setString("Trade & Build Phase");
 		cPlyr->makeBig();
+		numPlntsTrd = 0;
+		infoString.setString("Trades: " + std::to_string(numPlntsTrd) + " / 2");
 		flag[phaseComplete] = true;		//  Only until there is an actual phase coded
 		break;
 	}
@@ -344,7 +344,7 @@ void Game::updateDrawGameWindow()
 				float yPos = 200;
 				int cMove = universe->getCurrentMove();
 				int numToDisplay = flag[pirateAttack] ? cMove - 1 : cMove;
-				//  Draws the flightPath and actionPath taken so far
+				//  Draws the flightPath and actionPath taken so far (doesn't display current planet if pirateAttack is occuring)
 				for (int i = 0; i < numToDisplay; i++)
 				{
 					universe->getCurrentSector()[i]->setScale(CRDSSCL);
@@ -418,6 +418,8 @@ void Game::updateDrawGameWindow()
 				flag[phaseComplete] = true;
 			}
 		}
+		break;
+	case tradeBuild:
 		break;
 	default:
 		break;
@@ -1077,9 +1079,9 @@ void Game::updateFlightMenu()
 				flightMenuIcons[adv]->unhide();
 			}
 		}
-		else                                                             //  Everything else
+		else                                                        
 		{
-			//std::cout << "Everything Else" << std::endl;
+			std::cout << "Everything Else (Should only be Lost Planets)" << std::endl;
 		}
 	}
 }

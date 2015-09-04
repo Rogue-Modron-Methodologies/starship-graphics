@@ -20,6 +20,7 @@ Player::Player(ResourceManager<sf::Texture> &txtMgr, ResourceManager<sf::Font> &
 	colonyZone = new Zone<ColonyCard>(txtMgr, fntMgr, "Colony");
 	tradeZone = new Zone<TradeCard>(txtMgr, fntMgr, "Trade");
 	pirateZone = new Zone<Pirate>(txtMgr, fntMgr, "Pirate");
+	advZone = new Zone<AdventureCard>(txtMgr, fntMgr, "Adventure");
 
 	statistics = new Icon*[STATNUM];
 
@@ -71,6 +72,7 @@ Player::~Player()
 	delete colonyZone;
 	delete tradeZone;
 	delete pirateZone;
+	delete advZone;
 	for (int i = 0; i < STATNUM; i++)
 		delete statistics[i];
 	delete [] statistics;
