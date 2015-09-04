@@ -12,7 +12,7 @@
 
 #include "ShipObject.h"
 
-enum hShips{tradeShip, colonyShip };
+enum hShips{colonyShip, tradeShip };
 
 class HangarShips : public ShipObject
 {
@@ -27,14 +27,26 @@ public:
 	}
 
 	int getType() const { return type; }
-	bool loseItem(std::string &error){
+
+	void updateTextRect()
+	{
+		sprite->setTextureRect(sf::IntRect(srcPos.x * srcSize.x, srcPos.y * srcSize.y, srcSize.x, srcSize.y));
+	}
+
+	bool loseItem(std::string &error)
+	{
 		qty = 0;
 		return true;
 	}
-	bool gainItem(std::string &error){
-		qty = 0;
+
+	bool gainItem(int type, std::string &error)
+	{
+		qty = 1;
+		srcPos.x = type;
+		this->updateTextRect();
 		return true;
 	}
+	bool isMaxed() const { return qty >= 1; }
 
 };
 

@@ -146,7 +146,7 @@ private:
 	bool buildIconsTargeted(int &tempType);
 	bool flightMenuOptionTargeted(int &num);
 	bool anyResourcesInListAvailable(int resAvail[]);
-	bool allResourcesInListAvailable(int resAvail[]);
+	bool allRequirementsMet(int requirements[]);
 	bool areAnyResourcesAvailable();
 	bool gainOneResource(int cost = 0);
 	void updateFriendOfThePeople();
@@ -154,7 +154,7 @@ private:
 	void initPirateMenu();
 	void pirateMenuListener();
 	void adventureListener(int tempType);
-	void buyItem(int item);
+	void buildShipObject(int item);
 
 
 };

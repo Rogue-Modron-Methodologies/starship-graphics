@@ -627,9 +627,9 @@ void Game::flightPhaseListener(int tempType)
 		switch (tempType)
 		{
 		case colIt:	//  Colonize/Establish Post
-			if (universe->getCurrentPlanet()->getType() == tradeShip && cPlyr->getStarship()->shipAvailable(tradeShip, tempType, statusUpdate))
+			if (universe->getCurrentPlanet()->getType() == 0 && cPlyr->getStarship()->shipAvailabletoCompleteAction(tradeShip, tempType, statusUpdate))
 			{
-				//cPlyr->getStarship()->loseItem(tempType, statusUpdate);
+				cPlyr->getStarship()->loseItem(tempType, statusUpdate);
 				cPlyr->getTradeZone()->push_back((TradeCard*)universe->getCurrentPlanet());
 				cPlyr->getTradeZone()->updateZone(cPlyr->getTradeZone()->getPosition(), cPlyr->getTradeZone()->getScale(), cPlyr->getTradeZone()->getIconOnly());
 				cPlyr->addFrdPt();
@@ -639,9 +639,9 @@ void Game::flightPhaseListener(int tempType)
 				flag[justActed] = true;
 				actionNum++;
 			}
-			else if (universe->getCurrentPlanet()->getType() == colonyShip &&cPlyr->getStarship()->shipAvailable(colonyShip, tempType, statusUpdate))
+			else if (universe->getCurrentPlanet()->getType() == 1 &&cPlyr->getStarship()->shipAvailabletoCompleteAction(colonyShip, tempType, statusUpdate))
 			{
-				//cPlyr->getStarship()->loseItem(tempType, statusUpdate);
+				cPlyr->getStarship()->loseItem(tempType, statusUpdate);
 				cPlyr->getColonyZone()->push_back((ColonyCard*)universe->getCurrentPlanet());
 				cPlyr->getColonyZone()->updateZone(cPlyr->getColonyZone()->getPosition(), cPlyr->getColonyZone()->getScale(), cPlyr->getColonyZone()->getIconOnly());
 				cPlyr->addVicPt();
@@ -908,20 +908,26 @@ void Game::tradeBuildPhaseListener()
 		if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
 			cPlyr->makeBig();
 	}
-	// Starship (Large) is clicked
+	// Starship (Large) Build Icon is selected
 	else if (cPlyr->getStarship()->isTargeted(gWindow) && !cPlyr->getStarship()->isSmall() && buildIconsTargeted(tempNum))
 	{
 		if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
-		{
-			buyItem(tempNum);
-			//if (cPlyr->getStarship()->bigLeftClicked(gWindow, statusUpdate, tempType))
-			//	cPlyr->updateIcon(tempType);
-		}
-		//else if (sf::Mouse::isButtonPressed(sf::Mouse::Right)){
-		//	if (cPlyr->getStarship()->bigRightClicked(gWindow, statusUpdate, tempNum))
-		//		cPlyr->updateIcon(tempNum);
-		//}
+			buildShipObject(tempNum);
 	}
+	////////////////////////////////////  BUGTESTING ----  Enable changing of resource quantities
+	//else if (cPlyr->getStarship()->isTargeted(gWindow) && !cPlyr->getStarship()->isSmall())
+	//{
+	//	if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+	//	{
+	//		if (cPlyr->getStarship()->bigLeftClicked(gWindow, statusUpdate, tempNum))
+	//			cPlyr->updateIcon(tempNum);
+	//	}
+	//	else if (sf::Mouse::isButtonPressed(sf::Mouse::Right))
+	//	{
+	//		if (cPlyr->getStarship()->bigRightClicked(gWindow, statusUpdate, tempNum))
+	//			cPlyr->updateIcon(tempNum);
+	//	}
+	//}
 	// Colony Zone (Large Icon) is clicked
 	else if (!cPlyr->zonesSmall() && cPlyr->getColonyZone()->getIconOnly() && cPlyr->getColonyZone()->isIconTargeted(gWindow)){
 		if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
@@ -930,14 +936,16 @@ void Game::tradeBuildPhaseListener()
 			cPlyr->makeBig();
 	}
 	// Trade Zone (Large Icon) is clicked
-	else if (!cPlyr->zonesSmall() && cPlyr->getColonyZone()->getIconOnly() && cPlyr->getTradeZone()->isIconTargeted(gWindow)){
+	else if (!cPlyr->zonesSmall() && cPlyr->getColonyZone()->getIconOnly() && cPlyr->getTradeZone()->isIconTargeted(gWindow))
+	{
 		if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
 			cPlyr->expandTradeZone();
 		else if (sf::Mouse::isButtonPressed(sf::Mouse::Right))
 			cPlyr->makeBig();
 	}
 	// Colony Zone (Large List) is clicked
-	else if (!cPlyr->zonesSmall() && !cPlyr->getColonyZone()->getIconOnly() && cPlyr->getColonyZone()->isZoneTargeted(gWindow, tempNum)){
+	else if (!cPlyr->zonesSmall() && !cPlyr->getColonyZone()->getIconOnly() && cPlyr->getColonyZone()->isZoneTargeted(gWindow, tempNum))
+	{
 		if (sf::Mouse::isButtonPressed(sf::Mouse::Left)){
 			if (cPlyr->getStarship()->gainItem(tempNum, statusUpdate))
 				cPlyr->updateIcon(tempNum);
@@ -946,15 +954,17 @@ void Game::tradeBuildPhaseListener()
 			if (cPlyr->getStarship()->loseItem(tempNum, statusUpdate))
 				cPlyr->updateIcon(tempNum);
 		}
-
 	}
 	// Trade Zone (Large List) is clicked
-	else if (!cPlyr->zonesSmall() && !cPlyr->getTradeZone()->getIconOnly() && cPlyr->getTradeZone()->isZoneTargeted(gWindow, tempNum)){
-		if (sf::Mouse::isButtonPressed(sf::Mouse::Left)){
+	else if (!cPlyr->zonesSmall() && !cPlyr->getTradeZone()->getIconOnly() && cPlyr->getTradeZone()->isZoneTargeted(gWindow, tempNum))
+	{
+		if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+		{
 			if (cPlyr->getStarship()->gainItem(tempNum, statusUpdate))
 				cPlyr->updateIcon(tempNum);
 		}
-		else if (sf::Mouse::isButtonPressed(sf::Mouse::Right)){
+		else if (sf::Mouse::isButtonPressed(sf::Mouse::Right))
+		{
 			if (cPlyr->getStarship()->loseItem(tempNum, statusUpdate))
 				cPlyr->updateIcon(tempNum);
 		}
@@ -1218,14 +1228,13 @@ bool Game::anyResourcesInListAvailable(int resAvail[])
 //  in the holds of the startship
 //
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
-bool Game::allResourcesInListAvailable(int resAvail[])
+bool Game::allRequirementsMet(int resAvail[])
 {
 	for (int i = 0; i < 6; i++)
 	{
-		std::cout << resAvail[i];
 		if (resAvail[i] > cPlyr->getStarship()->getShipObjectQty(i))
 		{
-			std::cout << "FALSE\n";
+			statusUpdate = "Requirements Not Met";
 			return false;
 		}		
 	}
@@ -1252,44 +1261,64 @@ bool Game::areAnyResourcesAvailable()
 //  Attempts to buy an item chosen buy player
 //
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
-void Game::buyItem(int item)
+void Game::buildShipObject(int item)
 {
-	//enum ShipComponents { Science, Ore, Fuel, TradeGood, Wheat, Carbon, B1, B2, B3, L1, L2, L3, H1, H2 };
-	int resAvail[6] = { 0, 0, 0, 0, 0, 0 };	
+	int requirements[6] = { 0, 0, 0, 0, 0, 0 };
+	int pos = -99, type = -1;
 	switch (item)
 	{
-	case 1:	//  Booter Lvl 2
-		resAvail[0] = 1;
 	case 0:	//  Booter Lvl 1
-		resAvail[2] = 2;
+		requirements[2] = 2;
+		pos = B1;
+		break;
+	case 1:	//  Booter Lvl 2
+		requirements[0] = 1;
+		requirements[2] = 2;
+		pos = B2;
+		break;
+	case 2:	//  Laser Lvl 1
+		requirements[5] = 2;
+		pos = L1;
 		break;
 	case 3:	//  Laser Lvl 2
-		resAvail[0] = 1;
-	case 2:	//  Laser Lvl 1
-		resAvail[5] = 2;
+		requirements[0] = 1;
+		requirements[5] = 2;
+		pos = L2;
 		break;
 	case 4:	//  Colony Ship
-		resAvail[1] = 1;
-		resAvail[2] = 1;
-		resAvail[4] = 1;
+		requirements[1] = 1;
+		requirements[2] = 1;
+		requirements[4] = 1;
+		pos = H1;
+		type = 0;
 		break;
 	case 5:	//  Trade Ship
-		resAvail[1] = 1;
-		resAvail[2] = 1;
-		resAvail[3] = 1;
+		requirements[1] = 1;
+		requirements[2] = 1;
+		requirements[3] = 1;
+		pos = H1;
+		type = 1;
 		break;
 	default:
 		std::cout << "BUY ITEM Default:  This should never print\n";
 		for (int i = 0; i < 6; i++)
-			resAvail[i] = 100;
+			requirements[i] = 99;
+		pos = -1;
+		type = 1;
 		break;
 	}
-	
-	if (allResourcesInListAvailable(resAvail))
+	if (allRequirementsMet(requirements) && cPlyr->getStarship()->checkItemAvailability(pos, statusUpdate))
 	{
-		std::cout << "Can Afford\n";
+		cPlyr->getStarship()->gainItem(pos, statusUpdate, type);
+		for (int i = 0; i < 6; i++)
+		{
+			if (requirements[i])
+			{
+				for (int j = requirements[i]; j > 0; j--)
+					cPlyr->getStarship()->loseItem(i, statusUpdate);
+			}
+		}
 	}
-		
 }
 
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 

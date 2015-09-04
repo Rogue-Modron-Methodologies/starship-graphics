@@ -95,7 +95,7 @@ public:
 
 		zoneIcon->setTexture(*(zone[0]->getTexture()));
 		zoneIcon->setSrcPos(zone[0]->getSrcPos());
-		zoneIcon->updateTextRect();
+		//zoneIcon->updateTextRect();
 
 		int cardCnt = 0;
 

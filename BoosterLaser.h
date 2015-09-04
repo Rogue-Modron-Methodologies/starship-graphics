@@ -15,11 +15,12 @@
 class BoosterLaser : public ShipObject
 {
 private:
-
+	int max;
 public:
 	BoosterLaser(const sf::Texture &texture, sf::Vector2f pos, int num = 1, sf::Vector2u srcSize = { 0, 0 }, sf::Vector2u srcPos = { 0, 0 })
-		: ShipObject(texture, pos, num, srcSize, srcPos){};
+		: ShipObject(texture, pos, num, srcSize, srcPos){ max = 2; }
 
+	bool isMaxed() const { return qty >= 2; }
 	bool loseItem(std::string &error)
 	{ 
 		if (qty > 0)
