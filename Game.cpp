@@ -224,8 +224,8 @@ void Game::gameLoop()
 					break;
 				case tradeBuild:
 					tradeBuildPhaseListener(tempNum);
-					if (flag[tradeInProgress] && numPlntsTrd < 2)
-						tradeMenuListener();
+					if (flag[tradeInProgress] && (!flag[buildTradeBegin] != !flag[buildTradeEnd]))
+						tradeMenuListener();					
 					break;
 				}			
 			case sf::Event::MouseMoved:
@@ -277,18 +277,22 @@ void Game::phaseSetup()
 		tempString.clear();
 		specialString.setPosition({ 525, 30 });
 
-		if (cPlyr->getColonyZone()->findResource(flightDie->getQty(), resAvail)){
+		if (cPlyr->getColonyZone()->findResource(flightDie->getQty(), resAvail))
+		{
 			tempString += " Resource(s) in Colony Zone Found!";
-			if (anyResourcesInListAvailable(resAvail)){
+			if (anyResourcesInListAvailable(resAvail))
+			{
 				specialString.setString(+"Chose a colony resource");			
 				flag[gainResource] = true;
 			}
-			else{
+			else
+			{
 				specialString.setString(+"No Choices Available");
 				flag[phaseComplete] = true;
 			}
 		}
-		else{
+		else
+		{
 			tempString += " No Resources in Colony Zone";	
 			flag[phaseComplete] = true;
 		}	
@@ -314,7 +318,10 @@ void Game::phaseSetup()
 		phaseNameString.setString("Trade & Build Phase");
 		cPlyr->makeBig();
 		numPlntsTrd = 0;
+		flightEventString.setString("");
 		infoString.setString("Trades: " + std::to_string(numPlntsTrd) + " / 2");
+		flag[buildTradeBegin] = false;
+		flag[buildTradeEnd] = false;
 		flag[phaseComplete] = true;		//  Only until there is an actual phase coded
 		break;
 	}
@@ -424,13 +431,17 @@ void Game::updateDrawGameWindow()
 		}
 		break;
 	case tradeBuild:
-		if (flag[tradeInProgress] && numPlntsTrd < 2)
+		if (flag[tradeInProgress] && (!flag[buildTradeBegin] != !flag[buildTradeEnd]))
 		{
 			for (int i = 0; i < 4; i++)
 				tradeMenuIcons[i]->draw(gWindow);	//  Prints the Trade Menu Clickable Items
 			for (int i = 0; i < 6; i++)
-				tradeSaveState[i]->draw(gWindow);	//  Prints the resource icons available			
+				tradeSaveState[i]->draw(gWindow);	//  Prints the resource icons available	
+			cPlanetIcon.draw(gWindow);
 		}
+		infoString.setString("Trades: " + std::to_string(numPlntsTrd) + " / 2");
+		if (flag[buildTradeEnd])
+			flightEventString.setString("TRADE PHASE COMPLETE");
 		break;
 	default:
 		break;
@@ -576,11 +587,13 @@ void Game::preFlightListener(int &tempType){
 void Game::flightPhaseListener(int tempType)
 {	
 	//  If Pirate Attack is 
-	if (flag[pirateAttack]){
+	if (flag[pirateAttack])
+	{
 		pirateMenuListener();
 	}
 	// Starship (Small) is clicked
-	if (cPlyr->getStarship()->isTargeted(gWindow) && cPlyr->getStarship()->isSmall()){
+	if (cPlyr->getStarship()->isTargeted(gWindow) && cPlyr->getStarship()->isSmall())
+	{
 		if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
 		{
 			cPlyr->makeBig();
@@ -777,7 +790,7 @@ void Game::tradeMenuListener()
 	//  If resource has been chosen and the plus icon has been selected
 	if (flag[resourceChosen] && sf::Mouse::isButtonPressed(sf::Mouse::Left) && tradeMenuIcons[plus]->isTargeted(gWindow))
 	{
-		if (!limit || cTradeNum < limit)
+		if (!limit || abs(cTradeNum) < limit)
 		{
 			if (cPlyr->canAfford(cost, statusUpdate) && cPlyr->getStarship()->gainItem(cTradeResource, statusUpdate))
 			{
@@ -794,16 +807,16 @@ void Game::tradeMenuListener()
 	{
 		statusUpdate = "Choose a resource";
 	}
-	//  If resource has been chosen and the plus minus has been selected
+	//  If resource has been chosen and the minus icon has been selected
 	else if (flag[resourceChosen] && sf::Mouse::isButtonPressed(sf::Mouse::Left) && tradeMenuIcons[minus]->isTargeted(gWindow))
 	{
-		if (!limit || cTradeNum < limit)
+		if (!limit || abs(cTradeNum) < limit)
 		{
 			if (cPlyr->getStarship()->loseItem(cTradeResource, statusUpdate))
 			{
 				cPlyr->updateIcon(cTradeResource);
 				cPlyr->addAstro(cost);
-				cTradeNum++;
+				cTradeNum--;
 			}
 		}
 		else
@@ -817,14 +830,24 @@ void Game::tradeMenuListener()
 	//  If the Check Icon has been selected
 	else if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && tradeMenuIcons[check]->isTargeted(gWindow))
 	{
+		if (cPhase == flight)
+			flag[showflightMenu] = true;
 		flag[tradeInProgress] = false;
-		flag[showflightMenu] = true;
 
 		if (tradeSaveState[astro]->getQty() != cPlyr->getStatQty(astro))
 		{
-			actionNum++;
-			flag[justActed] = true;
-			flightPathActions[universe->getCurrentMove() - 1]->setSrcPosX(3);
+			if (cPhase == flight)
+			{
+				actionNum++;
+				flag[justActed] = true;
+				flightPathActions[universe->getCurrentMove() - 1]->setSrcPosX(3);
+			}
+			else if (cPhase == tradeBuild)
+			{
+				numPlntsTrd++;
+				if (numPlntsTrd == 2)
+					flag[buildTradeEnd] = true;
+			}
 			flightEventString.setString("Trade Complete");
 		}
 		else
@@ -834,8 +857,9 @@ void Game::tradeMenuListener()
 	//  If the Cancel Icon has been selected
 	else if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && tradeMenuIcons[cancel]->isTargeted(gWindow))
 	{
+		if (cPhase == flight)
+			flag[showflightMenu] = true;
 		flag[tradeInProgress] = false;
-		flag[showflightMenu] = true;
 		flag[choosingResource] = false;
 		flag[resourceChosen] = false;
 		for (int i = 0; i < 6; i++)							// restores the saveState for all resource and astro values
@@ -926,7 +950,11 @@ void Game::tradeBuildPhaseListener(int &tempNum)
 	else if (cPlyr->getStarship()->isTargeted(gWindow) && !cPlyr->getStarship()->isSmall() && buildIconsTargeted(tempNum))
 	{
 		if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
-			buildShipObject(tempNum);
+			if (buildShipObject(tempNum) && flag[buildTradeBegin] && !flag[buildTradeEnd])
+			{
+				flag[buildTradeEnd] = true;
+				statusUpdate = "All further trades this turn are cancelled";
+			}
 	}
 	////////////////////////////////////  BUGTESTING ----  Enable changing of resource quantities
 	//else if (cPlyr->getStarship()->isTargeted(gWindow) && !cPlyr->getStarship()->isSmall())
@@ -961,8 +989,11 @@ void Game::tradeBuildPhaseListener(int &tempNum)
 	// Colony Zone (Large List) is clicked
 	else if (!cPlyr->zonesSmall() && !cPlyr->getColonyZone()->getIconOnly() && cPlyr->getColonyZone()->isZoneTargeted(gWindow, tempNum, tempNum)){}
 	// Trade Zone (Large List) is clicked
-	else if (!cPlyr->zonesSmall() && !cPlyr->getTradeZone()->getIconOnly() && cPlyr->getTradeZone()->isZoneTargeted(gWindow, tempNum, tempPos))
+	else if (!cPlyr->zonesSmall() && !cPlyr->getTradeZone()->getIconOnly() && !flag[buildTradeEnd] && cPlyr->getTradeZone()->isZoneTargeted(gWindow, tempNum, tempPos))
 		initTradeMenu(tempNum, tempPos);
+	else if (!cPlyr->zonesSmall() && !cPlyr->getTradeZone()->getIconOnly() && flag[buildTradeEnd] && cPlyr->getTradeZone()->isZoneTargeted(gWindow, tempNum, tempPos))
+		statusUpdate = "Max Trades Reached";
+	else if (tradeIconsTargeted() && (!flag[buildTradeBegin] != !flag[buildTradeEnd])){}
 	//  Starship (Large) && Empty Space is clicked
 	else if (!cPlyr->getStarship()->isTargeted(gWindow) && !cPlyr->getStarship()->isSmall())
 		cPlyr->makeSmall();
@@ -974,11 +1005,10 @@ void Game::tradeBuildPhaseListener(int &tempNum)
 void Game::initTradeMenu(int &tempType, int tempPos)
 {
 	int cResource;
-	std::string transaction;
+	std::string transaction;		
+	int cTradeNum = 0;
 	if (cPhase == flight)
 	{
-		cTradeNum = 0;
-
 		cPlanetIcon.setSrcPos(universe->getCurrentPlanet()->getSrcPos());
 		cPlanetInfo.setType(universe->getCurrentPlanet()->getType());
 		cPlanetInfo.setResource(universe->getCurrentPlanet()->getResource());
@@ -991,7 +1021,7 @@ void Game::initTradeMenu(int &tempType, int tempPos)
 	}
 	else if (cPhase == tradeBuild)
 	{
-		numPlntsTrd = 0;
+		flag[buildTradeBegin] = true;
 		cPlanetIcon.setSrcPos(cPlyr->getTradeZone()->getZoneItem<TradeCard>(tempPos)->getSrcPos());
 		cPlanetInfo.setType(cPlyr->getTradeZone()->getZoneItem<TradeCard>(tempPos)->getType());
 		cPlanetInfo.setResource(cPlyr->getTradeZone()->getZoneItem<TradeCard>(tempPos)->getResource());
@@ -1277,7 +1307,7 @@ bool Game::areAnyResourcesAvailable()
 //  Attempts to buy an item chosen buy player
 //
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
-void Game::buildShipObject(int item)
+bool Game::buildShipObject(int item)
 {
 	int requirements[6] = { 0, 0, 0, 0, 0, 0 };
 	int pos = -99, type = -1;
@@ -1334,7 +1364,10 @@ void Game::buildShipObject(int item)
 					cPlyr->getStarship()->loseItem(i, statusUpdate);
 			}
 		}
+		return true;
 	}
+	else
+		return false;
 }
 
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 

@@ -39,8 +39,9 @@ enum menuOptions { trdW, colIt, conFly, endFl, adv };
 const int PMENUSIZE = 2;
 enum pirateIcons{pay, fight};
 
-const int FLAGNUM = 14;
-enum flagTypes{
+const int FLAGNUM = 16;
+enum flagTypes
+{
 	phaseSetupComplete,				//  Flag:  Phase Setup Complete
 	gainResource,					//  Flag:  Choose one resource
 	showFlightPath,				//  Flag:  Display flightPath
@@ -54,7 +55,9 @@ enum flagTypes{
 	justActed,					//  Flag:  Performed and action on this planet
 	pirateChoice,					//  Flag:  Choice to Pay or Fight Pirate
 	pirateAttack,					//  Flag:  Currently Being Attacked by Pirate
-	pirateResult					//  Flag:  Lost to pirate and losing something
+	pirateResult,					//  Flag:  Lost to pirate and losing something
+	buildTradeBegin,				//  Flag:  Beginning of Trading during build phase
+	buildTradeEnd					//  Flag:  End of Trading during build phase
 };
 
 class Game{
@@ -156,7 +159,7 @@ private:
 	void initPirateMenu();
 	void pirateMenuListener();
 	void adventureListener(int tempType);
-	void buildShipObject(int item);
+	bool buildShipObject(int item);
 
 
 };
