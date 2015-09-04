@@ -70,7 +70,8 @@ private:
 	Icon **tradeMenuIcons;				//  Icons for the Trade Menu
 	Icon *flightDie;					//  Production/Flight Die
 	Icon **combatDie;					//  Combat Die for Player and Pirate
-	Icon cPlanet;						//  Current Planet 
+	Icon cPlanetIcon;					//  Current Planet Icon
+	TradeCard cPlanetInfo;				//  Placeholder for current trade 
 	Icon **flightMenuIcons;				//  FlightMenu  
 	Icon **pirateMenuIcons;				//  PirateMenu
 	Icon **flightPathActions;			//  Displays actions by the Current Player during flight
@@ -142,7 +143,7 @@ private:
 	void tradeBuildPhaseListener(int &tempNum);
 	void tradeMenuListener();
 	void updateFlightMenu();
-	void initTradeMenu(int &tempType);
+	void initTradeMenu(int &tempType, int tempPos = -1);
 	bool tradeIconsTargeted();
 	bool buildIconsTargeted(int &tempType);
 	bool flightMenuOptionTargeted(int &num);

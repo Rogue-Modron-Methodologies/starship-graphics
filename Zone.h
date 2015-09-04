@@ -56,12 +56,17 @@ public:
 	bool getSmallDisplay() const { return smallDisplay; }
 	sf::Vector2f getPosition() const { return zoneIcon->getIconPosition(); }
 	sf::Vector2f getScale() const { return zoneIcon->getScale(); }
+	template <class T>
+	T* getZoneItem(int pos){ return zone[pos]; }
 
 	//  Misc Inline Functions
 	bool isIconTargeted(sf::RenderWindow &gWindow) { 	return zoneIcon->isTargeted(gWindow); }
+
+
 	
 	template<class T>
-	void push_back(T* item) 	{ 
+	void push_back(T* item) 	
+	{ 
 		zone.push_back(item); 
 		sortZone();
 	}
@@ -95,7 +100,6 @@ public:
 
 		zoneIcon->setTexture(*(zone[0]->getTexture()));
 		zoneIcon->setSrcPos(zone[0]->getSrcPos());
-		//zoneIcon->updateTextRect();
 
 		int cardCnt = 0;
 
@@ -108,9 +112,10 @@ public:
 	}
 
 	// Checks to see if any card in the vector has been targeted   
-	bool isZoneTargeted(sf::RenderWindow &gWindow, int &resource){
+	bool isZoneTargeted(sf::RenderWindow &gWindow, int &resource, int &pos){
 		for (int i = beginArrow->getQty(); i <= endArrow->getQty() && i < zone.size(); i++){
 			if (zone[i]->isTargeted(gWindow)){
+				pos = i;				
 				resource = zone[i]->getResource();
 				return true;
 			}

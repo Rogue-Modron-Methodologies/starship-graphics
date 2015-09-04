@@ -23,7 +23,8 @@ private:
 
 public:
 
-	TradeCard(const sf::Texture &texture, sf::Vector2u srcPos, int num, std::string name, int type, int resource, int cost, std::string transaction, int limit, int pts) : Card(texture, srcPos, type, num, name)
+	TradeCard(const sf::Texture &texture, sf::Vector2u srcPos, int num, std::string name, int type, int resource, int cost, 
+		std::string transaction, int limit, int pts) : Card(texture, srcPos, type, num, name)
 	{
 		this->resource = resource;
 		this->cost = cost;
@@ -36,16 +37,15 @@ public:
 	friend bool sortBy(const TradeCard *lhs, const TradeCard *rhs){ return lhs->resource < rhs->resource; }
 
 	// Getters and Setters
-	int getResource() const
-		{  return resource; }
-	int getCost() const
-		{  return cost;  }
-	std::string getTransaction() const
-		{	return transaction;  }
-	int getLimit() const
-		{	return limit;  }
-	int getPts() const
-		{  return pts;  }
-
+	int getResource() const {  return resource; }
+	int getCost() const {  return cost;  }
+	std::string getTransaction() const {	return transaction;  }
+	int getLimit() const {	return limit;  }
+	int getPts() const 	{  return pts;  }
+	void setResource(int r) { resource = r; }
+	void setCost(int c)  { cost = c; }
+	void setTransaction(std::string tr)  { transaction = tr; }
+	void setLimit(int l)  { limit = l; }
+	void setPts(int p) { pts = p; }
 };
 #endif // TRADECARD_H
