@@ -138,7 +138,7 @@ private:
 	void productionPhaseListener();
 	void flightPhaseListener(int tempType);
 	void preFlightListener(int &tempType);
-	void tradeBuildPhaseListener();
+	void tradeBuildPhaseListener(int &tempNum);
 	void tradeMenuListener();
 	void updateFlightMenu();
 	void initTradeMenu(int &tempType);

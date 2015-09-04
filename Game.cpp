@@ -222,7 +222,7 @@ void Game::gameLoop()
 						tradeMenuListener();
 					break;
 				case tradeBuild:
-					tradeBuildPhaseListener();
+					tradeBuildPhaseListener(tempNum);
 					break;
 				}			
 			case sf::Event::MouseMoved:
@@ -356,7 +356,7 @@ void Game::updateDrawGameWindow()
 			}
 			cPlanet.draw(gWindow);
 			//  Flight Phase - phase is not complete and player hasn't reached max actions
-			if (!flag[phaseComplete] && actionNum < cPlyr->getStarship()->getMaxActions())
+			if (!flag[phaseComplete])
 			{
 				infoString.setString("Flight: " + std::to_string(universe->getCurrentMove()) + " / " + std::to_string(cPlyr->getStarship()->getMaxDistance())
 					+ "\nMax Actions: " + std::to_string(actionNum) + " / " + std::to_string(cPlyr->getStarship()->getMaxActions()));
@@ -900,9 +900,8 @@ void Game::pirateMenuListener(){
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
 //  Deals with Mouse Click actions in the Build Phase
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
-void Game::tradeBuildPhaseListener()
+void Game::tradeBuildPhaseListener(int &tempNum)
 {
-	int tempNum;
 	// Starship (Small) is clicked
 	if (cPlyr->getStarship()->isTargeted(gWindow) && cPlyr->getStarship()->isSmall()){
 		if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
@@ -946,28 +945,28 @@ void Game::tradeBuildPhaseListener()
 	// Colony Zone (Large List) is clicked
 	else if (!cPlyr->zonesSmall() && !cPlyr->getColonyZone()->getIconOnly() && cPlyr->getColonyZone()->isZoneTargeted(gWindow, tempNum))
 	{
-		if (sf::Mouse::isButtonPressed(sf::Mouse::Left)){
-			if (cPlyr->getStarship()->gainItem(tempNum, statusUpdate))
-				cPlyr->updateIcon(tempNum);
-		}
-		else if (sf::Mouse::isButtonPressed(sf::Mouse::Right)){
-			if (cPlyr->getStarship()->loseItem(tempNum, statusUpdate))
-				cPlyr->updateIcon(tempNum);
-		}
+		//if (sf::Mouse::isButtonPressed(sf::Mouse::Left)){
+		//	if (cPlyr->getStarship()->gainItem(tempNum, statusUpdate))
+		//		cPlyr->updateIcon(tempNum);
+		//}
+		//else if (sf::Mouse::isButtonPressed(sf::Mouse::Right)){
+		//	if (cPlyr->getStarship()->loseItem(tempNum, statusUpdate))
+		//		cPlyr->updateIcon(tempNum);
+		//}
 	}
 	// Trade Zone (Large List) is clicked
 	else if (!cPlyr->zonesSmall() && !cPlyr->getTradeZone()->getIconOnly() && cPlyr->getTradeZone()->isZoneTargeted(gWindow, tempNum))
 	{
-		if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
-		{
-			if (cPlyr->getStarship()->gainItem(tempNum, statusUpdate))
-				cPlyr->updateIcon(tempNum);
-		}
-		else if (sf::Mouse::isButtonPressed(sf::Mouse::Right))
-		{
-			if (cPlyr->getStarship()->loseItem(tempNum, statusUpdate))
-				cPlyr->updateIcon(tempNum);
-		}
+		//if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+		//{
+		//	if (cPlyr->getStarship()->gainItem(tempNum, statusUpdate))
+		//		cPlyr->updateIcon(tempNum);
+		//}
+		//else if (sf::Mouse::isButtonPressed(sf::Mouse::Right))
+		//{
+		//	if (cPlyr->getStarship()->loseItem(tempNum, statusUpdate))
+		//		cPlyr->updateIcon(tempNum);
+		//}
 	}
 	//  Starship (Large) && Empty Space is clicked
 	else if (!cPlyr->getStarship()->isTargeted(gWindow) && !cPlyr->getStarship()->isSmall()){
@@ -1049,13 +1048,13 @@ void Game::updateFlightMenu()
 	else  //  NOT PIRATE
 	{
 		flightMenuIcons[endFl]->unhide();
-		if (universe->getCurrentMove() < cPlyr->getStarship()->getMaxDistance()) 
+		if (universe->getCurrentMove() < cPlyr->getStarship()->getMaxDistance() && actionNum < cPlyr->getStarship()->getMaxActions())
 			flightMenuIcons[conFly]->unhide();
-		if (universe->getCurrentPlanet()->getType() == 0)						//  Trade Planet
+		if (universe->getCurrentPlanet()->getType() == 0 && actionNum < cPlyr->getStarship()->getMaxActions())						//  Trade Planet
 		{
 			if (!flag[justActed])
 				flightMenuIcons[trdW]->unhide();
-			if (universe->getCurrentPlanet()->getPts() == 1 && !flag[justActed])	//  Can be colonized
+			if (universe->getCurrentPlanet()->getPts() == 1 && !flag[justActed] && actionNum < cPlyr->getStarship()->getMaxActions())	//  Can be colonized
 			{
 				flightMenuIcons[colIt]->setString("Establish Trade Post");
 				flightMenuIcons[colIt]->setSrcPos({ 1, 0 });
@@ -1063,14 +1062,14 @@ void Game::updateFlightMenu()
 				flightMenuIcons[colIt]->unhide();
 			}
 		}
-		else if (universe->getCurrentPlanet()->getType() == 1 && !flag[justActed])	//  Colony Planet
+		else if (universe->getCurrentPlanet()->getType() == 1 && !flag[justActed] && actionNum < cPlyr->getStarship()->getMaxActions())	//  Colony Planet
 		{
 			flightMenuIcons[colIt]->setString("Colonize the Planet");
 			flightMenuIcons[colIt]->setTextPosition({ 450, 660 });
 			flightMenuIcons[colIt]->setSrcPos({ 0, 0 });
 			flightMenuIcons[colIt]->unhide();
 		}
-		else if (universe->getCurrentPlanet()->getType() == 3)					//  Adventure Planet
+		else if (universe->getCurrentPlanet()->getType() == 3 && actionNum < cPlyr->getStarship()->getMaxActions())					//  Adventure Planet
 		{
 			if (universe->atAdventurePlanet())
 			{

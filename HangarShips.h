@@ -43,6 +43,7 @@ public:
 	{
 		qty = 1;
 		srcPos.x = type;
+		this->type = type;
 		this->updateTextRect();
 		return true;
 	}
