@@ -309,6 +309,7 @@ void Game::phaseSetup()
 		flag[justActed] = false;
 		flag[pirateAttack] = false;
 		flag[pirateChoice] = false;
+		flag[adventureAvailable] = false;
 		infoString.setString("Flight: 0 / " + std::to_string(cPlyr->getStarship()->getMaxDistance()) + "\nMax Actions: 0 / " + 
 			std::to_string(cPlyr->getStarship()->getMaxActions()));
 		specialString.setString("Select a Sector");
@@ -623,7 +624,6 @@ void Game::flightPhaseListener(int tempType)
 	// Objects in the FlightPath are clicked but not the current planet
 	else if (!flag[phaseComplete] && flag[showFlightPath] && universe->flightPathTargeted(gWindow, tempType) && tempType != universe->getCurrentMove() - 1)
 	{
-		//std::cout << "Flight Path Object " << tempType << " Clicked" << std::endl;
 		if (!flag[pirateAttack])
 		{
 			cPlanetIcon.setSrcPos(universe->getFlightPathPlanet(tempType)->getSrcPos());
@@ -643,10 +643,7 @@ void Game::flightPhaseListener(int tempType)
 		}
 	}
 	// Current Planet (Large Icon) clicked
-	else if (cPlanetIcon.isTargeted(gWindow))
-	{
-		std::cout << cPlanetIcon.getSrcPos().x << " " << cPlanetIcon.getSrcPos().y << std::endl;
-	}
+	else if (cPlanetIcon.isTargeted(gWindow)) { ; }
 	//  Current Planet's Menu in the FlightPath is clicked
 	else if (!flag[phaseComplete] && flag[showflightMenu] && flightMenuOptionTargeted(tempType))
 	{
@@ -659,13 +656,13 @@ void Game::flightPhaseListener(int tempType)
 				cPlyr->getTradeZone()->push_back((TradeCard*)universe->getCurrentPlanet());
 				cPlyr->getTradeZone()->updateZone(cPlyr->getTradeZone()->getPosition(), cPlyr->getTradeZone()->getScale(), cPlyr->getTradeZone()->getIconOnly());
 				cPlyr->addFrdPt();
-				updateFriendOfThePeople();	
+				updateFriendOfThePeople();
 				universe->replaceCurrentPlanet();
 				flightPathActions[universe->getCurrentMove() - 1]->setSrcPosX(1);
 				flag[justActed] = true;
 				actionNum++;
 			}
-			else if (universe->getCurrentPlanet()->getType() == 1 &&cPlyr->getStarship()->shipAvailabletoCompleteAction(colonyShip, tempType, statusUpdate))
+			else if (universe->getCurrentPlanet()->getType() == 1 && cPlyr->getStarship()->shipAvailabletoCompleteAction(colonyShip, tempType, statusUpdate))
 			{
 				cPlyr->getStarship()->loseItem(tempType, statusUpdate);
 				cPlyr->getColonyZone()->push_back((ColonyCard*)universe->getCurrentPlanet());
@@ -677,13 +674,13 @@ void Game::flightPhaseListener(int tempType)
 				actionNum++;
 			}
 			infoString.setString(statusUpdate);
-			break;			
+			break;
 		case trdW:	//  Trade with Planet
 			initTradeMenu(tempType);
 			break;
 		case conFly:	// Continue Flight
 			if (!flag[justActed])
-				flightPathActions[universe->getCurrentMove() - 1]->setSrcPosX(4);		
+				flightPathActions[universe->getCurrentMove() - 1]->setSrcPosX(4);
 			cPlanetIcon.setString("Current Planet");
 			universe->continueFlight();
 			cPlanetIcon.setSrcPos(universe->getCurrentPlanet()->getSrcPos());
@@ -695,7 +692,20 @@ void Game::flightPhaseListener(int tempType)
 			specialString.setString("Flight Sector: " + std::to_string(universe->getCurrentSectorNum() + 1));
 			break;
 		case adv:
-
+			if (flag[adventureAvailable])
+			{
+				if (universe->getAdvCard(curAdv)->getReq1Qty() == -1)
+				{
+					std::cout << "Adventure Action Here\n";
+				}
+				else
+					statusUpdate = "Requirements Not Met";
+			}
+			else
+			{
+				statusUpdate = "Select an adventure on " + universe->getCurrentPlanet()->getName();
+				flightEventString.setString("");
+			}
 			break;
 		case endFl:	//  End Flight
 			flag[phaseComplete] = true;
@@ -704,20 +714,24 @@ void Game::flightPhaseListener(int tempType)
 		}
 	}
 	//  Adventure Card is Clicked
-	else if (universe->isCurrentAdventureTargeted(gWindow, tempType))
+	else if (universe->isCurrentAdventureTargeted(gWindow, tempType) && !flag[pirateAttack])
 	{
-		if (!flag[pirateAttack])
-		{
-			cPlanetIcon.setSrcPos(universe->getAdvCard(tempType)->getSrcPos());
-			cPlanetIcon.setString("Adventure Planet");
-		}
+		cPlanetIcon.setSrcPos(universe->getAdvCard(tempType)->getSrcPos());
+		cPlanetIcon.setString("Adventure");
+		curAdv = tempType;
 		if (universe->getCurrentPlanet()->getName() == universe->getAdvCard(tempType)->getName())
 		{
+			flag[adventureAvailable] = true;
+			flightEventString.setString(getAdvReqString(tempType));
 			if (!universe->getAdvCard(tempType)->isAvailable())
-				statusUpdate = "Adventure Not Available yet";
+				statusUpdate = "New Adventures are Not Available this Flight";
 		}
 		else
+		{
+			flag[adventureAvailable] = false;
+			flightEventString.setString("");
 			statusUpdate = "Adventure Only Available on " + universe->getAdvCard(tempType)->getName();
+		}
 	}
 	//  Starship (Large) && Empty Space is clicked
 	else if (!cPlyr->getStarship()->isTargeted(gWindow) && !cPlyr->getStarship()->isSmall() && !tradeIconsTargeted())
@@ -725,30 +739,6 @@ void Game::flightPhaseListener(int tempType)
 		cPlyr->makeSmall();
 		flag[showFlightPath] = true;
 	}
-}
-
-// (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
-//  Deals with Mouse Click actions when an active adventure is available
-// (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
-void Game::adventureListener(int tempType)
-{
-	std::cout << "Adventure Menu here\n";
-	//if (universe->isCurrentAdventureTargeted(gWindow, tempType))
-	//{
-	//	if (universe->getCurrentPlanet()->getName() == universe->getAdvCard(tempType)->getName())
-	//	{
-	//		if (universe->getAdvCard(tempType)->isAvailable())
-	//		{
-	//			adventureListener(tempType);
-	//		}
-	//		else
-	//			statusUpdate = "Adventure Not Available yet";
-	//	}
-	//	else
-	//		statusUpdate = "Adventure Only Available on " + universe->getAdvCard(tempType)->getName();
-	//}
-	//flightEventString.setString(universe->getAdvCard(tempType)->getMission());
-
 }
 
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
@@ -790,7 +780,7 @@ void Game::tradeMenuListener()
 	//  If resource has been chosen and the plus icon has been selected
 	if (flag[resourceChosen] && sf::Mouse::isButtonPressed(sf::Mouse::Left) && tradeMenuIcons[plus]->isTargeted(gWindow))
 	{
-		if (!limit || abs(cTradeNum) < limit)
+		if (!limit || cTradeNum < limit)
 		{
 			if (cPlyr->canAfford(cost, statusUpdate) && cPlyr->getStarship()->gainItem(cTradeResource, statusUpdate))
 			{
@@ -810,13 +800,13 @@ void Game::tradeMenuListener()
 	//  If resource has been chosen and the minus icon has been selected
 	else if (flag[resourceChosen] && sf::Mouse::isButtonPressed(sf::Mouse::Left) && tradeMenuIcons[minus]->isTargeted(gWindow))
 	{
-		if (!limit || abs(cTradeNum) < limit)
+		if (!limit || cTradeNum < limit)
 		{
 			if (cPlyr->getStarship()->loseItem(cTradeResource, statusUpdate))
 			{
 				cPlyr->updateIcon(cTradeResource);
 				cPlyr->addAstro(cost);
-				cTradeNum--;
+				cTradeNum++;
 			}
 		}
 		else
@@ -1004,9 +994,8 @@ void Game::tradeBuildPhaseListener(int &tempNum)
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
 void Game::initTradeMenu(int &tempType, int tempPos)
 {
-	int cResource;
 	std::string transaction;		
-	int cTradeNum = 0;
+	cTradeNum = 0;
 	if (cPhase == flight)
 	{
 		cPlanetIcon.setSrcPos(universe->getCurrentPlanet()->getSrcPos());
@@ -1016,7 +1005,7 @@ void Game::initTradeMenu(int &tempType, int tempPos)
 		cPlanetInfo.setTransaction(universe->getCurrentPlanet()->getTransaction());
 		cPlanetInfo.setLimit(universe->getCurrentPlanet()->getLimit());
 		cPlanetInfo.setPts(universe->getCurrentPlanet()->getPts());		
-		cResource = cPlanetInfo.getResource();
+		cTradeResource = cPlanetInfo.getResource();
 		transaction = cPlanetInfo.getTransaction();
 	}
 	else if (cPhase == tradeBuild)
@@ -1029,11 +1018,11 @@ void Game::initTradeMenu(int &tempType, int tempPos)
 		cPlanetInfo.setTransaction(cPlyr->getTradeZone()->getZoneItem<TradeCard>(tempPos)->getTransaction());
 		cPlanetInfo.setLimit(cPlyr->getTradeZone()->getZoneItem<TradeCard>(tempPos)->getLimit());
 		cPlanetInfo.setPts(cPlyr->getTradeZone()->getZoneItem<TradeCard>(tempPos)->getPts());
-		cResource = cPlanetInfo.getResource();
+		cTradeResource = cPlanetInfo.getResource();
 		transaction = cPlanetInfo.getTransaction();
 	}
 
-	if (cResource == 6)
+	if (cTradeResource == 6)
 	{
 		flag[choosingResource] = true;
 		flag[resourceChosen] = false;
@@ -1051,8 +1040,8 @@ void Game::initTradeMenu(int &tempType, int tempPos)
 		tradeSaveState[i]->setQty(cPlyr->getStatQty(i));			//  saves the current resource and astro values
 		tradeSaveState[i]->greyOut();							//  makes all items unavailable
 	}
-	if (cResource > 0 && cResource < 6)
-		tradeSaveState[cResource]->unGreyOut();
+	if (cTradeResource > 0 && cTradeResource < 6)
+		tradeSaveState[cTradeResource]->unGreyOut();
 
 
 	if (transaction == "Buy")			//  Can only buy at this trade post
@@ -1124,7 +1113,8 @@ void Game::updateFlightMenu()
 		{
 			if (universe->atAdventurePlanet())
 			{
-				flightEventString.setString("Adventures Available");
+				if (flightEventString.getString() == "")
+					flightEventString.setString("Adventure Available");
 				flightMenuIcons[adv]->unhide();
 			}
 		}
@@ -1455,4 +1445,27 @@ void Game::endPhase()
 	if (cPhase == 3)
 		cPhase = 0;
 	flag[phaseSetupComplete] = false;
+}
+
+// (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
+//
+//  Parses adventure requirements into std::string format
+//
+// (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
+std::string Game::getAdvReqString(int tempType)
+{
+	int reqQty = universe->getAdvCard(tempType)->getReq1Qty();
+	std::string tempString = "Requirements:\n";
+	if (reqQty == -1)
+		tempString += "None";
+	else
+		tempString += std::to_string(reqQty) + " " +
+		universe->getAdvCard(tempType)->getResName(universe->getAdvCard(tempType)->getReq1Type()) + "\n";
+
+	reqQty = universe->getAdvCard(tempType)->getReq2Qty();
+	if (reqQty != -1)
+		tempString += std::to_string(reqQty) + " " +
+		universe->getAdvCard(tempType)->getResName(universe->getAdvCard(tempType)->getReq2Type());
+
+	return tempString;
 }

@@ -48,7 +48,7 @@ public:
 	void setShipObjectQty(int type, int num){ shipObjects[type]->setQty(num); }
 
 	//  Misc Inline Functions
-	void calcMaxDistance(int dieRoll)  { maxMovement = dieRoll + totalBoosters(); }
+	void calcMaxDistance(int dieRoll)  { maxMovement = 10; }// dieRoll + totalBoosters();}
 	int totalLasers() { return shipObjects[L1]->getQty() + shipObjects[L2]->getQty() + shipObjects[L3]->getQty(); }			// used in combat
 	int totalBoosters()  { return shipObjects[B1]->getQty() + shipObjects[B2]->getQty() + shipObjects[B3]->getQty(); }			// called by calcMaxDistance and events	
 	bool shipAvailabletoCompleteAction(int type, int &hanger, std::string &error);

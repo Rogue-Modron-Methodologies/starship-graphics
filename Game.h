@@ -39,7 +39,7 @@ enum menuOptions { trdW, colIt, conFly, endFl, adv };
 const int PMENUSIZE = 2;
 enum pirateIcons{pay, fight};
 
-const int FLAGNUM = 16;
+const int FLAGNUM = 17;
 enum flagTypes
 {
 	phaseSetupComplete,				//  Flag:  Phase Setup Complete
@@ -57,7 +57,8 @@ enum flagTypes
 	pirateAttack,					//  Flag:  Currently Being Attacked by Pirate
 	pirateResult,					//  Flag:  Lost to pirate and losing something
 	buildTradeBegin,				//  Flag:  Beginning of Trading during build phase
-	buildTradeEnd					//  Flag:  End of Trading during build phase
+	buildTradeEnd,					//  Flag:  End of Trading during build phase
+	adventureAvailable				//  Flag:  Current Planet is an adventure planet and adventure is available.
 };
 
 class Game{
@@ -94,6 +95,7 @@ private:
 	int cTradeResource;					//  Current Traded Resource
 	int cTradeNum;						//  Current Number of Trades
 	int numPlntsTrd;
+	int curAdv;
 
 public:
 	Game();
@@ -160,6 +162,7 @@ private:
 	void pirateMenuListener();
 	void adventureListener(int tempType);
 	bool buildShipObject(int item);
+	std::string getAdvReqString(int tempType);
 
 
 };

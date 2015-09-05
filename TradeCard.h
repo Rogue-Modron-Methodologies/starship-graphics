@@ -47,5 +47,6 @@ public:
 	void setTransaction(std::string tr)  { transaction = tr; }
 	void setLimit(int l)  { limit = l; }
 	void setPts(int p) { pts = p; }
+
 };
 #endif // TRADECARD_H

@@ -59,6 +59,10 @@ public:
 	{	return available;	}
 	void setAvailable(bool toggle)
 	{	available = toggle;	}
+	int getReq1Qty() const { return req1Qty; }
+	int getReq1Type() const { return req1Type; }
+	int getReq2Qty() const { return req2Qty; }
+	int getReq2Type() const { return req2Type; }
 
 };
 #endif // ADVENTURECARD_H

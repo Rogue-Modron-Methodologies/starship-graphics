@@ -78,7 +78,7 @@ public:
 	{	return "This should never print.";	}
 	virtual std::string getResult() const
 	{	return "This should never print.";	}
-	std::string getResName(int type)
+	virtual std::string getResName(int type)
 	{
 		std::string tempName;
 		switch (type)

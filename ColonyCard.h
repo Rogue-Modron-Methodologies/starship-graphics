@@ -42,5 +42,6 @@ public:
 	int getPts() const
 	{  return vicPts;  }
 
+
 };
 #endif // COLONYCARD_H

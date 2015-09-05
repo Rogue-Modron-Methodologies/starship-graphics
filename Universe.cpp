@@ -427,6 +427,8 @@ void Universe::universeSetup(ResourceManager<sf::Texture> &txtMgr)
 	
 	//  ADVENTURE CARD SETUP
 
+	getline(inputFile, buffer); // Title Line
+
 	ctr0 = 0, ctr1 = 0, ctr2 = 0, ctr3 = 0, ctr4 = 0;
 
 	for (int i = 0; i < 12; i++)
