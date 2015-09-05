@@ -99,7 +99,7 @@ void Starship::makeSmall()
 //  Checks availability of item and returns location number if true
 //
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
-bool Starship::checkItemAvailability(int &num, std::string &statusUpdate)
+bool Starship::checkBuildItemAvailability(int &num, std::string &statusUpdate)
 {
 	int tempNum = num;
 	num = -1;
@@ -363,6 +363,14 @@ bool Starship::loseItem(int pos, std::string &statusUpdate, int type)
 	default:
 		return false;
 	}
+}
+
+bool Starship::resourceAvailable(int type, int qty, std::string &statusUpdate) 
+{ 
+	if (qty <= shipObjects[type]->getQty())
+		return true;
+	statusUpdate = "Resource Requirement Not Met";
+	return false;
 }
 
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 

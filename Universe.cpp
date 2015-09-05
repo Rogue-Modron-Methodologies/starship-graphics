@@ -162,8 +162,10 @@ void Universe::addCardtoSector(int secNum, int i)
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
 void Universe::addCardtoAdvDeck(int i)
 {
+	AD[advPtr]->setPosition(cAdv[i]->getPosition());
 	cAdv[i] = AD[advPtr];
-	advPtr++;
+	AD[advPtr++] = NULL;
+	//////////////////////////////////   NEED TO CHECK FOR END OF THE DECK
 }
 
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
@@ -209,6 +211,16 @@ bool Universe::atAdventurePlanet()
 		if (getCurrentPlanet()->getName() == cAdv[i]->getName())
 			return true;
 	return false;
+}
+
+// (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
+//
+// Returns true if current planet is in the current adventure planet
+//
+// (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
+bool Universe::atCurrentAdventurePlanet(int num)
+{
+	return getCurrentPlanet()->getName() == cAdv[num]->getName();
 }
 
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 

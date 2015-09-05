@@ -56,6 +56,7 @@ public:
 	bool areBoostersMaxed() const { return shipObjects[B1]->isMaxed() && shipObjects[B2]->isMaxed() && shipObjects[B3]->isMaxed(); }
 	bool areLasersMaxed() const { return shipObjects[L1]->isMaxed() && shipObjects[L2]->isMaxed() && shipObjects[L3]->isMaxed(); }
 	bool areHangersFull() const { return shipObjects[H1]->isMaxed() && shipObjects[H2]->isMaxed(); }
+	
 
 	//  Prototypes
 	void draw(sf::RenderWindow &window);
@@ -66,9 +67,9 @@ public:
 	void update(ShipObject *o, sf::Vector2f scale = { 1, 1 });	
 	bool gainItem(int pos, std::string &statusUpdate, int type = -1);
 	bool loseItem(int pos, std::string &statusUpdate, int type = -1);
-	bool checkItemAvailability(int &num, std::string &statusUpdate);
+	bool checkBuildItemAvailability(int &num, std::string &statusUpdate);
 	void updateShipIcons();							//  Used when Trade is Cancelled to reset icons back to pre-trade status
-	
+	bool resourceAvailable(int num, int qty, std::string &statusUpdate);
 };
 
 #endif // STARSHIP_H

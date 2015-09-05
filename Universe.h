@@ -59,10 +59,11 @@ public:
 	void replaceCurrentPlanet();
 	void makeAdventuresAvailable();
 	bool atAdventurePlanet();
+	bool atCurrentAdventurePlanet(int num);
+	void addCardtoAdvDeck(int i);	
 
 private:
 	void universeSetup(ResourceManager<sf::Texture> &txtMgr);
-	void addCardtoAdvDeck(int i);		
 	void shuffleDeck(Card* list[], int size);
 	void addCardtoSector(int secNum, int i);
 	Icon* getFlightSector() const { return flightSector[0]; }

@@ -102,7 +102,7 @@ public:
 			tempName = "Carbon";
 			break;
 		default:
-			tempName = "Any";
+			std::cout << type << std::endl;
 		}
 		return tempName;
 	}

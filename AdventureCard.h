@@ -44,6 +44,9 @@ public:
 		available = false;
 	}
 	~AdventureCard() {}
+
+	friend bool sortBy(const AdventureCard *lhs, const AdventureCard *rhs){ return lhs->mission < rhs->mission; }
+
 	// Getters and Setters
 	std::string getMission() const
 	{	return mission;	}

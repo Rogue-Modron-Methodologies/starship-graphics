@@ -153,7 +153,7 @@ private:
 	bool buildIconsTargeted(int &tempType);
 	bool flightMenuOptionTargeted(int &num);
 	bool anyResourcesInListAvailable(int resAvail[]);
-	bool allRequirementsMet(int requirements[]);
+	bool allRequirementsMet(int requirements[], int size = 6);
 	bool areAnyResourcesAvailable();
 	bool gainOneResource(int cost = 0);
 	void updateFriendOfThePeople();
@@ -162,7 +162,8 @@ private:
 	void pirateMenuListener();
 	void adventureListener(int tempType);
 	bool buildShipObject(int item);
-	std::string getAdvReqString(int tempType);
+	std::string getAdvReqString();
+	bool startAdventure();
 
 
 };

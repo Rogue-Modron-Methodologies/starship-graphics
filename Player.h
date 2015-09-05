@@ -48,6 +48,7 @@ public:
 	Zone<ColonyCard>* getColonyZone() const {	return colonyZone;	}
 	Zone<TradeCard>* getTradeZone() const 	{	return tradeZone;	}
 	Zone<Pirate>* getPirateZone() const { return pirateZone; }
+	Zone<AdventureCard>* getAdventureZone() const { return advZone; }
 	int getStatQty(int num){ return statistics[num]->getQty(); }
 	void setStatQty(int stat, int num){ statistics[stat]->setQty(num); }
 	

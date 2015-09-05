@@ -568,7 +568,6 @@ void Game::preFlightListener(int &tempType){
 		flag[sectorSelected] = true;
 		universe->initializeFlightPath(tempType);
 		cPlanetIcon.setSrcPos(universe->getCurrentPlanet()->getSrcPos());
-		universe->makeAdventuresAvailable();
 		for (int i = 0; i < FLIGHTACTIONS; i++)
 		{
 			flightPathActions[i]->setSrcPosX(6);
@@ -690,20 +689,28 @@ void Game::flightPhaseListener(int tempType)
 			flag[showflightMenu] = true;
 			flightEventString.setString("");
 			specialString.setString("Flight Sector: " + std::to_string(universe->getCurrentSectorNum() + 1));
+			universe->makeAdventuresAvailable();
 			break;
 		case adv:
-			if (flag[adventureAvailable])
+			if (flag[adventureAvailable] && universe->getAdvCard(curAdv)->isAvailable())
 			{
-				if (universe->getAdvCard(curAdv)->getReq1Qty() == -1)
+				if (startAdventure())
 				{
-					std::cout << "Adventure Action Here\n";
-				}
-				else
-					statusUpdate = "Requirements Not Met";
+					cPlyr->getAdventureZone()->push_back((AdventureCard*)universe->getAdvCard(curAdv));
+					universe->addCardtoAdvDeck(curAdv);
+					actionNum++;
+					flightEventString.setString("Rewards String Here");
+					//gain rewards
+				}	
 			}
-			else
+			else if (!flag[adventureAvailable] && universe->getAdvCard(curAdv)->isAvailable())
 			{
 				statusUpdate = "Select an adventure on " + universe->getCurrentPlanet()->getName();
+				flightEventString.setString("");
+			}
+			else if (flag[adventureAvailable] && !universe->getAdvCard(curAdv)->isAvailable())
+			{
+				statusUpdate = "New Adventures are Not Available this Flight";
 				flightEventString.setString("");
 			}
 			break;
@@ -716,21 +723,23 @@ void Game::flightPhaseListener(int tempType)
 	//  Adventure Card is Clicked
 	else if (universe->isCurrentAdventureTargeted(gWindow, tempType) && !flag[pirateAttack])
 	{
-		cPlanetIcon.setSrcPos(universe->getAdvCard(tempType)->getSrcPos());
-		cPlanetIcon.setString("Adventure");
 		curAdv = tempType;
-		if (universe->getCurrentPlanet()->getName() == universe->getAdvCard(tempType)->getName())
+		cPlanetIcon.setSrcPos(universe->getAdvCard(curAdv)->getSrcPos());
+		cPlanetIcon.setString("Adventure");
+		
+		if (universe->atCurrentAdventurePlanet(curAdv))
 		{
 			flag[adventureAvailable] = true;
-			flightEventString.setString(getAdvReqString(tempType));
-			if (!universe->getAdvCard(tempType)->isAvailable())
+			if (!universe->getAdvCard(curAdv)->isAvailable())
 				statusUpdate = "New Adventures are Not Available this Flight";
+			else
+				flightEventString.setString(getAdvReqString());
 		}
 		else
 		{
 			flag[adventureAvailable] = false;
 			flightEventString.setString("");
-			statusUpdate = "Adventure Only Available on " + universe->getAdvCard(tempType)->getName();
+			statusUpdate = "Adventure Only Available on " + universe->getAdvCard(curAdv)->getName();
 		}
 	}
 	//  Starship (Large) && Empty Space is clicked
@@ -1112,11 +1121,7 @@ void Game::updateFlightMenu()
 		else if (universe->getCurrentPlanet()->getType() == 3 && actionNum < cPlyr->getStarship()->getMaxActions())					//  Adventure Planet
 		{
 			if (universe->atAdventurePlanet())
-			{
-				if (flightEventString.getString() == "")
-					flightEventString.setString("Adventure Available");
 				flightMenuIcons[adv]->unhide();
-			}
 		}
 	}
 }
@@ -1264,9 +1269,9 @@ bool Game::anyResourcesInListAvailable(int resAvail[])
 //  in the holds of the startship
 //
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
-bool Game::allRequirementsMet(int resAvail[])
+bool Game::allRequirementsMet(int resAvail[], int size)
 {
-	for (int i = 0; i < 6; i++)
+	for (int i = 0; i < size; i++)
 	{
 		if (resAvail[i] > cPlyr->getStarship()->getShipObjectQty(i))
 		{
@@ -1343,7 +1348,7 @@ bool Game::buildShipObject(int item)
 		type = 1;
 		break;
 	}
-	if (allRequirementsMet(requirements) && cPlyr->getStarship()->checkItemAvailability(pos, statusUpdate))
+	if (allRequirementsMet(requirements) && cPlyr->getStarship()->checkBuildItemAvailability(pos, statusUpdate))
 	{
 		cPlyr->getStarship()->gainItem(pos, statusUpdate, type);
 		for (int i = 0; i < 6; i++)
@@ -1452,20 +1457,131 @@ void Game::endPhase()
 //  Parses adventure requirements into std::string format
 //
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
-std::string Game::getAdvReqString(int tempType)
+std::string Game::getAdvReqString()
 {
-	int reqQty = universe->getAdvCard(tempType)->getReq1Qty();
+	int reqQty = universe->getAdvCard(curAdv)->getReq1Qty();
 	std::string tempString = "Requirements:\n";
 	if (reqQty == -1)
-		tempString += "None";
+		return tempString += "None";
 	else
-		tempString += std::to_string(reqQty) + " " +
-		universe->getAdvCard(tempType)->getResName(universe->getAdvCard(tempType)->getReq1Type()) + "\n";
+	{
+		int reqType = universe->getAdvCard(curAdv)->getReq1Type();
+		tempString += std::to_string(reqQty) + " ";
+		if (reqType >= 0 && reqType < 6)				//  Resource
+			tempString += universe->getAdvCard(curAdv)->getResName(reqType) + "\n";
+		else if (reqType == 6)						//  Boosters
+			tempString += "Boosters\n";
+		else if (reqType == 9)						//  Lasers
+			tempString += "Lasers\n";
+		else if (reqType == 14)						//  Astro
+			tempString += "Astro\n";
+	}
 
-	reqQty = universe->getAdvCard(tempType)->getReq2Qty();
+	reqQty = universe->getAdvCard(curAdv)->getReq2Qty();
 	if (reqQty != -1)
-		tempString += std::to_string(reqQty) + " " +
-		universe->getAdvCard(tempType)->getResName(universe->getAdvCard(tempType)->getReq2Type());
+	{
+		int req2Type = universe->getAdvCard(curAdv)->getReq2Type();
+		tempString += std::to_string(reqQty) + " ";
+		if (req2Type >= 0 && req2Type < 6)				//  Resource
+			tempString += universe->getAdvCard(curAdv)->getResName(req2Type) + "\n";
+		else if (req2Type == 6)						//  Boosters
+			tempString += "Boosters\n";
+		else if (req2Type == 9)						//  Lasers
+			tempString += "Lasers\n";
+		else if (req2Type == 14)						//  Astro
+			tempString += "Astro\n";
+	}
 
 	return tempString;
+}
+
+// (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
+//
+//  Checks if adventure requirements are met and if so removes them
+//
+// (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
+bool Game::startAdventure()
+{
+	bool flag = false;
+	bool secRes = false;
+	int req1Qty = universe->getAdvCard(curAdv)->getReq1Qty();
+
+	if (req1Qty == -1)
+		return true;
+	int req1Type = universe->getAdvCard(curAdv)->getReq1Type();
+
+	if (req1Type >= 0 && req1Type < 6 && cPlyr->getStarship()->resourceAvailable(req1Type, req1Qty, statusUpdate))	//  Resource
+		flag = true;
+	else if (req1Type == 6)								//  Boosters
+	{
+		if (req1Qty <= cPlyr->getStarship()->totalBoosters())
+			flag = true;
+		else
+			statusUpdate = "Not enough boosters";
+	}
+	else if (req1Type == 9)								//  Lasers
+	{
+		if (req1Qty <= cPlyr->getStarship()->totalLasers())		
+			flag = true;
+		else
+			statusUpdate = "Not enough lasers";
+	}
+	else if (req1Type == 14 && cPlyr->canAfford(req1Qty, statusUpdate))			//  Astro
+		flag = true;
+
+	if (!flag)
+		return false;
+			
+	int req2Qty = universe->getAdvCard(curAdv)->getReq2Qty();
+	int req2Type = universe->getAdvCard(curAdv)->getReq2Type();
+	if (req2Qty != -1)
+	{
+		secRes = true;
+		if (req2Type >= 0 && req2Type < 6 && cPlyr->getStarship()->resourceAvailable(req2Type, req2Qty, statusUpdate))	//  Resource
+			flag = true;
+		else if (req2Type == 6)								//  Boosters
+		{
+			if (req2Qty <= cPlyr->getStarship()->totalBoosters())
+				flag = true;
+			else
+				statusUpdate = "Not enough boosters";
+		}
+		else if (req2Type == 9)								//  Lasers
+		{
+			if (req2Qty <= cPlyr->getStarship()->totalLasers())
+				flag = true;
+			else
+				statusUpdate = "Not enough lasers";
+		}
+		else if (req2Type == 14 && cPlyr->canAfford(req2Qty, statusUpdate))			//  Astro
+			flag = true;
+		else
+			flag = false;
+
+	}
+	
+	if (flag)			//  Remove resources and/or astro
+	{
+		if (req1Type >= 0 && req1Type < 6)								//  Resource
+		{
+			for (int i = 0; i < req1Qty; i++)
+				cPlyr->getStarship()->loseItem(req1Type, statusUpdate);		
+		}		
+		else if (req1Type == 14)
+			cPlyr->subAstro(req1Qty);								//  Astro
+
+		if (secRes)		//  If second requirement... Remove resources and/or astro
+		{
+			if (req2Type >= 0 && req2Type < 6)							//  Resource
+			{
+				for (int i = 0; i < req2Qty; i++)
+					cPlyr->getStarship()->loseItem(req2Type, statusUpdate);
+			}
+			else if (req2Type == 14)
+				cPlyr->subAstro(req2Qty);							//  Astro
+		}
+	}	
+	return flag;
+
+
 }
