@@ -81,7 +81,7 @@ public:
 	{
 		statistics[vicPt]->setQty(statistics[vicPt]->getQty() + num ); 
 		if (statistics[vicPt]->getQty() >= 10)
-			std::cout << "winner!!!!!!!!!!!!\n";
+			std::cout << "If it is this player's turn (will check later) they are the winner!!!!!!!!!!!!\n";
 
 	}
 	void toggleFriend(bool toggle)

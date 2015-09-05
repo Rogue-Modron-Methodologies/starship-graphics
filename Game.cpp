@@ -191,14 +191,16 @@ void Game::gameLoop()
 //		cin >> choice;
 //	}
 	int tempNum;
-	sf::Event event;
+	gWindow.setKeyRepeatEnabled(false);
+
 	while (gWindow.isOpen())
 	{
 		if (!flag[phaseSetupComplete])
 			phaseSetup();
 		while (gWindow.pollEvent(event))		// the event loop
 		{
-			switch (event.type) {
+			switch (event.type) 
+			{
 			case sf::Event::Closed:
 				gWindow.close();
 				break;
@@ -414,6 +416,29 @@ void Game::updateDrawGameWindow()
 				{
 					; //  Implement
 				}
+				//  Adventure Resource Reward
+				else if (flag[adventureReward])
+				{						
+
+					for (int i = 0; i < 6; i++)
+						tradeSaveState[i]->draw(gWindow);						//  Prints the resource icons available	
+					if (!areAnyResourcesAvailable() || gainOneResource())			//  If there are no available resources
+					{
+						if (flag[gainResource])
+						{
+							statusUpdate = "No Resources Available";
+							flightEventString.setString("No Resources\nAvailable");
+							flag[gainResource] = false;
+						}
+						else
+						{
+							flightEventString.setString("Resources Gained");
+							std::cout << "Resource Gained\n";
+						}
+							flag[adventureReward] = false;
+							flag[showflightMenu] = true;
+					}
+				}
 				//  When trade menu is active
 				else if (flag[tradeInProgress])
 				{									
@@ -485,7 +510,8 @@ void Game::productionPhaseListener(){
 	// Starship (Small) is clicked
 	if (cPlyr->getStarship()->isTargeted(gWindow) && cPlyr->getStarship()->isSmall())
 	{
-		if (sf::Mouse::isButtonPressed(sf::Mouse::Left)){
+		if (event.mouseButton.button == sf::Mouse::Left)
+	{
 			cPlyr->makeBig();
 			flightDie->setIconPosition({ 350, 525 });
 			flightDie->setTextPosition({ 440, 545 });
@@ -494,24 +520,24 @@ void Game::productionPhaseListener(){
 	// Colony Zone (Large Icon) is clicked
 	else if (!cPlyr->zonesSmall() && cPlyr->getColonyZone()->getIconOnly() && cPlyr->getColonyZone()->isIconTargeted(gWindow))
 	{
-		if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+		if (event.mouseButton.button == sf::Mouse::Left)
 			cPlyr->expandColonyZone();
-		else if (sf::Mouse::isButtonPressed(sf::Mouse::Right))
+		else if (event.mouseButton.button == sf::Mouse::Right)
 			cPlyr->makeBig();
 	}
 	// Trade Zone (Large Icon) is clicked
 	else if (!cPlyr->zonesSmall() && cPlyr->getTradeZone()->getIconOnly() && cPlyr->getTradeZone()->isIconTargeted(gWindow))
 	{
-		if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+		if (event.mouseButton.button == sf::Mouse::Left)
 			cPlyr->expandTradeZone();
-		else if (sf::Mouse::isButtonPressed(sf::Mouse::Right))
+		else if (event.mouseButton.button == sf::Mouse::Right)
 			cPlyr->makeBig();
 	}
 	// Colony Zone (Large List) is clicked and player is entitled to a production resource
 	else if (!cPlyr->zonesSmall() && !cPlyr->getColonyZone()->getIconOnly() && cPlyr->getColonyZone()->isZoneTargeted(gWindow, tempType, tempType))
 	{
 		
-		if (flag[gainResource] && sf::Mouse::isButtonPressed(sf::Mouse::Left))
+		if (flag[gainResource] && event.mouseButton.button == sf::Mouse::Left)
 			if (cPlyr->getColonyZone()->resourceMatchesActNum(tempType, flightDie->getQty()) && cPlyr->getStarship()->gainItem(tempType, statusUpdate)){
 				cPlyr->updateIcon(tempType);
 				specialString.setString("Resource Gained");
@@ -535,7 +561,8 @@ void Game::productionPhaseListener(){
 void Game::preFlightListener(int &tempType){
 	// Starship (Small) is clicked
 	if (cPlyr->getStarship()->isTargeted(gWindow) && cPlyr->getStarship()->isSmall()){
-		if (sf::Mouse::isButtonPressed(sf::Mouse::Left)){
+		if (event.mouseButton.button == sf::Mouse::Left)
+		{
 			cPlyr->makeBig();
 			flag[showSectors] = false;
 		}
@@ -544,16 +571,16 @@ void Game::preFlightListener(int &tempType){
 	else if (cPlyr->getStarship()->isTargeted(gWindow) && !cPlyr->getStarship()->isSmall()){}	// Do Nothing this Phase
 	// Colony Zone (Large Icon) is clicked
 	else if (!cPlyr->zonesSmall() && cPlyr->getColonyZone()->getIconOnly() && cPlyr->getColonyZone()->isIconTargeted(gWindow)){
-		if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+		if (event.mouseButton.button == sf::Mouse::Left)
 			cPlyr->expandColonyZone();
-		else if (sf::Mouse::isButtonPressed(sf::Mouse::Right))
+		else if (event.mouseButton.button == sf::Mouse::Right)
 			cPlyr->makeBig();
 	}
 	// Trade Zone (Large Icon) is clicked
 	else if (!cPlyr->zonesSmall() && cPlyr->getTradeZone()->getIconOnly() && cPlyr->getTradeZone()->isIconTargeted(gWindow)){
-		if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+		if (event.mouseButton.button == sf::Mouse::Left)
 			cPlyr->expandTradeZone();
-		else if (sf::Mouse::isButtonPressed(sf::Mouse::Right))
+		else if (event.mouseButton.button == sf::Mouse::Right)
 			cPlyr->makeBig();
 	}
 	// Colony Zone (Large List) is clicked
@@ -594,7 +621,7 @@ void Game::flightPhaseListener(int tempType)
 	// Starship (Small) is clicked
 	if (cPlyr->getStarship()->isTargeted(gWindow) && cPlyr->getStarship()->isSmall())
 	{
-		if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+		if (event.mouseButton.button == sf::Mouse::Left)
 		{
 			cPlyr->makeBig();
 			flag[showFlightPath] = false;
@@ -604,16 +631,16 @@ void Game::flightPhaseListener(int tempType)
 	else if (cPlyr->getStarship()->isTargeted(gWindow) && !cPlyr->getStarship()->isSmall()){}	// Do Nothing this Phase
 	// Colony Zone (Large Icon) is clicked
 	else if (!cPlyr->zonesSmall() && cPlyr->getColonyZone()->getIconOnly() && cPlyr->getColonyZone()->isIconTargeted(gWindow)){
-		if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+		if (event.mouseButton.button == sf::Mouse::Left)
 			cPlyr->expandColonyZone();
-		else if (sf::Mouse::isButtonPressed(sf::Mouse::Right))
+		else if (event.mouseButton.button == sf::Mouse::Right)
 			cPlyr->makeBig();
 	}
 	// Trade Zone (Large Icon) is clicked
 	else if (!cPlyr->zonesSmall() && cPlyr->getTradeZone()->getIconOnly() && cPlyr->getTradeZone()->isIconTargeted(gWindow)){
-		if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+		if (event.mouseButton.button == sf::Mouse::Left)
 			cPlyr->expandTradeZone();
-		else if (sf::Mouse::isButtonPressed(sf::Mouse::Right))
+		else if (event.mouseButton.button == sf::Mouse::Right)
 			cPlyr->makeBig();
 	}
 	// Colony Zone (Large List) is clicked
@@ -696,12 +723,9 @@ void Game::flightPhaseListener(int tempType)
 			{
 				if (startAdventure())
 				{
-					cPlyr->getAdventureZone()->push_back((AdventureCard*)universe->getAdvCard(curAdv));
-					universe->addCardtoAdvDeck(curAdv);
-					actionNum++;
-					flightEventString.setString("Rewards String Here");
-					//gain rewards
-				}	
+					adventureRewards();
+				}
+					
 			}
 			else if (!flag[adventureAvailable] && universe->getAdvCard(curAdv)->isAvailable())
 			{
@@ -787,7 +811,7 @@ void Game::tradeMenuListener()
 	}	
 
 	//  If resource has been chosen and the plus icon has been selected
-	if (flag[resourceChosen] && sf::Mouse::isButtonPressed(sf::Mouse::Left) && tradeMenuIcons[plus]->isTargeted(gWindow))
+	if (flag[resourceChosen] && event.mouseButton.button == sf::Mouse::Left && tradeMenuIcons[plus]->isTargeted(gWindow))
 	{
 		if (!limit || cTradeNum < limit)
 		{
@@ -802,12 +826,12 @@ void Game::tradeMenuListener()
 			statusUpdate = "Max Trades Reached";
 	}
 	//  If resource has NOT been chosen and the plus icon has been selected
-	else if (!flag[resourceChosen] && sf::Mouse::isButtonPressed(sf::Mouse::Left) && tradeMenuIcons[plus]->isTargeted(gWindow))
+	else if (!flag[resourceChosen] && event.mouseButton.button == sf::Mouse::Left && tradeMenuIcons[plus]->isTargeted(gWindow))
 	{
 		statusUpdate = "Choose a resource";
 	}
 	//  If resource has been chosen and the minus icon has been selected
-	else if (flag[resourceChosen] && sf::Mouse::isButtonPressed(sf::Mouse::Left) && tradeMenuIcons[minus]->isTargeted(gWindow))
+	else if (flag[resourceChosen] && event.mouseButton.button == sf::Mouse::Left && tradeMenuIcons[minus]->isTargeted(gWindow))
 	{
 		if (!limit || cTradeNum < limit)
 		{
@@ -822,12 +846,12 @@ void Game::tradeMenuListener()
 			statusUpdate = "Max Trades Reached";
 	}
 	//  If resource has NOT been chosen and the minus icon has been selected
-	else if (flag[resourceChosen] && sf::Mouse::isButtonPressed(sf::Mouse::Left) && tradeMenuIcons[minus]->isTargeted(gWindow))
+	else if (flag[resourceChosen] && event.mouseButton.button == sf::Mouse::Left && tradeMenuIcons[minus]->isTargeted(gWindow))
 	{
 		statusUpdate = "Choose a resource";
 	}
 	//  If the Check Icon has been selected
-	else if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && tradeMenuIcons[check]->isTargeted(gWindow))
+	else if (event.mouseButton.button == sf::Mouse::Left && tradeMenuIcons[check]->isTargeted(gWindow))
 	{
 		if (cPhase == flight)
 			flag[showflightMenu] = true;
@@ -854,7 +878,7 @@ void Game::tradeMenuListener()
 
 	}
 	//  If the Cancel Icon has been selected
-	else if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && tradeMenuIcons[cancel]->isTargeted(gWindow))
+	else if (event.mouseButton.button == sf::Mouse::Left && tradeMenuIcons[cancel]->isTargeted(gWindow))
 	{
 		if (cPhase == flight)
 			flag[showflightMenu] = true;
@@ -942,13 +966,13 @@ void Game::tradeBuildPhaseListener(int &tempNum)
 	// Starship (Small) is clicked
 	if (cPlyr->getStarship()->isTargeted(gWindow) && cPlyr->getStarship()->isSmall())
 	{
-		if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+		if (event.mouseButton.button == sf::Mouse::Left)
 			cPlyr->makeBig();
 	}
 	// Starship (Large) Build Icon is selected
 	else if (cPlyr->getStarship()->isTargeted(gWindow) && !cPlyr->getStarship()->isSmall() && buildIconsTargeted(tempNum))
 	{
-		if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+		if (event.mouseButton.button == sf::Mouse::Left)
 			if (buildShipObject(tempNum) && flag[buildTradeBegin] && !flag[buildTradeEnd])
 			{
 				flag[buildTradeEnd] = true;
@@ -958,12 +982,12 @@ void Game::tradeBuildPhaseListener(int &tempNum)
 	////////////////////////////////////  BUGTESTING ----  Enable changing of resource quantities
 	//else if (cPlyr->getStarship()->isTargeted(gWindow) && !cPlyr->getStarship()->isSmall())
 	//{
-	//	if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+	//	if (event.mouseButton.button == sf::Mouse::Left)
 	//	{
 	//		if (cPlyr->getStarship()->bigLeftClicked(gWindow, statusUpdate, tempNum))
 	//			cPlyr->updateIcon(tempNum);
 	//	}
-	//	else if (sf::Mouse::isButtonPressed(sf::Mouse::Right))
+	//	else if (event.mouseButton.button == sf::Mouse::Right)
 	//	{
 	//		if (cPlyr->getStarship()->bigRightClicked(gWindow, statusUpdate, tempNum))
 	//			cPlyr->updateIcon(tempNum);
@@ -972,17 +996,17 @@ void Game::tradeBuildPhaseListener(int &tempNum)
 	// Colony Zone (Large Icon) is clicked
 	else if (!cPlyr->zonesSmall() && cPlyr->getColonyZone()->getIconOnly() && cPlyr->getColonyZone()->isIconTargeted(gWindow))
 	{
-		if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+		if (event.mouseButton.button == sf::Mouse::Left)
 			cPlyr->expandColonyZone();
-		else if (sf::Mouse::isButtonPressed(sf::Mouse::Right))
+		else if (event.mouseButton.button == sf::Mouse::Right)
 			cPlyr->makeBig();
 	}
 	// Trade Zone (Large Icon) is clicked
 	else if (!cPlyr->zonesSmall() && cPlyr->getTradeZone()->getIconOnly() && cPlyr->getTradeZone()->isIconTargeted(gWindow))
 	{
-		if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+		if (event.mouseButton.button == sf::Mouse::Left)
 			cPlyr->expandTradeZone();
-		else if (sf::Mouse::isButtonPressed(sf::Mouse::Right))
+		else if (event.mouseButton.button == sf::Mouse::Right)
 			cPlyr->makeBig();
 	}
 	// Colony Zone (Large List) is clicked
@@ -1379,10 +1403,10 @@ bool Game::gainOneResource(int cost)
 		if(cPlyr->getStarship()->holdFull(i))			
 			tradeSaveState[i]->greyOut();
 	}
-
+	//this should be moved into a listener function
 	for (int i = 0; i < 6; i++)
 	{
-		if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && tradeSaveState[i]->isTargeted(gWindow))
+		if (event.mouseButton.button == sf::Mouse::Left && tradeSaveState[i]->isTargeted(gWindow))
 		{
 			if (cPlyr->canAfford(cost, statusUpdate) && cPlyr->getStarship()->gainItem(i, statusUpdate))
 			{
@@ -1584,4 +1608,54 @@ bool Game::startAdventure()
 	return flag;
 
 
+}
+
+// (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
+//
+//  Dispenses Rewards of completed Adventure
+//
+// (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
+void Game::adventureRewards()
+{
+	int numRes = universe->getAdvCard(curAdv)->getRecRcvd();
+	int astro = universe->getAdvCard(curAdv)->getAstros();
+	int fame = universe->getAdvCard(curAdv)->getFame();
+	int vic = universe->getAdvCard(curAdv)->getVicPts();
+	flightEventString.setString(getAdvRewardsString(numRes, astro, fame, vic));
+	if (astro > 0)
+		cPlyr->addAstro(astro);
+	for (int i = 0; i < fame; i++)
+		cPlyr->addFmPt(fame);  
+	updateHeroOfThePeople();
+	for (int i = 0; i < vic; i++)
+		cPlyr->addVicPt(vic);
+	if (numRes > 0)
+	{
+		flag[adventureReward] = true;
+		flag[showflightMenu] = false;
+		cPlyr->getAdventureZone()->push_back((AdventureCard*)universe->getAdvCard(curAdv)); // this may need to be moved until after resources are selected (for resource restriction purposes)
+		universe->addCardtoAdvDeck(curAdv);
+		cPlanetIcon.setSrcPos(universe->getCurrentPlanet()->getSrcPos());
+		actionNum++;
+	}
+}
+
+// (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
+//
+//  Parses adventure rewards into std::string format
+//
+// (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
+std::string Game::getAdvRewardsString(int res, int astro, int fame, int vic)
+{
+	std::string tempString = "Rewards:\n";
+	if (res > 0)
+		tempString += std::to_string(res) + " Resource\n";
+	if (astro > 0)
+		tempString += std::to_string(astro) + " Astro\n";
+	if (fame > 0)
+		tempString += std::to_string(fame) + " Fame Point(s)\n";
+	if (vic > 0)
+		tempString += std::to_string(vic) + " Victory Point\n";
+
+	return tempString;
 }

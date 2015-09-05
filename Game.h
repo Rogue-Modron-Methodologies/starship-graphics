@@ -39,7 +39,7 @@ enum menuOptions { trdW, colIt, conFly, endFl, adv };
 const int PMENUSIZE = 2;
 enum pirateIcons{pay, fight};
 
-const int FLAGNUM = 17;
+const int FLAGNUM = 18;
 enum flagTypes
 {
 	phaseSetupComplete,				//  Flag:  Phase Setup Complete
@@ -58,7 +58,8 @@ enum flagTypes
 	pirateResult,					//  Flag:  Lost to pirate and losing something
 	buildTradeBegin,				//  Flag:  Beginning of Trading during build phase
 	buildTradeEnd,					//  Flag:  End of Trading during build phase
-	adventureAvailable				//  Flag:  Current Planet is an adventure planet and adventure is available.
+	adventureAvailable,				//  Flag:  Current Planet is an adventure planet and adventure is available.
+	adventureReward				//  Flag:  Adventure Resource Granted
 };
 
 class Game{
@@ -67,6 +68,7 @@ private:
 	Universe *universe;
 	sf::RenderWindow gWindow;
 	sf::Vector2u screenSize;
+	sf::Event event;
 	ResourceManager<sf::Texture> txtMgr;
 	ResourceManager<sf::Font> fntMgr;
 	bool flag[FLAGNUM];					//  Will hold an array of flags for game decisions	
@@ -164,6 +166,8 @@ private:
 	bool buildShipObject(int item);
 	std::string getAdvReqString();
 	bool startAdventure();
+	void adventureRewards();
+	std::string getAdvRewardsString(int res, int astro, int fame, int vic);
 
 
 };
