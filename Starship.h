@@ -17,7 +17,6 @@
 #include "BoosterLaser.h"
 #include "HangarShips.h"
 #include "ShipObject.h"
-#include "Icon.h"
 #include "Module.h"
 #include "Card.h"
 

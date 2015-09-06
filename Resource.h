@@ -31,6 +31,7 @@ public:
 	int getRCap() const  { return rCap; }
 	bool loseItem(std::string &error);
 	bool gainItem(std::string &error);
+	void setSrcPos(sf::Vector2u source) { this->srcPos = source; updateTextRect(); }
 	
 };
 

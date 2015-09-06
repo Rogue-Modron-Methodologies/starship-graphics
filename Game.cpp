@@ -19,14 +19,14 @@ Game::Game() : cPlanetIcon(txtMgr.getResource(UNIVERSECARDIMAGES), { 825, 520 },
 			heroPeople(txtMgr.getResource(FRIENDHERO), sf::Vector2f{ 975, 840 }, 1, sf::Vector2u(200, 200), { 0, 0 }),
 			cPlanetInfo(txtMgr.getResource(UNIVERSECARDIMAGES), { 0, 0 }, 0, "", 0, 0, 0, "", 0, 0)
 {  
-	flightDie = new Icon(txtMgr.getResource(SDIEFLE), sf::Vector2f{ 350, 525 }, 1, sf::Vector2u(80, 80));
+	flightDie = new Object(txtMgr.getResource(SDIEFLE), sf::Vector2f{ 350, 525 }, 1, sf::Vector2u(80, 80));
 	flightDie->initString(fntMgr.getResource(FNTFLE), { 440, 545 }, "", sf::Text::Bold);		
 
-	combatDie = new Icon*[2];
-	combatDie[ply] = new Icon(txtMgr.getResource(CDIEFLE), sf::Vector2f{ 350, 525 }, 1, sf::Vector2u(200, 200));
+	combatDie = new Object*[2];
+	combatDie[ply] = new Object(txtMgr.getResource(CDIEFLE), sf::Vector2f{ 350, 525 }, 1, sf::Vector2u(200, 200));
 	combatDie[ply]->initString(fntMgr.getResource(FNTFLE), { 440, 545 }, "", sf::Text::Bold);
 
-	combatDie[prt] = new Icon(txtMgr.getResource(CDIEFLE), sf::Vector2f{ 350, 525 }, 1, sf::Vector2u(200, 200));
+	combatDie[prt] = new Object(txtMgr.getResource(CDIEFLE), sf::Vector2f{ 350, 525 }, 1, sf::Vector2u(200, 200));
 	combatDie[prt]->initString(fntMgr.getResource(FNTFLE), { 440, 545 }, "", sf::Text::Bold);
 	
 	P1 = new Player(txtMgr, fntMgr, "Player1", 1);		// Default names for bugtesting
@@ -73,57 +73,57 @@ Game::Game() : cPlanetIcon(txtMgr.getResource(UNIVERSECARDIMAGES), { 825, 520 },
 	flightEventString.setString("");
 	flightEventString.setStyle(sf::Text::Bold);
 
-	tradeSaveState = new Icon*[NUMRESOURCES];
-	tradeSaveState[astro] = new Icon(txtMgr.getResource(SYM1FLE), { 780, 562 }, 25, { 35, 35 }, { 3, 0 });
-	tradeSaveState[science] = new Icon(txtMgr.getResource(RICNFLE), { 780, 565 }, 1, { 35, 35 });
-	tradeSaveState[ore] = new Icon(txtMgr.getResource(RICNFLE), { 780, 600 }, 1, { 35, 35 }, { 1, 0 });
-	tradeSaveState[fuel] = new Icon(txtMgr.getResource(RICNFLE), { 780, 635 }, 1, { 35, 35 }, { 2, 0 });
-	tradeSaveState[tradeGood] = new Icon(txtMgr.getResource(RICNFLE), { 780, 670 }, 1, { 35, 35 }, { 3, 0 });
-	tradeSaveState[wheat] = new Icon(txtMgr.getResource(RICNFLE), { 780, 705 }, 1, { 35, 35 }, { 4, 0 });
-	tradeSaveState[carbon] = new Icon(txtMgr.getResource(RICNFLE), { 780, 740 }, 1, { 35, 35 }, { 5, 0 });
+	tradeSaveState = new Object*[NUMRESOURCES];
+	tradeSaveState[astro] = new Object(txtMgr.getResource(SYM1FLE), { 780, 562 }, 25, { 35, 35 }, { 3, 0 });
+	tradeSaveState[science] = new Object(txtMgr.getResource(RICNFLE), { 780, 565 }, 1, { 35, 35 });
+	tradeSaveState[ore] = new Object(txtMgr.getResource(RICNFLE), { 780, 600 }, 1, { 35, 35 }, { 1, 0 });
+	tradeSaveState[fuel] = new Object(txtMgr.getResource(RICNFLE), { 780, 635 }, 1, { 35, 35 }, { 2, 0 });
+	tradeSaveState[tradeGood] = new Object(txtMgr.getResource(RICNFLE), { 780, 670 }, 1, { 35, 35 }, { 3, 0 });
+	tradeSaveState[wheat] = new Object(txtMgr.getResource(RICNFLE), { 780, 705 }, 1, { 35, 35 }, { 4, 0 });
+	tradeSaveState[carbon] = new Object(txtMgr.getResource(RICNFLE), { 780, 740 }, 1, { 35, 35 }, { 5, 0 });
 
-	tradeMenuIcons = new Icon*[TRADEMENUSIZE];
-	tradeMenuIcons[plus] = new Icon(txtMgr.getResource(TRDICN), { 675, 575 }, 1, { 50, 50 }, { 0, 0 });
-	tradeMenuIcons[minus] = new Icon(txtMgr.getResource(TRDICN), { 675, 675 }, 1, { 50, 50 }, { 1, 0 });
-	tradeMenuIcons[check] = new Icon(txtMgr.getResource(TRDICN), { 635, 760 }, 1, { 50, 50 }, { 2, 0 });
-	tradeMenuIcons[cancel] = new Icon(txtMgr.getResource(TRDICN), { 710, 760 }, 1, { 50, 50 }, { 3, 0 });
+	tradeMenuIcons = new Object*[TRADEMENUSIZE];
+	tradeMenuIcons[plus] = new Object(txtMgr.getResource(TRDICN), { 675, 575 }, 1, { 50, 50 }, { 0, 0 });
+	tradeMenuIcons[minus] = new Object(txtMgr.getResource(TRDICN), { 675, 675 }, 1, { 50, 50 }, { 1, 0 });
+	tradeMenuIcons[check] = new Object(txtMgr.getResource(TRDICN), { 635, 760 }, 1, { 50, 50 }, { 2, 0 });
+	tradeMenuIcons[cancel] = new Object(txtMgr.getResource(TRDICN), { 710, 760 }, 1, { 50, 50 }, { 3, 0 });
 
-	pirateMenuIcons = new Icon*[PMENUSIZE];
+	pirateMenuIcons = new Object*[PMENUSIZE];
 
-	pirateMenuIcons[pay] = new Icon(txtMgr.getResource(SYMBFLE), { 710, 610 }, 0, { 50, 50 }, { 3, 0 });
+	pirateMenuIcons[pay] = new Object(txtMgr.getResource(SYMBFLE), { 710, 610 }, 0, { 50, 50 }, { 3, 0 });
 	pirateMenuIcons[pay]->initString(fntMgr.getResource(FNTFLE), { 600, 610 }, "Bribe");
 
-	pirateMenuIcons[fight] = new Icon(txtMgr.getResource(SYMBFLE), { 710, 660 }, 0, { 50, 50 }, { 2, 0 });
+	pirateMenuIcons[fight] = new Object(txtMgr.getResource(SYMBFLE), { 710, 660 }, 0, { 50, 50 }, { 2, 0 });
 	pirateMenuIcons[fight]->initString(fntMgr.getResource(FNTFLE), { 600, 660 }, "Fight");
 
-	flightMenuIcons = new Icon*[FMENUSIZE];
+	flightMenuIcons = new Object*[FMENUSIZE];
 
-	flightMenuIcons[trdW] = new Icon(txtMgr.getResource(SYMBFLE), { 710, 610 }, 0, { 50, 50 }, { 3, 0 });
+	flightMenuIcons[trdW] = new Object(txtMgr.getResource(SYMBFLE), { 710, 610 }, 0, { 50, 50 }, { 3, 0 });
 	flightMenuIcons[trdW]->initString(fntMgr.getResource(FNTFLE), { 480, 610 }, "Trade With Planet");
 
-	flightMenuIcons[colIt] = new Icon(txtMgr.getResource(SYMBFLE), sf::Vector2f(710, 660), 0, { 50, 50 }, { 1, 0 });
+	flightMenuIcons[colIt] = new Object(txtMgr.getResource(SYMBFLE), sf::Vector2f(710, 660), 0, { 50, 50 }, { 1, 0 });
 	flightMenuIcons[colIt]->initString(fntMgr.getResource(FNTFLE), { 500, 660 }, "Colonize/Trade");
 
-	flightMenuIcons[conFly] = new Icon(txtMgr.getResource(SYMBFLE), sf::Vector2f(710, 710), 0, { 50, 50 }, { 4, 0 });
+	flightMenuIcons[conFly] = new Object(txtMgr.getResource(SYMBFLE), sf::Vector2f(710, 710), 0, { 50, 50 }, { 4, 0 });
 	flightMenuIcons[conFly]->initString(fntMgr.getResource(FNTFLE), { 500, 710 }, "Continue Flying");
 
-	flightMenuIcons[endFl] = new Icon(txtMgr.getResource(SYMBFLE), sf::Vector2f(710, 760), 0, { 50, 50 }, { 5, 0 });
+	flightMenuIcons[endFl] = new Object(txtMgr.getResource(SYMBFLE), sf::Vector2f(710, 760), 0, { 50, 50 }, { 5, 0 });
 	flightMenuIcons[endFl]->initString(fntMgr.getResource(FNTFLE), { 570, 760 }, "End Flight");
 
-	flightMenuIcons[adv] = new Icon(txtMgr.getResource(SYMBFLE), sf::Vector2f(710, 660), 0, { 50, 50 }, { 9, 0 });
+	flightMenuIcons[adv] = new Object(txtMgr.getResource(SYMBFLE), sf::Vector2f(710, 660), 0, { 50, 50 }, { 9, 0 });
 	flightMenuIcons[adv]->initString(fntMgr.getResource(FNTFLE), { 450, 660 }, "Complete Adventure");
 
-	flightPathActions = new Icon*[FLIGHTACTIONS];
+	flightPathActions = new Object*[FLIGHTACTIONS];
 	for (int i = 0; i < FLIGHTACTIONS; i++)
 	{
-		flightPathActions[i] = new Icon(txtMgr.getResource(SYMBFLE), { 710, 610 }, 0, { 50, 50 }, { 6, 0 });
+		flightPathActions[i] = new Object(txtMgr.getResource(SYMBFLE), { 710, 610 }, 0, { 50, 50 }, { 6, 0 });
 		flightPathActions[i]->setPosition(sf::Vector2f{ 70.0f + i * 100, 350 });
 	}
 
-	buildMenuIcons = new Icon*[BUILDICONSIZE];
+	buildMenuIcons = new Object*[BUILDICONSIZE];
 	for (int i = 0; i < BUILDICONSIZE; i++)
 	{
-		buildMenuIcons[i] = new Icon(txtMgr.getResource(SYMBFLE), { 0, 0 }, 0, { 50, 50 });
+		buildMenuIcons[i] = new Object(txtMgr.getResource(SYMBFLE), { 0, 0 }, 0, { 50, 50 });
 		buildMenuIcons[i]->setVisible(false);	
 	}
 	buildMenuIcons[BLVL1]->setPosition(sf::Vector2f{ 110, 125 });
@@ -142,17 +142,6 @@ Game::Game() : cPlanetIcon(txtMgr.getResource(UNIVERSECARDIMAGES), { 825, 520 },
 	universe = new Universe(txtMgr, fntMgr);
 	screenSize = sf::Vector2u(1200, 900);
 	gWindow.create(sf::VideoMode(screenSize.x, screenSize.y), "Starship Game");
-	playerSetup();
-	cPhase = production;
-}
-
-// (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
-//
-//  Player Name Setup
-//
-// (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
-void Game::playerSetup()
-{	
 	/*     -------------------These commented parts will be readded when I'm further along... 
 	string tempName;
 	cout << "Please enter Player 1 Name. \n";
@@ -169,9 +158,10 @@ void Game::playerSetup()
 
 	tempCard = new ColonyCard(txtMgr.getResource(STRFILE), { 0, 0 }, -1, "Colony: Megrez VII", colony, Fuel, 1, 1);
 	tempCard->setScale(CRDZNSCL);
-	P2->getColonyZone()->push_back(tempCard);
-	
+	P2->getColonyZone()->push_back(tempCard);	
+	cPhase = production;
 }
+
 
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
 //
@@ -513,7 +503,7 @@ void Game::productionPhaseListener(){
 		if (event.mouseButton.button == sf::Mouse::Left)
 	{
 			cPlyr->makeBig();
-			flightDie->setIconPosition({ 350, 525 });
+			flightDie->setPosition({ 350, 525 });
 			flightDie->setTextPosition({ 440, 545 });
 		}
 	}
@@ -550,7 +540,7 @@ void Game::productionPhaseListener(){
 	//  Starship (Large) && Empty Space is clicked
 	else if (!cPlyr->getStarship()->isTargeted(gWindow) && !cPlyr->getStarship()->isSmall()){
 		cPlyr->makeSmall();
-		flightDie->setIconPosition({ 250, 725 });
+		flightDie->setPosition({ 250, 725 });
 		flightDie->setTextPosition({ 340, 745 });
 	}
 }

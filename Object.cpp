@@ -39,12 +39,11 @@ sf::Vector2f Object::convertCoord(sf::RenderWindow &gWindow)
 }
 
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
-//  Check if Mouse Position is within bounds of Starship
+//  Check if Mouse Position is within bounds of the sprite
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
 bool Object::isTargeted(sf::RenderWindow &gWindow)
 {
-	sf::Vector2f temp = convertCoord(gWindow);
-	if (sprite->getGlobalBounds().contains(temp) && clickable)
+	if (clickable && sprite->getGlobalBounds().contains(convertCoord(gWindow)))
 		return true;
 	else
 		return false;

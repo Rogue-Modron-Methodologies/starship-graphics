@@ -27,6 +27,7 @@ public:
 	}
 
 	int getType() const { return type; }
+	void setSrcPos(sf::Vector2u source) { this->srcPos = source; updateTextRect(); }
 
 	void updateTextRect()
 	{

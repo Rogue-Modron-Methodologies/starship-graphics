@@ -10,7 +10,6 @@
 #ifndef ZONE_H
 #define ZONE_H
 
-#include "Icon.h"
 #include "ColonyCard.h"
 #include "Pirate.h"
 #include "TradeCard.h"
@@ -21,9 +20,9 @@ class Zone
 {
 private:
 	std::vector<T*> zone;
-	Icon	*zoneIcon;
-	Icon *beginArrow;
-	Icon *endArrow;
+	Object	*zoneIcon;
+	Object *beginArrow;
+	Object *endArrow;
 	bool	showIconOnly;
 	bool begArwVis;
 	bool endArwVis;
@@ -32,7 +31,7 @@ private:
 public:
 	Zone(ResourceManager<sf::Texture> &txtMgr, ResourceManager<sf::Font> &fntMgr, std::string name)
 	{
-		zoneIcon = new Icon(txtMgr.getResource(UNIVERSECARDIMAGES), CLPOS, 10, sf::Vector2u(200, 300), {4, 13});
+		zoneIcon = new Object(txtMgr.getResource(UNIVERSECARDIMAGES), CLPOS, 10, sf::Vector2u(200, 300), { 4, 13 });
 		zoneIcon->setScale(CRDZNSCL);
 		if (name == "Colony")
 			zoneIcon->initString(fntMgr.getResource(FNTFLE), { CLPOS.x, CLPOS.y - 35}, name);
@@ -41,8 +40,8 @@ public:
 		showIconOnly = true;
 		begArwVis = false;
 		endArwVis = false;
-		beginArrow = new Icon(txtMgr.getResource(SYMBFLE), { CLPOS.x + 175, CLPOS.y - 60 }, 0, { 50, 50 }, { 7, 0 });
-		endArrow = new Icon(txtMgr.getResource(SYMBFLE), { CLPOS.x + 250, CLPOS.y - 60 }, 3, { 50, 50 }, { 8, 0 });
+		beginArrow = new Object(txtMgr.getResource(SYMBFLE), { CLPOS.x + 175, CLPOS.y - 60 }, 0, { 50, 50 }, { 7, 0 });
+		endArrow = new Object(txtMgr.getResource(SYMBFLE), { CLPOS.x + 250, CLPOS.y - 60 }, 3, { 50, 50 }, { 8, 0 });
 	}
 
 	~Zone()
@@ -54,7 +53,7 @@ public:
 	// getters and setters
 	bool getIconOnly() const { return showIconOnly; }
 	bool getSmallDisplay() const { return smallDisplay; }
-	sf::Vector2f getPosition() const { return zoneIcon->getIconPosition(); }
+	sf::Vector2f getPosition() const { return zoneIcon->getPosition(); }
 	sf::Vector2f getScale() const { return zoneIcon->getScale(); }
 	template <class T>
 	T* getZoneItem(int pos){ return zone[pos]; }
@@ -92,7 +91,7 @@ public:
 	//  Updates the ColonyZone based on given pos and scale 
 	void updateZone(sf::Vector2f pos, sf::Vector2f scale, bool toggle){
 		showIconOnly = toggle;
-		zoneIcon->setIconPosition(pos);
+		zoneIcon->setPosition(pos);
 		zoneIcon->setScale(scale);
 		zoneIcon->setTextPosition({pos.x, pos.y - 35});
 		if (zone.empty())

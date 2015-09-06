@@ -21,21 +21,21 @@ Universe::Universe(ResourceManager<sf::Texture> &txtMgr, ResourceManager<sf::Fon
 	board = new Object(txtMgr.getResource(BOARDFILE), sf::Vector2f(0, 0));
 	board->setScale({ 3.1f, 3.6f });
 
-	flightSector = new Icon*[4];
+	flightSector = new Object*[4];
 
-	flightSector[0] = new Icon(txtMgr.getResource(UNIVERSECARDIMAGES), sf::Vector2f(100, 150), 10, sf::Vector2u(200, 300), { 4, 13 });
+	flightSector[0] = new Object(txtMgr.getResource(UNIVERSECARDIMAGES), sf::Vector2f(100, 150), 10, sf::Vector2u(200, 300), { 4, 13 });
 	flightSector[0]->initString(fntMgr.getResource(FNTFLE), { 175, 200 }, "1", sf::Text::Bold);
 	flightSector[0]->setTextScale({ 5, 5 });
 
-	flightSector[1] = new Icon(txtMgr.getResource(UNIVERSECARDIMAGES), sf::Vector2f(300, 150), 10, sf::Vector2u(200, 300), { 4, 13 });
+	flightSector[1] = new Object(txtMgr.getResource(UNIVERSECARDIMAGES), sf::Vector2f(300, 150), 10, sf::Vector2u(200, 300), { 4, 13 });
 	flightSector[1]->initString(fntMgr.getResource(FNTFLE), { 360, 200 }, "2", sf::Text::Bold);
 	flightSector[1]->setTextScale({ 5, 5 });
 
-	flightSector[2] = new Icon(txtMgr.getResource(UNIVERSECARDIMAGES), sf::Vector2f(500, 150), 10, sf::Vector2u(200, 300), { 4, 13 });
+	flightSector[2] = new Object(txtMgr.getResource(UNIVERSECARDIMAGES), sf::Vector2f(500, 150), 10, sf::Vector2u(200, 300), { 4, 13 });
 	flightSector[2]->initString(fntMgr.getResource(FNTFLE), { 560, 200 }, "3", sf::Text::Bold);
 	flightSector[2]->setTextScale({ 5, 5 });
 
-	flightSector[3] = new Icon(txtMgr.getResource(UNIVERSECARDIMAGES), sf::Vector2f(700, 150), 10, sf::Vector2u(200, 300), { 4, 13 });
+	flightSector[3] = new Object(txtMgr.getResource(UNIVERSECARDIMAGES), sf::Vector2f(700, 150), 10, sf::Vector2u(200, 300), { 4, 13 });
 	flightSector[3]->initString(fntMgr.getResource(FNTFLE), { 760, 200 }, "4", sf::Text::Bold);
 	flightSector[3]->setTextScale({ 5, 5 });
 
@@ -46,9 +46,13 @@ Universe::Universe(ResourceManager<sf::Texture> &txtMgr, ResourceManager<sf::Fon
 	SE = new Card*[28];
 	AD = new AdventureCard*[9];
 	cAdv = new AdventureCard*[3];
+	hideSectors();
 	universeSetup(txtMgr);
 	ExtraDeckPtr = 0;
 	advPtr = 0;
+	currentMove = 0;
+	sectorNum = 0;
+
 }
 
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
@@ -95,6 +99,28 @@ void Universe::drawSectors(sf::RenderWindow &gWindow)
 {
 	for (int i = 0; i < 4; i++)
 		flightSector[i]->draw(gWindow);
+}
+
+// (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
+//
+//  Hides the Sector Icons
+//
+// (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
+void Universe::hideSectors()
+{
+	for (int i = 0; i < 4; i++)
+		flightSector[i]->hide();
+}
+
+// (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
+//
+//  unhides the Sector Icons
+//
+// (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
+void Universe::unhideSectors()
+{
+	for (int i = 0; i < 4; i++)
+		flightSector[i]->unhide();
 }
 
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 

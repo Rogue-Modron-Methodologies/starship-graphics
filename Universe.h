@@ -14,14 +14,13 @@
 #include "ColonyCard.h"		
 #include "Pirate.h"
 #include "AdventureCard.h"
-#include "Icon.h"
 
 const int CARDLISTSIZE = 71;							//  number of cards in the universe deck
 const std::string CARDLIST = "starship.csv";
-const std::string ADVENTURELIST = "starship2.csv";
 const std::string BOARDFILE = "resources/starrynight.png";
 
-class Universe{
+class Universe
+{
 private:
 	Object *board;
 	Card **S1;				//  Sector 1
@@ -31,7 +30,7 @@ private:
 	Card **SE;				//  Extra Cards waiting to be put into Sectors
 	AdventureCard **AD;			//  Adventure Deck (Extra Cards)
 	AdventureCard **cAdv;		//  Available Adventures (will be three of them)
-	Icon **flightSector;
+	Object **flightSector;
 	int currentMove;
 	int sectorNum;
 	int ExtraDeckPtr;
@@ -51,6 +50,8 @@ public:
 	Card* getFlightPathPlanet(int num){ return getSector(sectorNum)[num]; }
 	bool isCurrentAdventureTargeted(sf::RenderWindow &gWindow, int &temp);
 	void drawCurrentAdventures(sf::RenderWindow &gWindow);
+	void hideSectors();
+	void unhideSectors();
 	void drawSectors(sf::RenderWindow &gWindow);
 	bool sectorsTargeted(sf::RenderWindow &gWindow, int &num);
 	bool flightPathTargeted(sf::RenderWindow &gWindow, int &num);
@@ -66,7 +67,7 @@ private:
 	void universeSetup(ResourceManager<sf::Texture> &txtMgr);
 	void shuffleDeck(Card* list[], int size);
 	void addCardtoSector(int secNum, int i);
-	Icon* getFlightSector() const { return flightSector[0]; }
+	Object* getFlightSector() const { return flightSector[0]; }
 	void setSector(Card* nCard, int sNum, int cNum);
 
 };

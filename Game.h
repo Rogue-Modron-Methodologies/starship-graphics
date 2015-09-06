@@ -72,18 +72,18 @@ private:
 	ResourceManager<sf::Texture> txtMgr;
 	ResourceManager<sf::Font> fntMgr;
 	bool flag[FLAGNUM];					//  Will hold an array of flags for game decisions	
-	Icon **tradeSaveState;				//  Saves value of all six resources and astro in case of cancel 
-	Icon **tradeMenuIcons;				//  Icons for the Trade Menu
-	Icon *flightDie;					//  Production/Flight Die
-	Icon **combatDie;					//  Combat Die for Player and Pirate
-	Icon cPlanetIcon;					//  Current Planet Icon
+	Object **tradeSaveState;				//  Saves value of all six resources and astro in case of cancel 
+	Object **tradeMenuIcons;				//  Icons for the Trade Menu
+	Object *flightDie;					//  Production/Flight Die
+	Object **combatDie;					//  Combat Die for Player and Pirate
+	Object cPlanetIcon;					//  Current Planet Icon
 	TradeCard cPlanetInfo;				//  Placeholder for current trade 
-	Icon **flightMenuIcons;				//  FlightMenu  
-	Icon **pirateMenuIcons;				//  PirateMenu
-	Icon **flightPathActions;			//  Displays actions by the Current Player during flight
-	Icon **buildMenuIcons;				//  Clickable objects for build phase
-	Icon friendPeople;
-	Icon heroPeople;
+	Object **flightMenuIcons;				//  FlightMenu  
+	Object **pirateMenuIcons;				//  PirateMenu
+	Object **flightPathActions;			//  Displays actions by the Current Player during flight
+	Object **buildMenuIcons;				//  Clickable objects for build phase
+	Object friendPeople;
+	Object heroPeople;
 	std::string statusUpdate;			//  Catches errors from called functions
 	sf::Text phaseNameString;			//  Phase Name Text String
 	sf::Text endPhaseString;				//  For End of Phase Messages
@@ -138,7 +138,6 @@ public:
 
 private:	
 	void gameLoop();
-	void playerSetup();	
 	void phaseSetup();
 	void updateDrawGameWindow();
 	void endPhase();

@@ -21,6 +21,7 @@ public:
 		: ShipObject(texture, pos, num, srcSize, srcPos){ max = 2; }
 
 	bool isMaxed() const { return qty >= 2; }
+	void setSrcPos(sf::Vector2u source) { this->srcPos = source; updateTextRect(); }
 	bool loseItem(std::string &error)
 	{ 
 		if (qty > 0)
