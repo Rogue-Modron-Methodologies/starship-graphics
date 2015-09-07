@@ -18,8 +18,8 @@ enum BuildIcons{ BLVL1, BLVL2, LLVL1, LLVL2, COLSHIP, TRDSHIP };
 const int TRADEMENUSIZE = 4;
 enum tradeIcons{ plus, minus, check, cancel };
 
-const int FMENUSIZE = 5;
-enum menuOptions { trdW, colIt, conFly, endFl, adv };
+const int FMENUSIZE = 6;
+enum menuOptions { trdW, estTP, colIt, conFly, endFl, adv };
 
 const int PMENUSIZE = 2;
 enum pirateIcons{ pay, fight };
@@ -45,6 +45,7 @@ public:
 	void push_back(Object* item) 	{  menu.push_back(item); }
 	bool isActive() const { return active; }
 	void setActive(bool toggle){ active = toggle; }
+	void setPositionOfItem(int i, sf::Vector2f pos ){ menu[i]->setPosition(pos); }
 
 	bool isItemTargeted(sf::RenderWindow & gWindow, int pos)
 	{

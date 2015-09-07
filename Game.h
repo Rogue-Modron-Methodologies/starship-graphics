@@ -58,16 +58,16 @@ private:
 	ResourceManager<sf::Texture> txtMgr;
 	ResourceManager<sf::Font> fntMgr;
 	bool flag[FLAGNUM];					//  Will hold an array of flags for game decisions	
+	Menu flightMenu;	
+	Menu buildMenu;
+	Menu pirateMenu;
 	Object **tradeSaveState;				//  Saves value of all six resources and astro in case of cancel 
 	Object **tradeMenuIcons;				//  Icons for the Trade Menu
 	Object *flightDie;					//  Production/Flight Die
 	Object **combatDie;					//  Combat Die for Player and Pirate
 	Object cPlanetIcon;					//  Current Planet Icon
-	TradeCard cPlanetInfo;				//  Placeholder for current trade 
-	Menu flightMenu;					
-	Object **pirateMenuIcons;			//  PirateMenu
+	TradeCard cPlanetInfo;				//  Placeholder for current trade 				
 	Object **flightPathActions;			//  Displays actions by the Current Player during flight
-	Object **buildMenuIcons;				//  Clickable objects for build phase
 	Object friendPeople;
 	Object heroPeople;
 	std::string statusUpdate;			//  Catches errors from called functions
@@ -105,11 +105,6 @@ public:
 		for (int i = 0; i < NUMRESOURCES; i++)
 			delete tradeSaveState[i];
 		delete [] tradeSaveState;
-		for (int i = 0; i < PMENUSIZE; i++)
-			delete pirateMenuIcons[i];
-		for (int i = 0; i < BUILDICONSIZE; i++)
-			delete buildMenuIcons[i];
-		delete[] pirateMenuIcons;
 	}
 
 	// getters and setters
@@ -135,7 +130,6 @@ private:
 	void updateFlightMenu();
 	void initTradeMenu(int &tempType, int tempPos = -1);
 	bool tradeIconsTargeted();
-	bool buildIconsTargeted(int &tempType);
 	bool anyResourcesInListAvailable(int resAvail[]);
 	bool allRequirementsMet(int requirements[], int size = 6);
 	bool areAnyResourcesAvailable();
@@ -150,7 +144,9 @@ private:
 	bool startAdventure();
 	void adventureRewards();
 	std::string getAdvRewardsString(int res, int astro, int fame, int vic);
-
+	void createFlightMenu();
+	void createBuildMenu();
+	void createPirateMenu();
 
 };
 

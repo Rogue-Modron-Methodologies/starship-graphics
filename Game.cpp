@@ -19,7 +19,6 @@ Game::Game() : cPlanetIcon(txtMgr.getResource(UNIVERSECARDIMAGES), { 825, 520 },
 			heroPeople(txtMgr.getResource(FRIENDHERO), sf::Vector2f{ 975, 840 }, 1, sf::Vector2u(200, 200), { 0, 0 }),
 			cPlanetInfo(txtMgr.getResource(UNIVERSECARDIMAGES), { 0, 0 }, 0, "", 0, 0, 0, "", 0, 0)
 {  
-	Object* tempObject;
 	flightDie = new Object(txtMgr.getResource(SDIEFLE), sf::Vector2f{ 350, 525 }, 1, sf::Vector2u(80, 80));
 	flightDie->initString(fntMgr.getResource(FNTFLE), { 440, 545 }, "", sf::Text::Bold);		
 
@@ -39,6 +38,10 @@ Game::Game() : cPlanetIcon(txtMgr.getResource(UNIVERSECARDIMAGES), { 825, 520 },
 
 	cPlanetIcon.initString(fntMgr.getResource(FNTFLE), { 835, 480 }, "Current Planet");
 	cPlanetInfo.hide();
+
+	createFlightMenu();
+	createBuildMenu();
+	createPirateMenu();
 
 	phaseNameString.setFont(fntMgr.getResource(FNTFLE));
 	phaseNameString.setPosition({ 200, 820 });
@@ -89,54 +92,12 @@ Game::Game() : cPlanetIcon(txtMgr.getResource(UNIVERSECARDIMAGES), { 825, 520 },
 	tradeMenuIcons[check] = new Object(txtMgr.getResource(TRDICN), { 635, 760 }, 1, { 50, 50 }, { 2, 0 });
 	tradeMenuIcons[cancel] = new Object(txtMgr.getResource(TRDICN), { 710, 760 }, 1, { 50, 50 }, { 3, 0 });
 
-	pirateMenuIcons = new Object*[PMENUSIZE];
-
-	pirateMenuIcons[pay] = new Object(txtMgr.getResource(SYMBFLE), { 710, 610 }, 0, { 50, 50 }, { 3, 0 });
-	pirateMenuIcons[pay]->initString(fntMgr.getResource(FNTFLE), { 600, 610 }, "Bribe");
-
-	pirateMenuIcons[fight] = new Object(txtMgr.getResource(SYMBFLE), { 710, 660 }, 0, { 50, 50 }, { 2, 0 });
-	pirateMenuIcons[fight]->initString(fntMgr.getResource(FNTFLE), { 600, 660 }, "Fight");
-
-	
-	tempObject = new Object(txtMgr.getResource(SYMBFLE), { 710, 610 }, 0, { 50, 50 }, { 3, 0 });			// Trade With Icon
-	tempObject->initString(fntMgr.getResource(FNTFLE), { 480, 610 }, "Trade With Planet");
-	flightMenu.push_back(tempObject);
-
-	tempObject = new Object(txtMgr.getResource(SYMBFLE), sf::Vector2f(710, 660), 0, { 50, 50 }, { 1, 0 });	//  Colonize Icon
-	tempObject->initString(fntMgr.getResource(FNTFLE), { 500, 660 }, "Colonize/Trade");
-	flightMenu.push_back(tempObject);
-
-	tempObject = new Object(txtMgr.getResource(SYMBFLE), sf::Vector2f(710, 710), 0, { 50, 50 }, { 4, 0 });	//  Continue Flying Icon
-	tempObject->initString(fntMgr.getResource(FNTFLE), { 500, 710 }, "Continue Flying");
-	flightMenu.push_back(tempObject);
-
-	tempObject = new Object(txtMgr.getResource(SYMBFLE), sf::Vector2f(710, 760), 0, { 50, 50 }, { 5, 0 });	//  End Flight Icon
-	tempObject->initString(fntMgr.getResource(FNTFLE), { 570, 760 }, "End Flight");
-	flightMenu.push_back(tempObject);
-
-	tempObject = new Object(txtMgr.getResource(SYMBFLE), sf::Vector2f(710, 660), 0, { 50, 50 }, { 9, 0 });	//  Adventure Icon
-	tempObject->initString(fntMgr.getResource(FNTFLE), { 450, 660 }, "Complete Adventure");	
-	flightMenu.push_back(tempObject);
-
 	flightPathActions = new Object*[FLIGHTACTIONS];
 	for (int i = 0; i < FLIGHTACTIONS; i++)
 	{
 		flightPathActions[i] = new Object(txtMgr.getResource(SYMBFLE), { 710, 610 }, 0, { 50, 50 }, { 6, 0 });
 		flightPathActions[i]->setPosition(sf::Vector2f{ 70.0f + i * 100, 350 });
 	}
-
-	buildMenuIcons = new Object*[BUILDICONSIZE];
-	for (int i = 0; i < BUILDICONSIZE; i++)
-	{
-		buildMenuIcons[i] = new Object(txtMgr.getResource(SYMBFLE), { 0, 0 }, 0, { 50, 50 });
-		buildMenuIcons[i]->setVisible(false);	
-	}
-	buildMenuIcons[BLVL1]->setPosition(sf::Vector2f{ 110, 125 });
-	buildMenuIcons[BLVL2]->setPosition(sf::Vector2f{ 110, 450 });
-	buildMenuIcons[LLVL1]->setPosition(sf::Vector2f{ 750, 175 });
-	buildMenuIcons[LLVL2]->setPosition(sf::Vector2f{ 750, 400 });	
-	buildMenuIcons[TRDSHIP]->setPosition(sf::Vector2f{ 150, 175 });
-	buildMenuIcons[COLSHIP]->setPosition(sf::Vector2f{ 150, 400 });
 
 	for (int i = 0; i < FLAGNUM; i++)
 		flag[i] = false;
@@ -316,6 +277,7 @@ void Game::phaseSetup()
 		numPlntsTrd = 0;
 		flightEventString.setString("");
 		infoString.setString("Trades: " + std::to_string(numPlntsTrd) + " / 2");
+		buildMenu.setActive(true);
 		flag[buildTradeBegin] = false;
 		flag[buildTradeEnd] = false;
 		flag[phaseComplete] = true;		//  Only until there is an actual phase coded
@@ -368,11 +330,8 @@ void Game::drawGameWindow()
 					flightMenu.draw(gWindow);
 
 				//  When pirate menu is active ( Bribe/Flight Choice )
-				if (flag[pirateAttack] && !flag[pirateChoice])
-				{
-					pirateMenuIcons[pay]->draw(gWindow);
-					pirateMenuIcons[fight]->draw(gWindow);				
-				}
+					if (flag[pirateAttack] && !flag[pirateChoice])
+						pirateMenu.draw(gWindow);
 				//  When Winner of Pirate Attack (Gain a resource)
 				else if (flag[pirateAttack] && flag[pirateChoice] && flag[gainResource])
 				{
@@ -661,8 +620,8 @@ void Game::flightPhaseListener(int tempType)
 	{
 		switch (tempType)
 		{
-		case colIt:	//  Colonize/Establish Post
-			if (universe->getCurrentPlanet()->getType() == 0 && cPlyr->getStarship()->shipAvailabletoCompleteAction(tradeShip, tempType, statusUpdate))
+		case estTP:	//  Establish Post
+			if (cPlyr->getStarship()->shipAvailabletoCompleteAction(tradeShip, tempType, statusUpdate))
 			{
 				cPlyr->getStarship()->loseItem(tempType, statusUpdate);
 				cPlyr->getTradeZone()->push_back((TradeCard*)universe->getCurrentPlanet());
@@ -674,7 +633,10 @@ void Game::flightPhaseListener(int tempType)
 				flag[justActed] = true;
 				actionNum++;
 			}
-			else if (universe->getCurrentPlanet()->getType() == 1 && cPlyr->getStarship()->shipAvailabletoCompleteAction(colonyShip, tempType, statusUpdate))
+			infoString.setString(statusUpdate);
+			break;
+		case colIt:	//  Colonize
+			if (cPlyr->getStarship()->shipAvailabletoCompleteAction(colonyShip, tempType, statusUpdate))
 			{
 				cPlyr->getStarship()->loseItem(tempType, statusUpdate);
 				cPlyr->getColonyZone()->push_back((ColonyCard*)universe->getCurrentPlanet());
@@ -885,10 +847,11 @@ void Game::tradeMenuListener()
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
 //  Deals with Mouse Click actions in the Pirate Menu
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
-void Game::pirateMenuListener(){
+void Game::pirateMenuListener()
+{
 	if (!flag[pirateChoice])								//  If the choice to pay/fight hasn't been made yet
 	{
-		if (pirateMenuIcons[pay]->isTargeted(gWindow))		//  If the player decides to pay
+		if (pirateMenu.isItemTargeted(gWindow, pay))			//  If the player decides to pay
 		{
 			if (cPlyr->canAfford(universe->getCurrentPlanet()->getCost(), statusUpdate))
 			{
@@ -901,7 +864,7 @@ void Game::pirateMenuListener(){
 				flightMenu.setActive(true);
 			}
 		}
-		else	if (pirateMenuIcons[fight]->isTargeted(gWindow))	// If the player decides to fight
+		else	if (pirateMenu.isItemTargeted(gWindow, fight))		// If the player decides to fight
 		{	
 			flag[pirateChoice] = true;
 			rollCombatDie(ply);
@@ -956,7 +919,7 @@ void Game::tradeBuildPhaseListener(int &tempNum)
 			cPlyr->makeBig();
 	}
 	// Starship (Large) Build Icon is selected
-	else if (cPlyr->getStarship()->isTargeted(gWindow) && !cPlyr->getStarship()->isSmall() && buildIconsTargeted(tempNum))
+	else if (cPlyr->getStarship()->isTargeted(gWindow) && !cPlyr->getStarship()->isSmall() && buildMenu.isMenuTargeted(gWindow, tempNum))
 	{
 		if (event.mouseButton.button == sf::Mouse::Left)
 			if (buildShipObject(tempNum) && flag[buildTradeBegin] && !flag[buildTradeEnd])
@@ -1088,6 +1051,7 @@ void Game::initPirateMenu()
 	flag[pirateAttack] = true;
 	flightMenu.setActive(false);
 	cPlanetIcon.setSrcPos({ 4, 13 });				//  Card Back
+	pirateMenu.setActive(true);
 	specialString.setString("There is a Pirate Here!  They demand " + std::to_string(universe->getCurrentPlanet()->getCost()) + " astro!");
 	flightEventString.setString("Bribe / Fight");
 }
@@ -1112,23 +1076,15 @@ void Game::updateFlightMenu()
 				flightMenu.unhideItem(conFly);
 			if (universe->getCurrentPlanet()->getType() == 0 && actionNum < cPlyr->getStarship()->getMaxActions())						//  Trade Planet
 			{
-				if (!flag[justActed])
-					flightMenu.unhideItem(trdW);
-				if (universe->getCurrentPlanet()->getPts() == 1 && !flag[justActed] && actionNum < cPlyr->getStarship()->getMaxActions())	//  Can be colonized
+				if (!flag[justActed] && actionNum < cPlyr->getStarship()->getMaxActions())
 				{
-					//flightMenuIcons[colIt]->setString("Establish Trade Post");
-					//flightMenuIcons[colIt]->setSrcPos({ 1, 0 });
-					//flightMenuIcons[colIt]->setTextPosition({ 430, 660 });
-					flightMenu.unhideItem(colIt);
+					flightMenu.unhideItem(trdW);
+					if (universe->getCurrentPlanet()->getPts() == 1)															//  Can Establish Trade Post
+						flightMenu.unhideItem(estTP);
 				}
 			}
 			else if (universe->getCurrentPlanet()->getType() == 1 && !flag[justActed] && actionNum < cPlyr->getStarship()->getMaxActions())	//  Colony Planet
-			{
-			//	flightMenuIcons[colIt]->setString("Colonize the Planet");
-			//	flightMenuIcons[colIt]->setTextPosition({ 450, 660 });
-			//	flightMenuIcons[colIt]->setSrcPos({ 0, 0 });
 				flightMenu.unhideItem(colIt);
-			}
 			else if (universe->getCurrentPlanet()->getType() == 3 && actionNum < cPlyr->getStarship()->getMaxActions())					//  Adventure Planet
 			{
 				if (universe->atAdventurePlanet())
@@ -1155,24 +1111,6 @@ bool Game::tradeIconsTargeted()
 				return true;
 		if (universe->getCurrentPlanet()->isTargeted(gWindow))
 			return true;
-	}
-	return false;
-}
-
-// (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
-//
-//  Returns true if any Build Icons are clicked
-//
-// (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
-bool Game::buildIconsTargeted(int &num)
-{
-	for (int i = 0; i < BUILDICONSIZE; i++)
-	{
-		if (buildMenuIcons[i]->isTargeted(gWindow))
-		{
-			num = i;
-			return true;
-		}	
 	}
 	return false;
 }
@@ -1440,6 +1378,18 @@ void Game::endPhase()
 {
 	specialString.setString("");
 	flightEventString.setString("");
+	switch (cPhase)
+	{
+	case production:
+		
+		break;
+	case flight:
+		
+		break;
+	case tradeBuild:
+		buildMenu.setActive(false);
+		break;
+	}
 	cPhase++;
 	if (cPhase == 3)
 		cPhase = 0;
@@ -1628,4 +1578,73 @@ std::string Game::getAdvRewardsString(int res, int astro, int fame, int vic)
 		tempString += std::to_string(vic) + " Victory Point\n";
 
 	return tempString;
+}
+
+// (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
+//  Creates the Flight Menu
+// (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
+void Game::createFlightMenu()
+{
+	Object* tempObject;
+	tempObject = new Object(txtMgr.getResource(SYMBFLE), { 710, 610 }, 0, { 50, 50 }, { 3, 0 });			// Trade With Icon
+	tempObject->initString(fntMgr.getResource(FNTFLE), { 480, 610 }, "Trade With Planet");
+	flightMenu.push_back(tempObject);
+
+	tempObject = new Object(txtMgr.getResource(SYMBFLE), sf::Vector2f(710, 660), 0, { 50, 50 }, { 1, 0 });	//  Establish Trade Post
+	tempObject->initString(fntMgr.getResource(FNTFLE), { 430, 660 }, "Establish Trade Post");
+	flightMenu.push_back(tempObject);
+
+	tempObject = new Object(txtMgr.getResource(SYMBFLE), sf::Vector2f(710, 660), 0, { 50, 50 }, { 0, 0 });	//  Colonize Icon
+	tempObject->initString(fntMgr.getResource(FNTFLE), { 450, 660 }, "Colonize the Planet");
+	flightMenu.push_back(tempObject);
+
+	tempObject = new Object(txtMgr.getResource(SYMBFLE), sf::Vector2f(710, 710), 0, { 50, 50 }, { 4, 0 });	//  Continue Flying Icon
+	tempObject->initString(fntMgr.getResource(FNTFLE), { 500, 710 }, "Continue Flying");
+	flightMenu.push_back(tempObject);
+
+	tempObject = new Object(txtMgr.getResource(SYMBFLE), sf::Vector2f(710, 760), 0, { 50, 50 }, { 5, 0 });	//  End Flight Icon
+	tempObject->initString(fntMgr.getResource(FNTFLE), { 570, 760 }, "End Flight");
+	flightMenu.push_back(tempObject);
+
+	tempObject = new Object(txtMgr.getResource(SYMBFLE), sf::Vector2f(710, 660), 0, { 50, 50 }, { 9, 0 });	//  Adventure Icon
+	tempObject->initString(fntMgr.getResource(FNTFLE), { 450, 660 }, "Complete Adventure");
+	flightMenu.push_back(tempObject);
+}
+
+// (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
+//  Creates the Build Menu
+// (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
+void Game::createBuildMenu()
+{
+	Object* tempObject;
+
+	for (int i = 0; i < BUILDICONSIZE; i++)
+	{
+		tempObject = new Object(txtMgr.getResource(SYMBFLE), { 0, 0 }, 0, { 50, 50 });
+		tempObject->setVisible(false);
+		buildMenu.push_back(tempObject);
+	}
+	buildMenu.setPositionOfItem(BLVL1, sf::Vector2f{ 110, 125 });
+	buildMenu.setPositionOfItem(BLVL2, sf::Vector2f{ 110, 450 });
+	buildMenu.setPositionOfItem(LLVL1, sf::Vector2f{ 750, 175 });
+	buildMenu.setPositionOfItem(LLVL2, sf::Vector2f{ 750, 400 });
+	buildMenu.setPositionOfItem(TRDSHIP, sf::Vector2f{ 150, 175 });
+	buildMenu.setPositionOfItem(COLSHIP, sf::Vector2f{ 150, 400 });
+}
+
+
+// (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
+//  Creates the Pirate
+// (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
+void Game::createPirateMenu()
+{
+	Object* tempObject;
+
+	tempObject = new Object(txtMgr.getResource(SYMBFLE), { 710, 610 }, 0, { 50, 50 }, { 3, 0 });
+	tempObject->initString(fntMgr.getResource(FNTFLE), { 600, 610 }, "Bribe");
+	pirateMenu.push_back(tempObject);
+
+	tempObject = new Object(txtMgr.getResource(SYMBFLE), { 710, 660 }, 0, { 50, 50 }, { 2, 0 });
+	tempObject->initString(fntMgr.getResource(FNTFLE), { 600, 660 }, "Fight");
+	pirateMenu.push_back(tempObject);
 }
