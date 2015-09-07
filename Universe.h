@@ -30,7 +30,6 @@ private:
 	Card **SE;				//  Extra Cards waiting to be put into Sectors
 	AdventureCard **AD;			//  Adventure Deck (Extra Cards)
 	AdventureCard **cAdv;		//  Available Adventures (will be three of them)
-	Object **flightSector;
 	int currentMove;
 	int sectorNum;
 	int ExtraDeckPtr;
@@ -50,10 +49,10 @@ public:
 	Card* getFlightPathPlanet(int num){ return getSector(sectorNum)[num]; }
 	bool isCurrentAdventureTargeted(sf::RenderWindow &gWindow, int &temp);
 	void drawCurrentAdventures(sf::RenderWindow &gWindow);
-	void hideSectors();
-	void unhideSectors();
-	void drawSectors(sf::RenderWindow &gWindow);
-	bool sectorsTargeted(sf::RenderWindow &gWindow, int &num);
+	//void hideSectors();
+	//void unhideSectors();
+	//void drawSectors(sf::RenderWindow &gWindow);
+	//bool sectorsTargeted(sf::RenderWindow &gWindow, int &num);
 	bool flightPathTargeted(sf::RenderWindow &gWindow, int &num);
 	void initializeFlightPath(int tempType);
 	void continueFlight(){ currentMove++; }
@@ -67,7 +66,7 @@ private:
 	void universeSetup(ResourceManager<sf::Texture> &txtMgr);
 	void shuffleDeck(Card* list[], int size);
 	void addCardtoSector(int secNum, int i);
-	Object* getFlightSector() const { return flightSector[0]; }
+//	Object* getFlightSector() const { return flightSector[0]; }
 	void setSector(Card* nCard, int sNum, int cNum);
 
 };

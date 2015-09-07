@@ -46,6 +46,8 @@ public:
 	bool isActive() const { return active; }
 	void setActive(bool toggle){ active = toggle; }
 	void setPositionOfItem(int i, sf::Vector2f pos ){ menu[i]->setPosition(pos); }
+	void greyItem(int pos){ menu[pos]->greyOut(); }
+	void unGreyItem(int pos){ menu[pos]->unGreyOut(); }
 
 	bool isItemTargeted(sf::RenderWindow & gWindow, int pos)
 	{
@@ -63,6 +65,7 @@ public:
 					pos = i;
 					return true;
 				}
+					
 			}
 		}
 		return false;

@@ -27,20 +27,18 @@ const int FLIGHTACTIONS = 10;
 enum phases{ production, flight, tradeBuild };
 enum combatParties{ply, prt};
 
-const int FLAGNUM = 16;
+const int FLAGNUM = 14;
 enum flagTypes
 {
 	phaseSetupComplete,				//  Flag:  Phase Setup Complete
 	gainResource,					//  Flag:  Choose one resource
 	showFlightPath,				//  Flag:  Display flightPath
-	sectorSelected,				//  Flag:  Sector Selection Complete
 	phaseComplete,					//  Flag:  Phase Complete
 	choosingResource,				//  Flag;  In process of choosing Resource
 	resourceChosen,				//  Flag:  Resource Chosen
 	tradeInProgress,				//  Flag:  Trade in Progress
 	justActed,					//  Flag:  Performed and action on this planet
 	pirateChoice,					//  Flag:  Choice to Pay or Fight Pirate
-	pirateAttack,					//  Flag:  Currently Being Attacked by Pirate
 	pirateResult,					//  Flag:  Lost to pirate and losing something
 	buildTradeBegin,				//  Flag:  Beginning of Trading during build phase
 	buildTradeEnd,					//  Flag:  End of Trading during build phase
@@ -48,41 +46,46 @@ enum flagTypes
 	adventureReward				//  Flag:  Adventure Resource Granted
 };
 
-class Game{
+class Game
+{
 private:
-	Player *P1, *P2, *cPlyr;
-	Universe *universe;
+	ResourceManager<sf::Texture> txtMgr;
+	ResourceManager<sf::Font> fntMgr;	
+	bool flag[FLAGNUM];						//  Hold an array of flags for game decisions	
 	sf::RenderWindow gWindow;
 	sf::Vector2u screenSize;
 	sf::Event event;
-	ResourceManager<sf::Texture> txtMgr;
-	ResourceManager<sf::Font> fntMgr;
-	bool flag[FLAGNUM];					//  Will hold an array of flags for game decisions	
-	Menu flightMenu;	
-	Menu buildMenu;
-	Menu pirateMenu;
-	Object **tradeSaveState;				//  Saves value of all six resources and astro in case of cancel 
-	Object **tradeMenuIcons;				//  Icons for the Trade Menu
-	Object *flightDie;					//  Production/Flight Die
-	Object **combatDie;					//  Combat Die for Player and Pirate
-	Object cPlanetIcon;					//  Current Planet Icon
-	TradeCard cPlanetInfo;				//  Placeholder for current trade 				
-	Object **flightPathActions;			//  Displays actions by the Current Player during flight
-	Object friendPeople;
-	Object heroPeople;
-	std::string statusUpdate;			//  Catches errors from called functions
-	sf::Text phaseNameString;			//  Phase Name Text String
-	sf::Text endPhaseString;				//  For End of Phase Messages
-	sf::Text specialString;				//  For special instructions
-	sf::Text infoString;				//  Info Text String
-	sf::Text errorString;				//  Error Text String	
-	sf::Text flightEventString;			//  In Progress/Complete/Cancelled	
-	int cType;						//  current resource type
-	int actionNum;						//  Current Action Num
-	int cPhase;						//  Current Phase Num
-	int errorTimer;
-	int cTradeResource;					//  Current Traded Resource
-	int cTradeNum;						//  Current Number of Trades
+
+	Universe *universe;
+	Player		*P1, 
+				*P2, 
+				*cPlyr;				
+	Menu			flightMenu,
+				buildMenu,
+				pirateMenu,
+				tradeMenu,
+				sectorMenu;
+	Object		**tradeSaveState,			//  Saves value of all six resources and astro in case of cancel 
+				**flightPathActions,		//  Displays actions by the Current Player during flight				
+				**combatDie,				//  Combat Die for Player and Pirate		 
+				flightDie,				//  Production/Flight Die
+				friendPeople,				//  Worth 1 Vic Point
+				heroPeople,				//  Worth 1 Vic Point
+				cPlanetIcon;				//  Current Planet Icon
+	TradeCard		cPlanetInfo;				//  Placeholder for current trade 		
+	std::string	statusUpdate;				//  Catches errors from called functions
+	sf::Text		phaseNameString,			//  Phase Name Text String
+				endPhaseString,			//  For End of Phase Messages
+				specialString,				//  For special instructions
+				infoString,				//  Info Text String
+				errorString,				//  Error Text String	
+				flightEventString;			//  In Progress/Complete/Cancelled	
+	int cType;							//  current resource type
+	int actionNum;							//  Current Action Num
+	int cPhase;							//  Current Phase Num
+	int errorTimer;						//  Controls error string fade
+	int cTradeResource;						//  Current Traded Resource
+	int cTradeNum;							//  Current Number of Trades
 	int numPlntsTrd;
 	int curAdv;
 
@@ -93,15 +96,11 @@ public:
 		delete P1;
 		delete P2;
 		delete universe;
-		delete flightDie;
 		delete combatDie[ply];
 		delete combatDie[prt];
 		delete combatDie;
 		for (int i = 0; i < FLIGHTACTIONS; i++)
 			delete flightPathActions[i];
-		for (int i = 0; i < TRADEMENUSIZE; i++)
-			delete tradeMenuIcons[i];
-		delete [] tradeMenuIcons;
 		for (int i = 0; i < NUMRESOURCES; i++)
 			delete tradeSaveState[i];
 		delete [] tradeSaveState;
@@ -147,6 +146,8 @@ private:
 	void createFlightMenu();
 	void createBuildMenu();
 	void createPirateMenu();
+	void createTradeMenu();
+	void createSectorMenu();
 
 };
 
