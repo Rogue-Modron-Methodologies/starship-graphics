@@ -39,13 +39,12 @@ enum menuOptions { trdW, colIt, conFly, endFl, adv };
 const int PMENUSIZE = 2;
 enum pirateIcons{pay, fight};
 
-const int FLAGNUM = 18;
+const int FLAGNUM = 17;
 enum flagTypes
 {
 	phaseSetupComplete,				//  Flag:  Phase Setup Complete
 	gainResource,					//  Flag:  Choose one resource
 	showFlightPath,				//  Flag:  Display flightPath
-	showSectors,					//  Flag:  Display Sectors
 	sectorSelected,				//  Flag:  Sector Selection Complete
 	phaseComplete,					//  Flag:  Phase Complete
 	showflightMenu,				//  Flag:	 Display Flight Menu
@@ -139,7 +138,7 @@ public:
 private:	
 	void gameLoop();
 	void phaseSetup();
-	void updateDrawGameWindow();
+	void drawGameWindow();
 	void endPhase();
 	void rollSpeedDie();
 	void rollCombatDie(int party);

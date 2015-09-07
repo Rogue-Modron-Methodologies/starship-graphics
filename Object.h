@@ -68,8 +68,6 @@ public:
 	
 	// Prototypes
 	virtual void updateTextRect();
-	//virtual void draw(sf::RenderWindow &window) 
-	//{ if(visible) window.draw(*sprite); }
 	bool isTargeted(sf::RenderWindow &gWindow);	
 	sf::Vector2f convertCoord(sf::RenderWindow &gWindow);
 	void unGreyOut();			//  Visible, unmuted and fully visible
@@ -106,9 +104,6 @@ public:
 //  Constructor for initializing the Icon
 //	Icon(const sf::Texture &texture, sf::Vector2f pos, int num = 1, sf::Vector2u srcSize = { 0, 0 }, sf::Vector2u srcPos = { 0, 0 })
 //	{ icon = new Object(texture, pos, num, srcSize, srcPos); }
-//
-//	~Icon() {	delete icon; }
-//
 //	// Getters and Setters
 //	sf::Text getText(){ return text; }
 //	int getQty() const { return icon->getQty(); }
@@ -143,38 +138,7 @@ public:
 //	void greyOut(){ icon->greyOut(); }
 //	void hide(){ icon->hide(); }
 //	void unhide(){ icon->unhide(); }
-//
-//
-//	//  Initializes the string member variable	
-//	void initString(const sf::Font &font, sf::Vector2f pos, std::string words = "XXX", int style = sf::Text::Regular)
-//	{
-//		text.setFont(font);
-//		if (words == "XXX")
-//			text.setString(std::to_string(icon->getQty()));
-//		else
-//			text.setString(words);
-//		text.setPosition(pos);
-//		text.setStyle(style);
-//	}
-//
-//	//  Draws to Window
-//	void draw(sf::RenderWindow &window)
-//	{ 
-//		icon->draw(window); 		
-//		if (icon->isVisible() && !text.getString().isEmpty())
-//				window.draw(text);
-//	}
-//	void updateTextRect()
-//	{
-//		icon->updateTextRect();
-//	}
-//	bool isTargeted(sf::RenderWindow &gWindow)
-//	{
-//		if (icon->isTargeted(gWindow))
-//			return true;
-//		else
-//			return false;
-//	}
-//
+
+
 //private:
 //	void refreshStringQty() { text.setString(std::to_string(icon->getQty())); }	//  Sets text field with icon's qty

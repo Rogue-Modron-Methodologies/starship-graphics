@@ -39,6 +39,8 @@ Universe::Universe(ResourceManager<sf::Texture> &txtMgr, ResourceManager<sf::Fon
 	flightSector[3]->initString(fntMgr.getResource(FNTFLE), { 760, 200 }, "4", sf::Text::Bold);
 	flightSector[3]->setTextScale({ 5, 5 });
 
+	hideSectors();
+
 	S1 = new Card*[10];
 	S2 = new Card*[10];
 	S3 = new Card*[10];
@@ -46,7 +48,6 @@ Universe::Universe(ResourceManager<sf::Texture> &txtMgr, ResourceManager<sf::Fon
 	SE = new Card*[28];
 	AD = new AdventureCard*[9];
 	cAdv = new AdventureCard*[3];
-	hideSectors();
 	universeSetup(txtMgr);
 	ExtraDeckPtr = 0;
 	advPtr = 0;

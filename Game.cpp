@@ -136,7 +136,6 @@ Game::Game() : cPlanetIcon(txtMgr.getResource(UNIVERSECARDIMAGES), { 825, 520 },
 	for (int i = 0; i < FLAGNUM; i++)
 		flag[i] = false;
 	flag[showFlightPath] = true;
-	flag[showSectors] = true;
 	flag[showflightMenu] = true;
 
 	universe = new Universe(txtMgr, fntMgr);
@@ -187,7 +186,7 @@ void Game::gameLoop()
 	{
 		if (!flag[phaseSetupComplete])
 			phaseSetup();
-		while (gWindow.pollEvent(event))		// the event loop
+		while (gWindow.pollEvent(event))		
 		{
 			switch (event.type) 
 			{
@@ -243,7 +242,7 @@ void Game::gameLoop()
 		}
 
 		gWindow.clear();
-		updateDrawGameWindow();			//  Updates the screen objects	
+		drawGameWindow();			//  Updates the screen objects	
 		gWindow.display();
 	}
 }
@@ -274,12 +273,12 @@ void Game::phaseSetup()
 			tempString += " Resource(s) in Colony Zone Found!";
 			if (anyResourcesInListAvailable(resAvail))
 			{
-				specialString.setString(+"Chose a colony resource");			
+				specialString.setString("Chose a colony resource");			
 				flag[gainResource] = true;
 			}
 			else
 			{
-				specialString.setString(+"No Choices Available");
+				specialString.setString("No Choices Available");
 				flag[phaseComplete] = true;
 			}
 		}
@@ -295,7 +294,7 @@ void Game::phaseSetup()
 		phaseNameString.setString("Flight Phase");
 		cPlyr->makeSmall();
 		actionNum = 0;
-		flag[showSectors] = true;
+		universe->unhideSectors();
 		flag[sectorSelected] = false;		
 		flag[showflightMenu] = true;
 		flag[justActed] = false;
@@ -326,7 +325,7 @@ void Game::phaseSetup()
 //  draws the icons and stats for game Window
 //
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
-void Game::updateDrawGameWindow()
+void Game::drawGameWindow()
 {
 	universe->getBoard()->draw(gWindow);
 	switch (cPhase)
@@ -335,10 +334,8 @@ void Game::updateDrawGameWindow()
 		flightDie->draw(gWindow);
 		break;
 	case flight:
-		if (!flag[sectorSelected] && flag[showSectors])
+		if (!flag[sectorSelected])
 			universe->drawSectors(gWindow);
-		else if (!flag[sectorSelected] && !flag[showSectors])
-			break;
 		else
 		{
 			// Draw Flight Path
@@ -554,7 +551,7 @@ void Game::preFlightListener(int &tempType){
 		if (event.mouseButton.button == sf::Mouse::Left)
 		{
 			cPlyr->makeBig();
-			flag[showSectors] = false;
+			universe->hideSectors();
 		}
 	}
 	// Starship (Large) is clicked
@@ -581,7 +578,7 @@ void Game::preFlightListener(int &tempType){
 	else if (universe->sectorsTargeted(gWindow, tempType) && cPlyr->getStarship()->isSmall())
 	{
 		infoString.setString("Flight: 1 / " + std::to_string(cPlyr->getStarship()->getMaxDistance()) + "\nMax Actions: 0 / " + std::to_string(cPlyr->getStarship()->getMaxActions()));
-		flag[showSectors] = false;
+		universe->hideSectors();
 		flag[sectorSelected] = true;
 		universe->initializeFlightPath(tempType);
 		cPlanetIcon.setSrcPos(universe->getCurrentPlanet()->getSrcPos());
@@ -594,7 +591,7 @@ void Game::preFlightListener(int &tempType){
 	//  Starship (Large) && Empty Space is clicked
 	else if (!cPlyr->getStarship()->isTargeted(gWindow) && !cPlyr->getStarship()->isSmall()){
 		cPlyr->makeSmall();
-		flag[showSectors] = true;
+		universe->unhideSectors();
 	}
 }
 
