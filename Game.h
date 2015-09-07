@@ -12,7 +12,7 @@
 
 #include "Player.h"
 #include "Universe.h"
-#include "Object.h"
+#include "Menu.h"
 #include <string>
 #include <fstream>
 #include <sstream>
@@ -27,19 +27,7 @@ const int FLIGHTACTIONS = 10;
 enum phases{ production, flight, tradeBuild };
 enum combatParties{ply, prt};
 
-const int BUILDICONSIZE = 6;
-enum BuildIcons{ BLVL1, BLVL2, LLVL1, LLVL2, COLSHIP, TRDSHIP };
-
-const int TRADEMENUSIZE = 4;
-enum tradeIcons{plus, minus, check, cancel};
-
-const int FMENUSIZE = 5;
-enum menuOptions { trdW, colIt, conFly, endFl, adv };
-
-const int PMENUSIZE = 2;
-enum pirateIcons{pay, fight};
-
-const int FLAGNUM = 17;
+const int FLAGNUM = 16;
 enum flagTypes
 {
 	phaseSetupComplete,				//  Flag:  Phase Setup Complete
@@ -47,7 +35,6 @@ enum flagTypes
 	showFlightPath,				//  Flag:  Display flightPath
 	sectorSelected,				//  Flag:  Sector Selection Complete
 	phaseComplete,					//  Flag:  Phase Complete
-	showflightMenu,				//  Flag:	 Display Flight Menu
 	choosingResource,				//  Flag;  In process of choosing Resource
 	resourceChosen,				//  Flag:  Resource Chosen
 	tradeInProgress,				//  Flag:  Trade in Progress
@@ -77,8 +64,8 @@ private:
 	Object **combatDie;					//  Combat Die for Player and Pirate
 	Object cPlanetIcon;					//  Current Planet Icon
 	TradeCard cPlanetInfo;				//  Placeholder for current trade 
-	Object **flightMenuIcons;				//  FlightMenu  
-	Object **pirateMenuIcons;				//  PirateMenu
+	Menu flightMenu;					
+	Object **pirateMenuIcons;			//  PirateMenu
 	Object **flightPathActions;			//  Displays actions by the Current Player during flight
 	Object **buildMenuIcons;				//  Clickable objects for build phase
 	Object friendPeople;
@@ -90,6 +77,7 @@ private:
 	sf::Text infoString;				//  Info Text String
 	sf::Text errorString;				//  Error Text String	
 	sf::Text flightEventString;			//  In Progress/Complete/Cancelled	
+	int cType;						//  current resource type
 	int actionNum;						//  Current Action Num
 	int cPhase;						//  Current Phase Num
 	int errorTimer;
@@ -117,9 +105,6 @@ public:
 		for (int i = 0; i < NUMRESOURCES; i++)
 			delete tradeSaveState[i];
 		delete [] tradeSaveState;
-		for (int i = 0; i < FMENUSIZE; i++)
-			delete flightMenuIcons[i];
-		delete[] flightMenuIcons;
 		for (int i = 0; i < PMENUSIZE; i++)
 			delete pirateMenuIcons[i];
 		for (int i = 0; i < BUILDICONSIZE; i++)
@@ -151,7 +136,6 @@ private:
 	void initTradeMenu(int &tempType, int tempPos = -1);
 	bool tradeIconsTargeted();
 	bool buildIconsTargeted(int &tempType);
-	bool flightMenuOptionTargeted(int &num);
 	bool anyResourcesInListAvailable(int resAvail[]);
 	bool allRequirementsMet(int requirements[], int size = 6);
 	bool areAnyResourcesAvailable();
