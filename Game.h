@@ -27,7 +27,7 @@ const int FLIGHTACTIONS = 10;
 enum phases{ production, flight, tradeBuild };
 enum combatParties{ply, prt};
 
-const int FLAGNUM = 14;
+const int FLAGNUM = 13;
 enum flagTypes
 {
 	phaseSetupComplete,				//  Flag:  Phase Setup Complete
@@ -38,7 +38,6 @@ enum flagTypes
 	resourceChosen,				//  Flag:  Resource Chosen
 	tradeInProgress,				//  Flag:  Trade in Progress
 	justActed,					//  Flag:  Performed and action on this planet
-	pirateChoice,					//  Flag:  Choice to Pay or Fight Pirate
 	pirateResult,					//  Flag:  Lost to pirate and losing something
 	buildTradeBegin,				//  Flag:  Beginning of Trading during build phase
 	buildTradeEnd,					//  Flag:  End of Trading during build phase
@@ -134,7 +133,6 @@ private:
 	bool gainOneResource(int cost = 0);
 	void updateFriendOfThePeople();
 	void updateHeroOfThePeople();
-	void initPirateMenu();
 	void pirateMenuListener();
 	void adventureListener(int tempType);
 	bool buildShipObject(int item);
