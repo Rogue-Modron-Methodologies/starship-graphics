@@ -32,7 +32,7 @@ enum flagTypes
 {
 	phaseSetupComplete,				//  Flag:  Phase Setup Complete
 	gainResource,					//  Flag:  Choose one resource
-	showFlightPath,				//  Flag:  Display flightPath
+	flightPathActive,				//  Flag:  flightPath, flightActionPath, and Adventures
 	phaseComplete,					//  Flag:  Phase Complete
 	choosingResource,				//  Flag;  In process of choosing Resource
 	resourceChosen,				//  Flag:  Resource Chosen
@@ -55,16 +55,15 @@ private:
 	sf::RenderWindow gWindow;
 	sf::Vector2u screenSize;
 	sf::Event event;
-
 	Universe *universe;
 	Player		*P1, 
 				*P2, 
 				*cPlyr;				
-	Menu			flightMenu,
-				buildMenu,
-				pirateMenu,
-				tradeMenu,
-				sectorMenu;
+	Menu			flightMenu,				//  Menu:  Flight Phase Actions
+				buildMenu,				//  Menu:  Build Phase Actions
+				pirateMenu,				//  Menu:  Pirate Options
+				tradeMenu,				//  Menu:  Trade Options
+				sectorMenu;				//  Menu:  Sector Selection
 	Object		**tradeSaveState,			//  Saves value of all six resources and astro in case of cancel 
 				**flightPathActions,		//  Displays actions by the Current Player during flight				
 				**combatDie,				//  Combat Die for Player and Pirate		 
@@ -143,6 +142,7 @@ private:
 	bool startAdventure();
 	void adventureRewards();
 	std::string getAdvRewardsString(int res, int astro, int fame, int vic);
+	void showFlightPath();
 	void createFlightMenu();
 	void createBuildMenu();
 	void createPirateMenu();

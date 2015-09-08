@@ -97,8 +97,6 @@ Game::Game() : cPlanetIcon(txtMgr.getResource(UNIVERSECARDIMAGES), { 825, 520 },
 
 	for (int i = 0; i < FLAGNUM; i++)
 		flag[i] = false;
-	flag[showFlightPath] = true;
-
 
 	universe = new Universe(txtMgr, fntMgr);
 	screenSize = sf::Vector2u(1200, 900);
@@ -203,7 +201,7 @@ void Game::gameLoop()
 		}
 
 		gWindow.clear();
-		drawGameWindow();			//  Updates the screen objects	
+		drawGameWindow();				
 		gWindow.display();
 	}
 }
@@ -255,8 +253,7 @@ void Game::phaseSetup()
 		phaseNameString.setString("Flight Phase");
 		cPlyr->makeSmall();
 		actionNum = 0;
-		sectorMenu.setActive(true);
-		flightMenu.setActive(true);	
+		sectorMenu.setActive(true);	
 		flag[justActed] = false;
 		pirateMenu.setActive(false);
 		flag[pirateChoice] = false;
@@ -294,40 +291,26 @@ void Game::drawGameWindow()
 	case production:
 		flightDie.draw(gWindow);
 		break;
-	case flight:
+	case flight:		
+		infoString.setString("Flight: " + std::to_string(universe->getCurrentMove()) + " / " + std::to_string(cPlyr->getStarship()->getMaxDistance())
+					+ "\nMax Actions: " + std::to_string(actionNum) + " / " + std::to_string(cPlyr->getStarship()->getMaxActions()));		
 		sectorMenu.draw(gWindow);
+		updateFlightMenu();
+		flightMenu.draw(gWindow);			
+		showFlightPath();				
+		pirateMenu.draw(gWindow);
+
 		if (!sectorMenu.isActive())
 		{
-			// Draw Flight Path
-			if (flag[showFlightPath])
-			{
-				float xPos = 50;
-				float yPos = 200;
-				int cMove = universe->getCurrentMove();
-				int numToDisplay = pirateMenu.isActive() ? cMove - 1 : cMove;
-				//  Draws the flightPath and actionPath taken so far (doesn't display current planet if Pirate Attack is occuring)
-				for (int i = 0; i < numToDisplay; i++)
-				{
-					universe->getCurrentSector()[i]->setScale(CRDSSCL);
-					universe->getCurrentSector()[i]->setPosition({ xPos + i * 100, yPos });
-					universe->getCurrentSector()[i]->draw(gWindow);
-					flightPathActions[i]->draw(gWindow);
-				}
-				universe->drawCurrentAdventures(gWindow);
-			}
 			cPlanetIcon.draw(gWindow);
 			//  Flight Phase - phase is not complete and player hasn't reached max actions
 			if (!flag[phaseComplete])
 			{
-				infoString.setString("Flight: " + std::to_string(universe->getCurrentMove()) + " / " + std::to_string(cPlyr->getStarship()->getMaxDistance())
-					+ "\nMax Actions: " + std::to_string(actionNum) + " / " + std::to_string(cPlyr->getStarship()->getMaxActions()));
-					updateFlightMenu();
-					flightMenu.draw(gWindow);
-
-				pirateMenu.draw(gWindow);
+				
 				//  When Winner of Pirate Attack (Gain a resource)
 				if (pirateMenu.isActive() && flag[pirateChoice] && flag[gainResource])
 				{
+
 					for (int i = 0; i < 6; i++)
 						tradeSaveState[i]->draw(gWindow);						//  Prints the resource icons available	
 					if (!areAnyResourcesAvailable() || gainOneResource())			//  If there are no available resources
@@ -530,6 +513,8 @@ void Game::preFlightListener(int &tempType){
 	{
 		infoString.setString("Flight: 1 / " + std::to_string(cPlyr->getStarship()->getMaxDistance()) + "\nMax Actions: 0 / " + std::to_string(cPlyr->getStarship()->getMaxActions()));
 		sectorMenu.setActive(false);
+		flightMenu.setActive(true);
+		flag[flightPathActive] = true;
 		universe->initializeFlightPath(tempType);
 		cPlanetIcon.setSrcPos(universe->getCurrentPlanet()->getSrcPos());
 		for (int i = 0; i < FLIGHTACTIONS; i++)
@@ -557,7 +542,7 @@ void Game::flightPhaseListener(int tempType)
 		if (event.mouseButton.button == sf::Mouse::Left)
 		{
 			cPlyr->makeBig();
-			flag[showFlightPath] = false;
+			flag[flightPathActive] = false;
 		}
 	}
 	// Starship (Large) is clicked
@@ -581,7 +566,7 @@ void Game::flightPhaseListener(int tempType)
 	// Trade Zone (Large List) is clicked
 	else if (!cPlyr->zonesSmall() && !cPlyr->getTradeZone()->getIconOnly() && cPlyr->getTradeZone()->isZoneTargeted(gWindow, tempType, tempType)){}		// Do Nothing this Phase
 	// Objects in the FlightPath are clicked but not the current planet
-	else if (!flag[phaseComplete] && flag[showFlightPath] && universe->flightPathTargeted(gWindow, tempType) && tempType != universe->getCurrentMove() - 1)
+	else if (!flag[phaseComplete] && flag[flightPathActive] && universe->flightPathTargeted(gWindow, tempType) && tempType != universe->getCurrentMove() - 1)
 	{
 		if (!pirateMenu.isActive())
 		{
@@ -706,7 +691,7 @@ void Game::flightPhaseListener(int tempType)
 	else if (!cPlyr->getStarship()->isTargeted(gWindow) && !cPlyr->getStarship()->isSmall() && !tradeIconsTargeted())
 	{
 		cPlyr->makeSmall();
-		flag[showFlightPath] = true;
+		flag[flightPathActive] = true;
 	}
 }
 
@@ -878,7 +863,8 @@ void Game::pirateMenuListener()
 					flag[pirateResult] = false;
 					flag[gainResource] = false;
 					flag[phaseComplete] = true;
-					flightMenu.setActive(true);
+					flightMenu.setActive(false);
+					pirateMenu.setActive(false);
 					flightEventString.setString("DEFEAT!\n\nRESULT: Flight Ends");
 				}
 				else
@@ -886,6 +872,8 @@ void Game::pirateMenuListener()
 					std::cout << "RESULT: " << universe->getCurrentPlanet()->getResult() << std::endl;
 					std::cout << "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" << std::endl; //  Implement this
 					flightEventString.setString("DEFEAT!\n\nRESULT:");
+					flightMenu.setActive(false);
+					pirateMenu.setActive(false);
 				}
 			}
 			//  Reveal the Pirate
@@ -1077,6 +1065,32 @@ void Game::updateFlightMenu()
 					flightMenu.unhideItem(adv);
 			}
 		}
+	}
+}
+
+// (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
+//
+//  displays the flight path, the flight action path, and the 
+//  adventure planets if it's currently active
+//
+// (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
+void Game::showFlightPath()
+{
+	if (flag[flightPathActive])
+	{
+		float xPos = 50;
+		float yPos = 200;
+		int cMove = universe->getCurrentMove();
+		int numToDisplay = pirateMenu.isActive() ? cMove - 1 : cMove;
+		//  Draws the flightPath and actionPath taken so far (doesn't display current planet if Pirate Attack is occuring)
+		for (int i = 0; i < numToDisplay; i++)
+		{
+			universe->getCurrentSector()[i]->setScale(CRDSSCL);
+			universe->getCurrentSector()[i]->setPosition({ xPos + i * 100, yPos });
+			universe->getCurrentSector()[i]->draw(gWindow);
+			flightPathActions[i]->draw(gWindow);
+		}
+		universe->drawCurrentAdventures(gWindow);
 	}
 }
 
@@ -1370,7 +1384,7 @@ void Game::endPhase()
 		
 		break;
 	case flight:
-		sectorMenu.setActive(false);
+		flag[flightPathActive] = false;
 		break;
 	case tradeBuild:
 		buildMenu.setActive(false);
