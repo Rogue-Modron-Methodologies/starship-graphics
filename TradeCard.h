@@ -47,6 +47,18 @@ public:
 	void setTransaction(std::string tr)  { transaction = tr; }
 	void setLimit(int l)  { limit = l; }
 	void setPts(int p) { pts = p; }
+	void copyData(TradeCard *right)
+	{
+		this->srcPos = right->srcPos;
+		this->resource = right->resource;
+		this->cost = right->cost;
+		this->limit = right->limit;
+		this->transaction = right->transaction;
+		this->pts = right->pts;
+		this->setType(right->getType());
+		this->setName(right->getName());
+		this->setVisible(right->isVisible());
+	}
 
 };
 #endif // TRADECARD_H

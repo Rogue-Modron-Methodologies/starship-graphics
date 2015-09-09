@@ -36,13 +36,13 @@ enum flagTypes
 	phaseComplete,					//  Flag:  Phase Complete
 	choosingResource,				//  Flag;  In process of choosing Resource
 	resourceChosen,				//  Flag:  Resource Chosen
-	tradeInProgress,				//  Flag:  Trade in Progress
 	justActed,					//  Flag:  Performed and action on this planet
 	pirateResult,					//  Flag:  Lost to pirate and losing something
 	buildTradeBegin,				//  Flag:  Beginning of Trading during build phase
 	buildTradeEnd,					//  Flag:  End of Trading during build phase
 	adventureAvailable,				//  Flag:  Current Planet is an adventure planet and adventure is available.
-	adventureReward				//  Flag:  Adventure Resource Granted
+	adventureReward,				//  Flag:  Adventure Resource Granted
+	cPlanetActive					//  Flag:  Show the Current Planet Icon
 };
 
 class Game
@@ -62,15 +62,14 @@ private:
 				buildMenu,				//  Menu:  Build Phase Actions
 				pirateMenu,				//  Menu:  Pirate Options
 				tradeMenu,				//  Menu:  Trade Options
-				sectorMenu;				//  Menu:  Sector Selection
-	Object		**tradeSaveState,			//  Saves value of all six resources and astro in case of cancel 
-				**flightPathActions,		//  Displays actions by the Current Player during flight				
+				sectorMenu,				//  Menu:  Sector Selection
+				resourceMenu;				//  Menu:  Used for resource choice and save states
+	Object		**flightPathActions,		//  Displays actions by the Current Player during flight				
 				**combatDie,				//  Combat Die for Player and Pirate		 
 				flightDie,				//  Production/Flight Die
 				friendPeople,				//  Worth 1 Vic Point
-				heroPeople,				//  Worth 1 Vic Point
-				cPlanetIcon;				//  Current Planet Icon
-	TradeCard		cPlanetInfo;				//  Placeholder for current trade 		
+				heroPeople;				//  Worth 1 Vic Point
+	TradeCard		currentPlanet;				//  Current Planet Icon	
 	std::string	statusUpdate;				//  Catches errors from called functions
 	sf::Text		phaseNameString,			//  Phase Name Text String
 				endPhaseString,			//  For End of Phase Messages
@@ -99,9 +98,6 @@ public:
 		delete combatDie;
 		for (int i = 0; i < FLIGHTACTIONS; i++)
 			delete flightPathActions[i];
-		for (int i = 0; i < NUMRESOURCES; i++)
-			delete tradeSaveState[i];
-		delete [] tradeSaveState;
 	}
 
 	// getters and setters
@@ -122,7 +118,7 @@ private:
 	void productionPhaseListener();
 	void flightPhaseListener(int tempType);
 	void preFlightListener(int &tempType);
-	void tradeBuildPhaseListener(int &tempNum);
+	void buildPhaseListener(int &tempNum);
 	void tradeMenuListener();
 	void updateFlightMenu();
 	void initTradeMenu(int &tempType, int tempPos = -1);
@@ -140,12 +136,15 @@ private:
 	bool startAdventure();
 	void adventureRewards();
 	std::string getAdvRewardsString(int res, int astro, int fame, int vic);
+	void drawCurrentPlanet();
+	bool isCPlanetTargeted();
 	void showFlightPath();
 	void createFlightMenu();
 	void createBuildMenu();
 	void createPirateMenu();
 	void createTradeMenu();
 	void createSectorMenu();
+	void createResourceMenu();
 
 };
 

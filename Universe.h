@@ -49,10 +49,6 @@ public:
 	Card* getFlightPathPlanet(int num){ return getSector(sectorNum)[num]; }
 	bool isCurrentAdventureTargeted(sf::RenderWindow &gWindow, int &temp);
 	void drawCurrentAdventures(sf::RenderWindow &gWindow);
-	//void hideSectors();
-	//void unhideSectors();
-	//void drawSectors(sf::RenderWindow &gWindow);
-	//bool sectorsTargeted(sf::RenderWindow &gWindow, int &num);
 	bool flightPathTargeted(sf::RenderWindow &gWindow, int &num);
 	void initializeFlightPath(int tempType);
 	void continueFlight(){ currentMove++; }

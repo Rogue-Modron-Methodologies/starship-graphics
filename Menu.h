@@ -12,16 +12,9 @@
 
 #include "Object.h"
 
-const int BUILDICONSIZE = 6;
 enum BuildIcons{ BLVL1, BLVL2, LLVL1, LLVL2, COLSHIP, TRDSHIP };
-
-const int TRADEMENUSIZE = 4;
 enum tradeIcons{ plus, minus, check, cancel };
-
-const int FMENUSIZE = 6;
 enum menuOptions { trdW, estTP, colIt, conFly, endFl, adv };
-
-const int PMENUSIZE = 2;
 enum pirateIcons{ pay, fight };
 
 class Menu
@@ -48,6 +41,9 @@ public:
 	void setPositionOfItem(int i, sf::Vector2f pos ){ menu[i]->setPosition(pos); }
 	void greyItem(int pos){ menu[pos]->greyOut(); }
 	void unGreyItem(int pos){ menu[pos]->unGreyOut(); }
+	int getItemQty(int i) const { return menu[i]->getQty(); }
+	void setItemQty(int i, int qty) { menu[i]->setQty(qty); }
+	int size() const { return (int)menu.size(); }
 
 	bool isItemTargeted(sf::RenderWindow & gWindow, int pos)
 	{
