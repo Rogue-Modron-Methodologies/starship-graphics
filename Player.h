@@ -34,7 +34,7 @@ private:
 	Zone<TradeCard> *tradeZone;		//  Trade Zone 
 	Zone<Pirate> *pirateZone;		//  Zone to hold Pirates that have been defeated  (to be used to create logs.)	
 	Zone<AdventureCard> *advZone;		//  Zone to hold Adventures that have been completed (to be used later.)
-	Object** statistics;				//  Array for the statistic Icons
+	Object** statistics;			//  Array for the statistic Icons
 	bool smallDisplay;
 	bool friendOfThePeople;
 	bool heroOfThePeople;
@@ -50,7 +50,7 @@ public:
 	Zone<Pirate>* getPirateZone() const { return pirateZone; }
 	Zone<AdventureCard>* getAdventureZone() const { return advZone; }
 	int getStatQty(int num){ return statistics[num]->getQty(); }
-	void setStatQty(int stat, int num){ statistics[stat]->setQty(num); }
+	void setAstro(int num){ statistics[astro]->setQty(num); }
 	
 	//  Misc Inline Functions
 	void updatePlayerIcon();

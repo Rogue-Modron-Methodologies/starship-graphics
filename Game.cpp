@@ -158,10 +158,12 @@ void Game::gameLoop()
 				case flight:
 					if (sectorMenu.isActive())
 						preFlightListener(tempNum);
-					if (!sectorMenu.isActive())
+					else if (pirateMenu.isActive())
+						pirateMenuListener(); 
+					else if (tradeMenu.isActive())
+						tradeMenuListener();					
+					else 
 						flightPhaseListener(tempNum);
-					if (tradeMenu.isActive())
-						tradeMenuListener();
 					break;
 				case tradeBuild:
 					buildPhaseListener(tempNum);
@@ -290,8 +292,7 @@ void Game::drawGameWindow()
 		showFlightPath();				
 		pirateMenu.draw(gWindow);
 		drawCurrentPlanet();		
-		tradeMenu.draw(gWindow);		//  Draws the trade icons
-		resourceMenu.draw(gWindow);	//  Prints the resource icons
+
 
 		if (!sectorMenu.isActive())
 		{
@@ -300,7 +301,7 @@ void Game::drawGameWindow()
 			//  When Winner of Pirate Attack (Gain a resource)
 			if (pirateMenu.isActive() && flag[gainResource])
 			{
-				resourceMenu.draw(gWindow);						//  Prints the resource icons available	
+				resourceMenu.draw(gWindow);								//  Prints the resource icons available	
 				if (!areAnyResourcesAvailable() || gainOneResource())			//  If there are no available resources
 				{
 					if (flag[gainResource])
@@ -358,7 +359,7 @@ void Game::drawGameWindow()
 		if (tradeMenu.isActive() && (!flag[buildTradeBegin] != !flag[buildTradeEnd]))
 		{
 				tradeMenu.draw(gWindow);			//  Prints the Trade Menu Clickable Items
-				resourceMenu.draw(gWindow);	//  Prints the resource icons available	
+				resourceMenu.draw(gWindow);		//  Prints the resource icons available	
 			drawCurrentPlanet();
 		}
 		infoString.setString("Trades: " + std::to_string(numPlntsTrd) + " / 2");
@@ -368,6 +369,9 @@ void Game::drawGameWindow()
 	default:
 		break;
 	}
+
+	tradeMenu.draw(gWindow);		//  Draws the trade icons
+	resourceMenu.draw(gWindow);	//  Prints the resource icons
 	
 	// Non Phase Specific Drawables
 	gWindow.draw(phaseNameString);
@@ -512,9 +516,6 @@ void Game::preFlightListener(int &tempType){
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
 void Game::flightPhaseListener(int tempType)
 {	
-	//  If Pirate Attack
-	if (pirateMenu.isActive())
-		pirateMenuListener();
 	// Starship (Small) is clicked
 	if (cPlyr->getStarship()->isTargeted(gWindow) && cPlyr->getStarship()->isSmall())
 	{
@@ -673,7 +674,6 @@ void Game::flightPhaseListener(int tempType)
 	{
 		cPlyr->makeSmall();
 		flag[flightPathActive] = true;
-		std::cout << "skdjf\n";
 	}
 }
 
@@ -687,18 +687,18 @@ void Game::tradeMenuListener()
 	//  If player has option to chose resource but hasn't yet done so
 	if (flag[choosingResource] && !flag[resourceChosen])
 	{
-		for (int i = 0; i < 6; i++)				//  Greys out any resources that are maxed
+		for (int i = 0; i < resourceMenu.size(); i++)				//  Greys out any resources that are maxed
 		{
 			resourceMenu.unGreyItem(i);
 			if (cPlyr->getStarship()->holdFull(i))
 				resourceMenu.greyItem(i);
 		}
-		for (int i = 0; i < 6; i++)				//  checks if a resource has been chosen
+		for (int i = 0; i < resourceMenu.size(); i++)				//  checks if a resource has been chosen
 		{
 			if (resourceMenu.isItemTargeted(gWindow, i))
 			{
 				cTradeResource = i;
-				for (int j = 0; j < 6; j++)
+				for (int j = 0; j < resourceMenu.size(); j++)
 					resourceMenu.greyItem(j);
 				resourceMenu.unGreyItem(cTradeResource);
 				flag[resourceChosen] = true;
@@ -722,6 +722,7 @@ void Game::tradeMenuListener()
 			{
 				cPlyr->updateIcon(cTradeResource);
 				cPlyr->subAstro(cost);
+				cPlyr->updateIcon(astro);
 				cTradeNum++;
 			}
 		}
@@ -742,6 +743,7 @@ void Game::tradeMenuListener()
 			{
 				cPlyr->updateIcon(cTradeResource);
 				cPlyr->addAstro(cost);
+				cPlyr->updateIcon(astro);
 				cTradeNum++;
 			}
 		}
@@ -796,13 +798,14 @@ void Game::tradeMenuListener()
 		flag[choosingResource] = false;
 		flag[resourceChosen] = false;
 		tradeMenu.setActive(false);
-		for (int i = 0; i < 6; i++)							// restores the saveState for all resource and astro values
+		for (int i = 0; i < resourceMenu.size(); i++)							// restores the saveState for all resource and astro values
 		{
-			cPlyr->setStatQty(i, (resourceMenu.getItemQty(i)));
 			cPlyr->getStarship()->setShipObjectQty(i, (resourceMenu.getItemQty(i)));
+			cPlyr->updateIcon(i);
 		}
-		cPlyr->setStatQty(astro, (resourceMenu.getItemQty(astro)));
-		cPlyr->getStarship()->updateShipIcons();
+		cPlyr->getStarship()->updateShipIcons();		
+		cPlyr->setAstro(resourceMenu.getItemQty(astro));
+		cPlyr->updateIcon(astro);
 		flightEventString.setString("Trade Cancelled");
 	}
 }
@@ -973,7 +976,7 @@ void Game::initTradeMenu(int &tempType, int tempPos)
 
 	for (int i = 0; i < resourceMenu.size(); i++)
 	{
-		resourceMenu.setItemQty(i, cPlyr->getStatQty(i));			//  saves the current resource and astro values							
+		resourceMenu.setItemQty(i, cPlyr->getStatQty(i));			//  saves the current resource and astro values	
 		resourceMenu.greyItem(i);							//  makes all items unavailable
 	}
 	if (cTradeResource > 0 && cTradeResource < 6)
@@ -1669,8 +1672,7 @@ void Game::createSectorMenu()
 void Game::createResourceMenu()
 {
 	Object* tempObject;
-	tempObject = new Object(txtMgr.getResource(SYM1FLE), { 780, 562 }, 25, { 35, 35 }, { 3, 0 });		//  Astro
-	resourceMenu.push_back(tempObject);
+
 	tempObject = new Object(txtMgr.getResource(RICNFLE), { 780, 565 }, 1, { 35, 35 });				//  Science
 	resourceMenu.push_back(tempObject);
 	tempObject = new Object(txtMgr.getResource(RICNFLE), { 780, 600 }, 1, { 35, 35 }, { 1, 0 });		//  Ore
@@ -1681,7 +1683,10 @@ void Game::createResourceMenu()
 	resourceMenu.push_back(tempObject);
 	tempObject = new Object(txtMgr.getResource(RICNFLE), { 780, 705 }, 1, { 35, 35 }, { 4, 0 });		//  Wheat
 	resourceMenu.push_back(tempObject);
-	tempObject = new Object(txtMgr.getResource(RICNFLE), { 780, 740 }, 1, { 35, 35 }, { 5, 0 });		//  Carbon
+	tempObject = new Object(txtMgr.getResource(RICNFLE), { 780, 740 }, 1, { 35, 35 }, { 5, 0 });		//  Carbon	
+	resourceMenu.push_back(tempObject);
+	tempObject = new Object(txtMgr.getResource(SYM1FLE), { 780, 562 }, 25, { 35, 35 }, { 3, 0 });		//  Astro
+	tempObject->hide();
 	resourceMenu.push_back(tempObject);
 }
 

@@ -97,11 +97,14 @@ void Player::updatePlayerIcon()
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
 void Player::updateIcon(int type)
 {
-	if (type < 6)
+	if (type < astro)	//  All the tradable resources
 	{
 		int tempNum = starship->getShipObjectQty(type);
 		statistics[type]->setQty(tempNum);
+		statistics[type]->setString(tempNum);
 	}
+	else if (type == astro)
+		statistics[astro]->setString(statistics[astro]->getQty());
 }
 
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
