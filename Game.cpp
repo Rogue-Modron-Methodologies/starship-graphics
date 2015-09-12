@@ -164,7 +164,7 @@ void Game::gameLoop()
 						pirateMenuListener(); 
 					else if (tradeMenu.isActive())
 						tradeMenuListener();					
-					else 
+					else
 						flightPhaseListener(tempNum);
 					break;
 				case tradeBuild:
@@ -352,7 +352,6 @@ void Game::productionPhaseListener()
 			flightDie.setTextPosition({ 440, 545 });
 		}
 	}
-
 	// Colony Zone (Large Icon) is clicked
 	if (!cPlyr->zonesSmall() && cPlyr->getColonyZone()->getIconOnly() && cPlyr->getColonyZone()->isIconTargeted(gWindow))
 	{
@@ -560,8 +559,7 @@ void Game::flightPhaseListener(int tempType)
 				if (startAdventure())
 				{
 					adventureRewards();
-				}
-					
+				}		
 			}
 			else if (!flag[adventureAvailable] && universe->getAdvCard(curAdv)->isAvailable())
 			{
@@ -618,7 +616,6 @@ void Game::tradeMenuListener()
 {	
 	int cost = currentPlanet.getCost();
 	int limit = currentPlanet.getLimit();
-
 	//  If player has option to chose resource but hasn't yet done so
 	if (flag[choosingResource] && !flag[resourceChosen])
 	{
@@ -699,10 +696,17 @@ void Game::tradeMenuListener()
 				universe->replaceCurrentPlanet();
 				flightEventString.setString("Resource Gained");
 			}
-			else 
+			else if (flag[adventureReward])
 			{
+				flag[adventureReward] = false;
+				cPlyr->getAdventureZone()->push_back((AdventureCard*)universe->getAdvCard(curAdv)); 
+				universe->addCardtoAdvDeck(curAdv);
+				currentPlanet.setSrcPos(universe->getCurrentPlanet()->getSrcPos());
 				actionNum++;
 			}
+			else
+				actionNum++;
+
 		}
 		else if (cPhase == tradeBuild)
 		{
@@ -719,6 +723,7 @@ void Game::tradeMenuListener()
 			flightEventString.setString("Resource Gained");
 		}
 
+		cTradeNum = 0;
 		tradeMenu.setActive(false);
 		resourceMenu.setActive(false);
 
@@ -753,6 +758,15 @@ void Game::tradeMenuListener()
 				pirateMenu.setActive(true);
 				gainOneResource();
 			}
+			// Adventure Resource
+			else if (flag[adventureReward])
+			{
+				currentPlanet.setLimit(1);
+				currentPlanet.setTransaction("Buy");
+				tradeMenu.setActive(false);
+				gainOneResource();
+
+			}
 			else
 				flightMenu.setActive(true);
 		}
@@ -768,6 +782,7 @@ void Game::tradeMenuListener()
 			gainOneResource();
 		}
 	}
+
 	updateTradeIcons();
 }
 
@@ -968,9 +983,10 @@ void Game::gainOneResource(int cost)
 			pirateMenu.setActive(false);
 			flightEventString.setString("Trade In Progress");
 			currentPlanet.setLimit(1);
-			flag[choosingResource] = true;
-			flag[resourceChosen] = false;
-		}
+		}			
+
+		flag[choosingResource] = true;
+		flag[resourceChosen] = false;
 	}
 	else if (cPhase == production)
 	{
@@ -1468,12 +1484,16 @@ bool Game::startAdventure()
 void Game::adventureRewards()
 {
 	int numRes = universe->getAdvCard(curAdv)->getRecRcvd();
-	int astro = universe->getAdvCard(curAdv)->getAstros();
+	int astroNum = universe->getAdvCard(curAdv)->getAstros();
 	int fame = universe->getAdvCard(curAdv)->getFame();
 	int vic = universe->getAdvCard(curAdv)->getVicPts();
-	flightEventString.setString(getAdvRewardsString(numRes, astro, fame, vic));
-	if (astro > 0)
-		cPlyr->addAstro(astro);
+	flightEventString.setString(getAdvRewardsString(numRes, astroNum, fame, vic));
+	if (astroNum > 0)
+	{
+		cPlyr->addAstro(astroNum);
+		cPlyr->updateIcon(astro);
+	}
+
 	for (int i = 0; i < fame; i++)
 		cPlyr->addFmPt(fame);  
 	updateHeroOfThePeople();
@@ -1482,29 +1502,18 @@ void Game::adventureRewards()
 	if (numRes > 0)
 	{
 		flag[adventureReward] = true;
-		flightMenu.setActive(false);
-		cPlyr->getAdventureZone()->push_back((AdventureCard*)universe->getAdvCard(curAdv)); // this may need to be moved until after resources are selected (for resource restriction purposes)
+		currentPlanet.setLimit(1);
+		currentPlanet.setTransaction("Buy");
+		gainOneResource();
+	}
+	else
+	{
+		flag[adventureReward] = false;
+		cPlyr->getAdventureZone()->push_back((AdventureCard*)universe->getAdvCard(curAdv));
 		universe->addCardtoAdvDeck(curAdv);
 		currentPlanet.setSrcPos(universe->getCurrentPlanet()->getSrcPos());
 		actionNum++;
 	}
-	//		resourceMenu.draw(gWindow);						//  Prints the resource icons available	
-	//		if (!areAnyResourcesAvailable() || gainOneResource())			//  If there are no available resources
-	//		{
-	//			if (flag[gainResource])
-	//			{
-	//				statusUpdate = "No Resources Available";
-	//				flightEventString.setString("No Resources\nAvailable");
-	//				flag[gainResource] = false;
-	//			}
-	//			else
-	//			{
-	//				flightEventString.setString("Resources Gained");
-	//				std::cout << "Resource Gained\n";
-	//			}
-	//				flag[adventureReward] = false;
-	//				flightMenu.setActive(true);
-	//		}
 }
 
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
@@ -1536,8 +1545,6 @@ std::string Game::getAdvRewardsString(int res, int astro, int fame, int vic)
 void Game::updateTradeIcons()
 {
 	tradeMenu.unhideAll();
-	std::cout << resourceMenu.getItemQty(astro) << " " << cPlyr->getStatQty(astro) << std::endl;
-	std::cout << cTradeNum << std::endl;
 	if (currentPlanet.getCost())
 	{
 		if (resourceMenu.getItemQty(astro) == cPlyr->getStatQty(astro))
@@ -1547,14 +1554,11 @@ void Game::updateTradeIcons()
 	}
 	else
 	{
-		std::cout << "NO COST\n";
 		if (cTradeNum)
 			tradeMenu.unGreyItem(check);
 		else
 			tradeMenu.greyItem(check);
 	}
-
-
 
 	if (currentPlanet.getLimit() && cTradeNum == currentPlanet.getLimit())
 	{
