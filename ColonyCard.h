@@ -13,8 +13,6 @@
 #include "Card.h"
 #include <iostream>
 
-const std::string STRFILE = "resources/colonystarter.png";			//  Source file name for starter colonies
-
 class ColonyCard : public Card
 {
 private:

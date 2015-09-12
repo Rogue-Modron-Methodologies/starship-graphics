@@ -48,10 +48,11 @@ public:
 
 	//  Misc Inline Functions
 	void calcMaxDistance(int dieRoll)  { maxMovement = 10; }// dieRoll + totalBoosters();}
-	int totalLasers() { return shipObjects[L1]->getQty() + shipObjects[L2]->getQty() + shipObjects[L3]->getQty(); }			// used in combat
+	int totalLasers() { return 6;} // shipObjects[L1]->getQty() + shipObjects[L2]->getQty() + shipObjects[L3]->getQty(); }			// used in combat
 	int totalBoosters()  { return shipObjects[B1]->getQty() + shipObjects[B2]->getQty() + shipObjects[B3]->getQty(); }			// called by calcMaxDistance and events	
 	bool shipAvailabletoCompleteAction(int type, int &hanger, std::string &error);
-	bool holdFull(int resource) { return shipObjects[resource]->getQty() >= shipObjects[resource]->getRCap(); }  ////////////// use resource is maxed function?
+	bool holdFull(int resource) const { return shipObjects[resource]->isMaxed(); }  
+	bool holdEmpty(int resource) const { return shipObjects[resource]->isEmpty(); }
 	bool areBoostersMaxed() const { return shipObjects[B1]->isMaxed() && shipObjects[B2]->isMaxed() && shipObjects[B3]->isMaxed(); }
 	bool areLasersMaxed() const { return shipObjects[L1]->isMaxed() && shipObjects[L2]->isMaxed() && shipObjects[L3]->isMaxed(); }
 	bool areHangersFull() const { return shipObjects[H1]->isMaxed() && shipObjects[H2]->isMaxed(); }
@@ -67,7 +68,7 @@ public:
 	bool gainItem(int pos, std::string &statusUpdate, int type = -1);
 	bool loseItem(int pos, std::string &statusUpdate, int type = -1);
 	bool checkBuildItemAvailability(int &num, std::string &statusUpdate);
-	void updateShipIcons();							//  Used when Trade is Cancelled to reset icons back to pre-trade status
+	void updateShipIcons();										//  Used when Trade is Cancelled to reset icons back to pre-trade status
 	bool resourceAvailable(int num, int qty, std::string &statusUpdate);
 };
 

@@ -32,6 +32,8 @@ public:
 	bool loseItem(std::string &error);
 	bool gainItem(std::string &error);
 	void setSrcPos(sf::Vector2u source) { this->srcPos = source; updateTextRect(); }
+	bool isMaxed() const { return qty >= rCap; }
+	bool isEmpty() const { return qty <= 0; }
 	
 };
 

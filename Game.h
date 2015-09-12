@@ -27,11 +27,10 @@ const int FLIGHTACTIONS = 10;
 enum phases{ production, flight, tradeBuild };
 enum combatParties{ply, prt};
 
-const int FLAGNUM = 13;
+const int FLAGNUM = 12;
 enum flagTypes
 {
 	phaseSetupComplete,				//  Flag:  Phase Setup Complete
-	gainResource,					//  Flag:  Choose one resource
 	flightPathActive,				//  Flag:  flightPath, flightActionPath, and Adventures
 	phaseComplete,					//  Flag:  Phase Complete
 	choosingResource,				//  Flag;  In process of choosing Resource
@@ -81,8 +80,7 @@ private:
 	int actionNum;							//  Current Action Num
 	int cPhase;							//  Current Phase Num
 	int errorTimer;						//  Controls error string fade
-	int cTradeResource;						//  Current Traded Resource
-	int cTradeNum;							//  Current Number of Trades
+	int cTradeNum;							//  Current Number of Trades in a specific trade
 	int numPlntsTrd;
 	int curAdv;
 
@@ -121,12 +119,12 @@ private:
 	void buildPhaseListener(int &tempNum);
 	void tradeMenuListener();
 	void updateFlightMenu();
-	void initTradeMenu(int &tempType, int tempPos = -1);
+	void initTradeMenu(int tempPos = -1);
 	bool tradeIconsTargeted();
 	bool anyResourcesInListAvailable(int resAvail[]);
 	bool allRequirementsMet(int requirements[], int size = 6);
 	bool areAnyResourcesAvailable();
-	bool gainOneResource(int cost = 0);
+	void gainOneResource(int cost = 0);
 	void updateFriendOfThePeople();
 	void updateHeroOfThePeople();
 	void pirateMenuListener();
@@ -136,6 +134,7 @@ private:
 	bool startAdventure();
 	void adventureRewards();
 	std::string getAdvRewardsString(int res, int astro, int fame, int vic);
+	void updateTradeIcons();
 	void drawCurrentPlanet();
 	bool isCPlanetTargeted();
 	void showFlightPath();

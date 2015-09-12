@@ -12,6 +12,7 @@
 
 #include "Object.h"
 
+const sf::Vector2u CARDBACK = { 4, 16 };
 const std::string UNIVERSECARDIMAGES = "resources/UniverseCards.png";
 const sf::Vector2u CSRCSZE = { 200, 300 };
 const sf::Vector2f CRDSSCL = sf::Vector2f(.45f, .45f);		//  Card Small Scale for Icons

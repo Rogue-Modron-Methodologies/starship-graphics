@@ -31,7 +31,7 @@ private:
 public:
 	Zone(ResourceManager<sf::Texture> &txtMgr, ResourceManager<sf::Font> &fntMgr, std::string name)
 	{
-		zoneIcon = new Object(txtMgr.getResource(UNIVERSECARDIMAGES), CLPOS, 10, sf::Vector2u(200, 300), { 4, 13 });
+		zoneIcon = new Object(txtMgr.getResource(UNIVERSECARDIMAGES), CLPOS, 10, sf::Vector2u(200, 300), CARDBACK);
 		zoneIcon->setScale(CRDZNSCL);
 		if (name == "Colony")
 			zoneIcon->initString(fntMgr.getResource(FNTFLE), { CLPOS.x, CLPOS.y - 35}, name);

@@ -59,8 +59,16 @@ public:
 	bool isHero() const { return heroOfThePeople; }
 	bool isFriend() const { return friendOfThePeople; }
 	
-	void addFmPt(int num = 1){ statistics[fmPt]->setQty(statistics[fmPt]->getQty() + num ); }
-	void addFrdPt(int num = 1){ statistics[frdPt]->setQty(statistics[frdPt]->getQty() + num ); }
+	void addFmPt(int num = 1)
+	{ 
+		statistics[fmPt]->setQty(statistics[fmPt]->getQty() + num ); 
+		statistics[fmPt]->setString(statistics[fmPt]->getQty());
+	}
+	void addFrdPt(int num = 1)
+	{ 
+		statistics[frdPt]->setQty(statistics[frdPt]->getQty() + num ); 
+		statistics[frdPt]->setString(statistics[frdPt]->getQty());
+	}
 	void updateIcon(int type);
 	void expandColonyZone();
 	void expandTradeZone();
@@ -80,6 +88,7 @@ public:
 	void addVicPt(int num = 1)
 	{
 		statistics[vicPt]->setQty(statistics[vicPt]->getQty() + num ); 
+		statistics[vicPt]->setString(statistics[vicPt]->getQty());
 		if (statistics[vicPt]->getQty() >= 10)
 			std::cout << "If it is this player's turn (will check later) they are the winner!!!!!!!!!!!!\n";
 

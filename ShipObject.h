@@ -37,6 +37,7 @@ public:
 	virtual int getType() const { std::cout << "shipObject getType Function Called\n"; return -1; }
 	virtual int getRCap() const  { "shipObject getRCap Function Called\n"; return -1; }
 	virtual bool isMaxed() const { "shipObject isMaxed Function Called\n"; return false; }
+	virtual bool isEmpty() const { "shipObject isEmpty Function Called\n"; return false; }
 	virtual void setSrcPos(sf::Vector2u source) { this->srcPos = source; updateTextRect(); }
 	virtual void updateTextRect()
 	{
