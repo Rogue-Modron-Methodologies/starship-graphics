@@ -42,7 +42,7 @@ template <class T>
 const T& ResourceManager<T>::getResource(const std::string &filename)
 {
 	// If the resource already exists
-	for (std::map<std::string, T>::const_iterator it = resources.begin(); it != resources.end(); it++)
+	for (typename std::map<std::string, T>::const_iterator it = resources.begin(); it != resources.end(); it++)
 	{
 		if (filename == it->first)
 			return it->second;
@@ -65,7 +65,7 @@ const T& ResourceManager<T>::getResource(const std::string &filename)
 template <class T>
 void ResourceManager<T>::unloadResource(const T &resource)
 {
-	for (std::map<std::string, T>::const_iterator it = resources.begin(); it != resources.end(); it++)
+	for (typename std::map<std::string, T>::const_iterator it = resources.begin(); it != resources.end(); it++)
 	{
 		if (&resource == &it->second)
 		{
@@ -78,7 +78,7 @@ void ResourceManager<T>::unloadResource(const T &resource)
 template <class T>
 void ResourceManager<T>::unloadResource(const std::string &filename)
 {
-	std::map<std::string, T>::const_iterator it = resources.find(filename);
+	typename std::map<std::string, T>::const_iterator it = resources.find(filename);
 	if (it != resources.end())
 		textures.erase(it);
 }
