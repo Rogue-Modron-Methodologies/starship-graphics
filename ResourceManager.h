@@ -80,7 +80,7 @@ void ResourceManager<T>::unloadResource(const std::string &filename)
 {
 	typename std::map<std::string, T>::const_iterator it = resources.find(filename);
 	if (it != resources.end())
-		textures.erase(it);
+		resources.erase(it);
 }
 
 #endif // RESOURCEMANAGER_H

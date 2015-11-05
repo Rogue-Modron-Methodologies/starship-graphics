@@ -12,6 +12,7 @@
 
 #include "ColonyCard.h"
 #include "Pirate.h"
+#include "Player.h"
 #include "TradeCard.h"
 #include "AdventureCard.h"
 
@@ -52,10 +53,8 @@ public:
 
 	// getters and setters
 	bool getIconOnly() const { return showIconOnly; }
-	bool getSmallDisplay() const { return smallDisplay; }
 	sf::Vector2f getPosition() const { return zoneIcon->getPosition(); }
 	sf::Vector2f getScale() const { return zoneIcon->getScale(); }
-	template <class T>
 	T* getZoneItem(int pos){ return zone[pos]; }
 
 	//  Misc Inline Functions
@@ -63,7 +62,6 @@ public:
 
 
 	
-	template<class T>
 	void push_back(T* item) 	
 	{ 
 		zone.push_back(item); 
@@ -162,8 +160,9 @@ public:
 private:
 	void sortZone(){
 		typedef bool(*comparer_t)(const T*, const T*);
-		comparer_t cmp = &sortBy;
-		std::sort(zone.begin(), zone.end(), cmp);
+		//comparer_t cmp = &sortBy;
+		//std::sort(zone.begin(), zone.end(), cmp);
+		std::sort(zone.begin(), zone.end());
 	}
 
 	void updateArrows(){

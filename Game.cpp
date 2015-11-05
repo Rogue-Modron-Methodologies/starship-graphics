@@ -375,7 +375,7 @@ void Game::productionPhaseListener()
 		if (tradeMenu.isActive() && event.mouseButton.button == sf::Mouse::Left)	
 			if (cPlyr->getColonyZone()->resourceMatchesActNum(cType, flightDie.getQty()))
 			{
-				currentPlanet.setSrcPos(cPlyr->getColonyZone()->getZoneItem<ColonyCard>(pos)->getSrcPos());
+				currentPlanet.setSrcPos(cPlyr->getColonyZone()->getZoneItem(pos)->getSrcPos());
 
 			}
 	}
@@ -909,7 +909,7 @@ void Game::initTradeMenu(int tempPos)
 	else if (cPhase == tradeBuild)
 	{
 		flag[buildTradeBegin] = true;
-		currentPlanet.copyData(cPlyr->getTradeZone()->getZoneItem<TradeCard>(tempPos));
+		currentPlanet.copyData(cPlyr->getTradeZone()->getZoneItem(tempPos));
 		flag[cPlanetActive] = true;
 	}	
 	if (currentPlanet.getResource() == 6)
