@@ -10,9 +10,7 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 
-#include "Starship.h"
-#include "Zone.h"
-#include <iostream>
+#include <SFML/Graphics.hpp>
 
 enum Icons{ science, ore, fuel, tradeGood, wheat, carbon, astro, player, vicPt, frdPt, fmPt };
 const int STATNUM = 11;
@@ -25,6 +23,10 @@ const sf::Vector2f CSPOS = sf::Vector2f(20, 550);				//  Screen Position for Sma
 const sf::Vector2f TSPOS = sf::Vector2f(130, 550);			//  Screen Position for Small Scale Trade Icon
 const sf::Vector2f CLPOS = sf::Vector2f(20, 610);				//  Screen Position for Large Scale Colony Icon
 const sf::Vector2f TLPOS = sf::Vector2f(170, 610);			//  Screen Position for Large Scale Trade Icon
+
+#include "Starship.h"
+#include "Zone.h"
+#include <iostream>
 
 class Player 
 {
