@@ -77,8 +77,16 @@ public:
 	void makeBig();
 	void makeSmall();
 	bool zonesSmall(){ return smallDisplay; }
-	void subAstro(int num) {	statistics[astro]->setQty(statistics[astro]->getQty() - num); }
-	void addAstro(int num) { statistics[astro]->setQty(statistics[astro]->getQty() + num); }
+	void subAstro(int num) 
+	{	
+		statistics[astro]->setQty(statistics[astro]->getQty() - num); 
+		statistics[astro]->setString(statistics[astro]->getQty());
+	}
+	void addAstro(int num) 
+	{ 
+		statistics[astro]->setQty(statistics[astro]->getQty() + num); 
+		statistics[astro]->setString(statistics[astro]->getQty());
+	}
 	bool canAfford(int num, std::string &statusUpdate)
 	{
 		if (num <= statistics[astro]->getQty())
