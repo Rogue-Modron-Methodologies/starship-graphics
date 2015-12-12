@@ -144,7 +144,8 @@ public:
 		return false;
 	}
 
-	//  Checks to see if num is in the                         
+	//  Returns true if any activation nums match passed number
+	//  toggles resAvail position to 1 if found
 	bool findResource(int num, int resAvail[]){
 		bool flag = false;
 

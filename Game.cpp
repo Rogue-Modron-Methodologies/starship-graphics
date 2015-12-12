@@ -634,7 +634,7 @@ void Game::tradeMenuListener()
 					resourceMenu.greyItem(j);
 				resourceMenu.unGreyItem(currentPlanet.getResource());
 				flag[resourceChosen] = true;
-				flightEventString.setString("Trade In Procgress");
+				flightEventString.setString("Trade In Progress");
 				break;
 			}
 		}
@@ -644,7 +644,7 @@ void Game::tradeMenuListener()
 	{
 		flag[resourceChosen] = true;
 		currentPlanet.getResource(); ///// ???  
-		flightEventString.setString("Trade In Procgress");
+		flightEventString.setString("Trade In Progress");
 	}	
 
 	//  If the plus icon has been selected
@@ -920,7 +920,6 @@ void Game::buildPhaseListener(int &tempNum)
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
 void Game::initTradeMenu(int tempPos)
 {
-	std::cout << "InitTrade" << std::endl;
 	cTradeNum = 0;
 	switch (cPhase)
 	{
@@ -959,13 +958,11 @@ void Game::initTradeMenu(int tempPos)
 
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
 //
-//  Checks to see if a resource is available and if so allows 
-//  player to chose one that is available.
+//  Checks to see if a resource is available and initiates tradeMenu with no cost.
 //
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
-void Game::gainOneResource(int cost)///////////////   why have cost as a parameter?
+void Game::gainOneResource()
 {
-	std::cout << "gainOne" << std::endl;
 	if (!anyResAvail())
 	{
 		statusUpdate = "No Resources Available";
@@ -985,28 +982,16 @@ void Game::gainOneResource(int cost)///////////////   why have cost as a paramet
 			resourceMenu.greyItem(i);						//  greys all resources that are unavailable
 	}
 
-	switch (cPhase)
-	{
-	case production:
-		flag[choosingResource] = true;
-		flag[resourceChosen] = false;
-		break;
-	case flight:
-		if (pirateMenu.isActive())
-		{
-			pirateMenu.setActive(false);
-			flightEventString.setString("Choose a Resource");
-			currentPlanet.setLimit(1);
-		}
-
-		flag[choosingResource] = true;
-		flag[resourceChosen] = false;
-		break;
-	default:
-		break;
-	}
+	if (pirateMenu.isActive())
+		pirateMenu.setActive(false);
+	flightEventString.setString("Choose a Resource");
+	currentPlanet.setLimit(1);
+	currentPlanet.setCost(0);
+	flag[choosingResource] = true;
+	flag[resourceChosen] = false;
 	updateTradeIcons();
 }
+
 
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
 //
@@ -1555,37 +1540,46 @@ std::string Game::getAdvRewardsString(int res, int astro, int fame, int vic)
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
 void Game::updateTradeIcons()
 {
-	tradeMenu.unhideAll();
-	if (currentPlanet.getCost())
+	//  If player has option to chose resource but hasn't yet done so
+	if (flag[choosingResource] && !flag[resourceChosen])
 	{
-		if (resourceMenu.getItemQty(astro) == cPlyr->getStatQty(astro))
-			tradeMenu.greyItem(check);
-		else
-			tradeMenu.unGreyItem(check);		
+		tradeMenu.hideAll();
 	}
 	else
 	{
-		if (cTradeNum)
-			tradeMenu.unGreyItem(check);
+		tradeMenu.unhideAll();
+		if (currentPlanet.getCost())
+		{
+			if (resourceMenu.getItemQty(astro) == cPlyr->getStatQty(astro))
+				tradeMenu.greyItem(check);
+			else
+				tradeMenu.unGreyItem(check);
+		}
 		else
-			tradeMenu.greyItem(check);
+		{
+			if (cTradeNum)
+				tradeMenu.unGreyItem(check);
+			else
+				tradeMenu.greyItem(check);
+		}
+
+		if (currentPlanet.getLimit() && cTradeNum == currentPlanet.getLimit())
+		{
+			tradeMenu.greyItem(plus);
+			tradeMenu.greyItem(minus);
+		}
+		else
+		{
+			cPlyr->getStarship()->holdFull(currentPlanet.getResource()) ? tradeMenu.greyItem(plus) : tradeMenu.unGreyItem(plus);
+			cPlyr->getStarship()->holdEmpty(currentPlanet.getResource()) ? tradeMenu.greyItem(minus) : tradeMenu.unGreyItem(minus);
+		}
+
+		if (currentPlanet.getTransaction() == "Buy")				//  Can only buy at this trade post
+			tradeMenu.greyItem(minus);
+		else if (currentPlanet.getTransaction() == "Sell")		//  Can only sell at this trade post
+			tradeMenu.greyItem(plus);
 	}
 
-	if (currentPlanet.getLimit() && cTradeNum == currentPlanet.getLimit())
-	{
-		tradeMenu.greyItem(plus);
-		tradeMenu.greyItem(minus);
-	}
-	else
-	{
-		cPlyr->getStarship()->holdFull(currentPlanet.getResource()) ? tradeMenu.greyItem(plus) : tradeMenu.unGreyItem(plus);
-		cPlyr->getStarship()->holdEmpty(currentPlanet.getResource()) ? tradeMenu.greyItem(minus) : tradeMenu.unGreyItem(minus);
-	}
-
-	if (currentPlanet.getTransaction() == "Buy")				//  Can only buy at this trade post
-		tradeMenu.greyItem(minus);
-	else if (currentPlanet.getTransaction() == "Sell")		//  Can only sell at this trade post
-		tradeMenu.greyItem(plus);
 }
 
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 

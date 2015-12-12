@@ -124,7 +124,7 @@ private:
 	bool anyResourcesInListAvailable(int resAvail[]);
 	bool allRequirementsMet(int requirements[], int size = 6);
 	bool anyResAvail();
-	void gainOneResource(int cost = 0);
+	void gainOneResource();
 	void updateFriendOfThePeople();
 	void updateHeroOfThePeople();
 	void pirateMenuListener();
