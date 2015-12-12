@@ -111,7 +111,7 @@ private:
 	void phaseSetup();
 	void drawGameWindow();
 	void endPhase();
-	void rollSpeedDie();
+	void rollFlightDie();
 	void rollCombatDie(int party);
 	void productionPhaseListener();
 	void flightPhaseListener(int tempType);
@@ -123,7 +123,7 @@ private:
 	bool tradeIconsTargeted();
 	bool anyResourcesInListAvailable(int resAvail[]);
 	bool allRequirementsMet(int requirements[], int size = 6);
-	bool areAnyResourcesAvailable();
+	bool anyResAvail();
 	void gainOneResource(int cost = 0);
 	void updateFriendOfThePeople();
 	void updateHeroOfThePeople();

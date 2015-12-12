@@ -202,6 +202,62 @@ void Game::gameLoop()
 }
 
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
+//  
+//  draws the icons and stats for game Window
+//
+// (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
+void Game::drawGameWindow()
+{
+	universe->getBoard()->draw(gWindow);
+	switch (cPhase)
+	{
+	case production:
+		flightDie.draw(gWindow);
+		break;
+	case flight:		
+		sectorMenu.draw(gWindow);
+		updateFlightMenu();
+		flightMenu.draw(gWindow);			
+		showFlightPath();				
+		pirateMenu.draw(gWindow);	
+		break;
+	case tradeBuild:
+		break;
+	}
+
+	// Non Phase Specific Drawables
+	drawCurrentPlanet();
+	tradeMenu.draw(gWindow);		
+	resourceMenu.draw(gWindow);	
+	gWindow.draw(phaseNameString);
+	gWindow.draw(infoString);
+	gWindow.draw(specialString);
+	gWindow.draw(flightEventString);
+	cPlyr->draw(gWindow);	
+
+	if (cPlyr->isFriend())
+		friendPeople.draw(gWindow);
+	if (cPlyr->isHero())
+		heroPeople.draw(gWindow);
+
+	if (statusUpdate.length())
+	{
+		errorTimer = 2550;
+		errorString.setString(statusUpdate);
+	}
+	statusUpdate.clear();
+
+	if (errorTimer){
+		errorString.setColor(sf::Color(255, 0, 0, errorTimer / 10));
+		gWindow.draw(errorString);		
+		errorTimer--;
+	}
+	if (flag[phaseComplete]){
+		gWindow.draw(endPhaseString);
+	}
+}
+
+// (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
 //
 //  inital phase setup
 //
@@ -218,7 +274,7 @@ void Game::phaseSetup()
 		phaseNameString.setString("Production Phase");
 		cPlyr->makeBig();
 		cPlyr->expandColonyZone();		
-		rollSpeedDie();
+		rollFlightDie();
 		cPlyr->getStarship()->calcMaxDistance(flightDie.getQty());
 		tempString.clear();
 		specialString.setPosition({ 525, 30 });
@@ -278,62 +334,6 @@ void Game::phaseSetup()
 		break;
 	}
 	flag[phaseSetupComplete] = true;
-}
-
-// (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
-//  
-//  draws the icons and stats for game Window
-//
-// (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
-void Game::drawGameWindow()
-{
-	universe->getBoard()->draw(gWindow);
-	switch (cPhase)
-	{
-	case production:
-		flightDie.draw(gWindow);
-		break;
-	case flight:		
-		sectorMenu.draw(gWindow);
-		updateFlightMenu();
-		flightMenu.draw(gWindow);			
-		showFlightPath();				
-		pirateMenu.draw(gWindow);	
-		break;
-	case tradeBuild:
-		break;
-	}
-
-	// Non Phase Specific Drawables
-	drawCurrentPlanet();
-	tradeMenu.draw(gWindow);		
-	resourceMenu.draw(gWindow);	
-	gWindow.draw(phaseNameString);
-	gWindow.draw(infoString);
-	gWindow.draw(specialString);
-	gWindow.draw(flightEventString);
-	cPlyr->draw(gWindow);	
-
-	if (cPlyr->isFriend())
-		friendPeople.draw(gWindow);
-	if (cPlyr->isHero())
-		heroPeople.draw(gWindow);
-
-	if (statusUpdate.length())
-	{
-		errorTimer = 2550;
-		errorString.setString(statusUpdate);
-	}
-	statusUpdate.clear();
-
-	if (errorTimer){
-		errorString.setColor(sf::Color(255, 0, 0, errorTimer / 10));
-		gWindow.draw(errorString);		
-		errorTimer--;
-	}
-	if (flag[phaseComplete]){
-		gWindow.draw(endPhaseString);
-	}
 }
 
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
@@ -634,6 +634,7 @@ void Game::tradeMenuListener()
 					resourceMenu.greyItem(j);
 				resourceMenu.unGreyItem(currentPlanet.getResource());
 				flag[resourceChosen] = true;
+				flightEventString.setString("Trade In Procgress");
 				break;
 			}
 		}
@@ -642,7 +643,8 @@ void Game::tradeMenuListener()
 	else if (!flag[choosingResource])
 	{
 		flag[resourceChosen] = true;
-		currentPlanet.getResource();
+		currentPlanet.getResource(); ///// ???  
+		flightEventString.setString("Trade In Procgress");
 	}	
 
 	//  If the plus icon has been selected
@@ -748,8 +750,15 @@ void Game::tradeMenuListener()
 		flag[resourceChosen] = false;
 		tradeMenu.setActive(false);
 
-		if (cPhase == flight)
+		switch (cPhase)
 		{
+		case production:
+			currentPlanet.setLimit(1);
+			currentPlanet.setTransaction("Buy");
+			tradeMenu.setActive(false);
+			gainOneResource();
+			break;
+		case flight:
 			if (universe->getCurrentPlanet()->getType() == pirate)
 			{
 				currentPlanet.setLimit(1);
@@ -769,17 +778,10 @@ void Game::tradeMenuListener()
 			}
 			else
 				flightMenu.setActive(true);
-		}
-		else if (cPhase == tradeBuild)
-		{
+			break;
+		case tradeBuild:
 			flag[cPlanetActive] = false;
-		}
-		else if (cPhase == production)
-		{
-			currentPlanet.setLimit(1);
-			currentPlanet.setTransaction("Buy");
-			tradeMenu.setActive(false);
-			gainOneResource();
+			break;
 		}
 	}
 
@@ -918,15 +920,20 @@ void Game::buildPhaseListener(int &tempNum)
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
 void Game::initTradeMenu(int tempPos)
 {
+	std::cout << "InitTrade" << std::endl;
 	cTradeNum = 0;
-	if (cPhase == flight)
-		currentPlanet.copyData((TradeCard*)universe->getCurrentPlanet());
-	else if (cPhase == tradeBuild)
+	switch (cPhase)
 	{
+	case flight:
+		currentPlanet.copyData((TradeCard*)universe->getCurrentPlanet());
+		break;
+	case tradeBuild:
 		flag[buildTradeBegin] = true;
 		currentPlanet.copyData(cPlyr->getTradeZone()->getZoneItem(tempPos));
 		flag[cPlanetActive] = true;
-	}	
+		break;
+	}
+	
 	if (currentPlanet.getResource() == 6)
 	{
 		flag[choosingResource] = true;
@@ -943,6 +950,7 @@ void Game::initTradeMenu(int tempPos)
 		resourceMenu.setItemQty(i, cPlyr->getStatQty(i));			//  saves the current resource and astro values	
 		resourceMenu.greyItem(i);							//  makes all items unavailable
 	}
+
 	if (currentPlanet.getResource() > 0 && currentPlanet.getResource() < 6)
 		resourceMenu.unGreyItem(currentPlanet.getResource());		//  ungreys the resource of current Planet if able
 	
@@ -955,9 +963,10 @@ void Game::initTradeMenu(int tempPos)
 //  player to chose one that is available.
 //
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
-void Game::gainOneResource(int cost)
+void Game::gainOneResource(int cost)///////////////   why have cost as a parameter?
 {
-	if (!areAnyResourcesAvailable())
+	std::cout << "gainOne" << std::endl;
+	if (!anyResAvail())
 	{
 		statusUpdate = "No Resources Available";
 		flightEventString.setString("No Resources\nAvailable");
@@ -971,29 +980,31 @@ void Game::gainOneResource(int cost)
 	for (int i = 0; i < resourceMenu.size(); i++)
 	{
 		resourceMenu.setItemQty(i, cPlyr->getStatQty(i));			//  saves the current resource and astro values	
-		resourceMenu.unGreyItem(i);
+		resourceMenu.unGreyItem(i);							//  makes all items available
 		if (cPlyr->getStarship()->holdFull(i))
-			resourceMenu.greyItem(i);						//  ungreys all resources that are available
+			resourceMenu.greyItem(i);						//  greys all resources that are unavailable
 	}
 
-	if (cPhase == flight)
+	switch (cPhase)
 	{
+	case production:
+		flag[choosingResource] = true;
+		flag[resourceChosen] = false;
+		break;
+	case flight:
 		if (pirateMenu.isActive())
 		{
 			pirateMenu.setActive(false);
-			flightEventString.setString("Trade In Progress");
+			flightEventString.setString("Choose a Resource");
 			currentPlanet.setLimit(1);
-		}			
+		}
 
 		flag[choosingResource] = true;
 		flag[resourceChosen] = false;
+		break;
+	default:
+		break;
 	}
-	else if (cPhase == production)
-	{
-		flag[choosingResource] = true;
-		flag[resourceChosen] = false;
-	}
-
 	updateTradeIcons();
 }
 
@@ -1082,7 +1093,7 @@ bool Game::tradeIconsTargeted()			////////////////////////////////////   REFACTO
 		if (tradeMenu.isMenuTargeted(gWindow, thisISTEMP))
 			return true;
 		if (resourceMenu.isMenuTargeted(gWindow, thisISTEMP))
-				return true;
+			return true;
 		if (isCPlanetTargeted())
 			return true;
 	}
@@ -1193,7 +1204,7 @@ bool Game::allRequirementsMet(int resAvail[], int size)
 //  Checks to see if a any resources available 
 //
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
-bool Game::areAnyResourcesAvailable()
+bool Game::anyResAvail()
 {
 	for (int i = 0; i < 6; i++){
 		if (!cPlyr->getStarship()->holdFull(i)){
@@ -1274,7 +1285,7 @@ bool Game::buildShipObject(int item)
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
 //  rand(1-3) and updates the sprite to correct textureRect
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
-void Game::rollSpeedDie()
+void Game::rollFlightDie()
 {
 	int num = rand() % 3;
 	flightDie.setSrcPos(sf::Vector2u(num, 0));

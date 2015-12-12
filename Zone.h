@@ -144,7 +144,7 @@ public:
 		return false;
 	}
 
-	//  Checks to see if num is in the list                         
+	//  Checks to see if num is in the                         
 	bool findResource(int num, int resAvail[]){
 		bool flag = false;
 
