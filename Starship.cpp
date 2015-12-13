@@ -19,11 +19,11 @@ Starship::Starship(ResourceManager<sf::Texture> &txtMgr, ResourceManager<sf::Fon
 	shipObjects = new ShipObject*[CLKNUM];			// will be higher once modules are included
 
 	shipObjects[Science] = new Resource(txtMgr.getResource(ARWFILE), sf::Vector2f{ 207, 51 }, sf::Vector2u(55, 55), 1, "Science");
-	shipObjects[Ore] = new Resource(txtMgr.getResource(ARWFILE), sf::Vector2f{ 472, 51 }, sf::Vector2u(55, 55), 1, "Ore");
-	shipObjects[Fuel] = new Resource(txtMgr.getResource(ARWFILE), sf::Vector2f{ 606, 51 }, sf::Vector2u(55, 55), 1, "Fuel");
+	shipObjects[Ore] = new Resource(txtMgr.getResource(ARWFILE), sf::Vector2f{ 472, 51 }, sf::Vector2u(55, 55), 0, "Ore");
+	shipObjects[Fuel] = new Resource(txtMgr.getResource(ARWFILE), sf::Vector2f{ 606, 51 }, sf::Vector2u(55, 55), 0, "Fuel");
 	shipObjects[TradeGood] = new Resource(txtMgr.getResource(ARWFILE), sf::Vector2f{ 207, 318 }, sf::Vector2u(55, 55), 1, "TradeGood");
-	shipObjects[Wheat] = new Resource(txtMgr.getResource(ARWFILE), sf::Vector2f{ 472, 318 }, sf::Vector2u(55, 55), 1, "Wheat");
-	shipObjects[Carbon] = new Resource(txtMgr.getResource(ARWFILE), sf::Vector2f{ 606, 318 }, sf::Vector2u(55, 55), 1, "Carbon");
+	shipObjects[Wheat] = new Resource(txtMgr.getResource(ARWFILE), sf::Vector2f{ 472, 318 }, sf::Vector2u(55, 55), 0, "Wheat");
+	shipObjects[Carbon] = new Resource(txtMgr.getResource(ARWFILE), sf::Vector2f{ 606, 318 }, sf::Vector2u(55, 55), 0, "Carbon");
 
 	shipObjects[B1] = new BoosterLaser(txtMgr.getResource(BSTFILE), sf::Vector2f{ 0, 110 }, 1, sf::Vector2u(105, 63));
 	shipObjects[B2] = new BoosterLaser(txtMgr.getResource(BSTFILE), sf::Vector2f{ 0, 180 }, 0, sf::Vector2u(105, 63));

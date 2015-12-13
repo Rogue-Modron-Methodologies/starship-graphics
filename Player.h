@@ -119,6 +119,24 @@ public:
 		else
 			statistics[vicPt]->setQty(statistics[vicPt]->getQty() - 1);
 	}
+
+	void fillHolds()
+	{
+		std::cout << "Cargo Holds Filled" << std::endl;
+		starship->setShipObjectQty(Science, 4);
+		starship->setShipObjectQty(Ore, 4);
+		starship->setShipObjectQty(Fuel, 4);
+		starship->setShipObjectQty(TradeGood, 4);
+		starship->setShipObjectQty(Wheat, 4);
+		starship->setShipObjectQty(Carbon, 4);
+		starship->updateShipIcons();
+		for (int i = 0; i < 6; i++)
+		{
+			statistics[i]->setQty(4);
+			updateIcon(i);
+		}
+			
+	}
 	
 };
 #endif // PLAYER_H

@@ -147,6 +147,8 @@ void Game::gameLoop()
 					gWindow.close();
 				if (event.key.code == sf::Keyboard::Return && flag[phaseComplete])
 					endPhase();
+				if (event.key.code == sf::Keyboard::F1)
+					cPlyr->fillHolds();
 				break;
 			case sf::Event::MouseButtonPressed:
 				switch (cPhase)
@@ -628,7 +630,6 @@ void Game::tradeMenuListener()
 	else if (!trdMgr.choosingResource())
 	{
 		trdMgr.setResourceChosen(true);
-		trdMgr.getTradedResource(); ///// ???  
 		flightEventString.setString("Trade In Progress");
 	}	
 	//  If the plus icon has been selected
@@ -721,8 +722,6 @@ void Game::tradeMenuListener()
 			{
 				trdMgr.setLimit(1);
 				trdMgr.setTransaction("Buy");
-				trdMgr.setActive(false);
-				pirateMenu.setActive(true);
 				gainOneResource();
 			}
 			// Adventure Resource
@@ -730,19 +729,20 @@ void Game::tradeMenuListener()
 			{
 				trdMgr.setLimit(1);
 				trdMgr.setTransaction("Buy");
-				trdMgr.setActive(false);
 				gainOneResource();
-
 			}
 			else
-				flightMenu.setActive(true);
+			{
+				trdMgr.setActive(false);
+				flightMenu.setActive(true); /////////////////////////////////
+			}
+				
 			break;
 		case tradeBuild:
 			flag[cPlanetActive] = false;
 			break;
 		}
 	}
-
 	trdMgr.updateTradeIcons(cPlyr);
 }
 
@@ -776,7 +776,7 @@ void Game::pirateMenuListener()
 		std::cout << "Pirate: " << pirRes << "   " << combatDie[prt]->getQty() << " + " << universe->getCurrentPlanet()->getCannons() << std::endl;
 		if (plyRes >= pirRes)			//  If the player wins
 		{
-			trdMgr.setActive(true); ///  HERE
+			trdMgr.setActive(true); 
 			flightEventString.setString("Choose a resource");
 			specialString.setString("VICTORY!!! Gain a resource and a fame point");
 			cPlyr->addFmPt();
@@ -923,18 +923,34 @@ void Game::initTradeMenu(int tempPos)
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
 void Game::gainOneResource()
 {
+	pirateMenu.setActive(false);
 	std::cout << "GainOneResource" << std::endl;
 	if (!anyResAvail())
 	{
+		flag[justActed] = true;		
 		statusUpdate = "All Cargo Holds Full";
-		flightEventString.setString("");
+		flightEventString.setString("No Resources Gained");
 		trdMgr.setActive(false);
 		flightMenu.setActive(true);
+		//  If the resource was granted by a pirate
+		if (universe->getCurrentPlanet()->getType() == pirate)
+		{
+			cPlyr->getPirateZone()->push_back((Pirate*)universe->getCurrentPlanet());
+			universe->replaceCurrentPlanet();
+		}
+		else if (flag[adventureReward])
+		{
+			flag[adventureReward] = false;
+			cPlyr->getAdventureZone()->push_back((AdventureCard*)universe->getAdvCard(curAdv));
+			universe->addCardtoAdvDeck(curAdv);
+			currentPlanet.setSrcPos(universe->getCurrentPlanet()->getSrcPos());
+			actionNum++;
+		}
 		return;
 	}
+
 	flightMenu.setActive(false);	
 	flightEventString.setString("Choose a Resource");
-	pirateMenu.setActive(false);
 	trdMgr.saveResources(cPlyr);
 	trdMgr.setTransaction("Buy");
 	trdMgr.setLimit(1);
@@ -960,7 +976,7 @@ void Game::updateFlightMenu()
 
 		if (universe->getCurrentPlanet()->getType() == 2 && !flag[justActed])			//  PIRATE'S CHOICE
 		{
-			currentPlanet.setSrcPos(CARDBACK);				
+			currentPlanet.setSrcPos(CARDBACK);	
 			pirateMenu.setActive(true);
 			flightMenu.setActive(false);
 			specialString.setString("There is a Pirate Here!  They demand " + std::to_string(universe->getCurrentPlanet()->getCost()) + " astro!");
@@ -1427,6 +1443,7 @@ void Game::adventureRewards()
 	updateHeroOfThePeople();
 	for (int i = 0; i < vic; i++)
 		cPlyr->addVicPt(vic);
+	trdMgr.setActive(true);
 	if (numRes > 0)
 	{
 		flag[adventureReward] = true;
