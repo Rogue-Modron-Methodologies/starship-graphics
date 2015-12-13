@@ -929,8 +929,10 @@ void Game::gainOneResource()
 	std::cout << "GainOneResource" << std::endl;
 	if (!anyResAvail())
 	{
-		statusUpdate = "No Resources Available";
-		flightEventString.setString("No Resources\nAvailable");
+		statusUpdate = "All Cargo Holds Full";
+		flightEventString.setString("");
+		trdMgr.setActive(false);
+		flightMenu.setActive(true);
 		return;
 	}
 	flightMenu.setActive(false);	
