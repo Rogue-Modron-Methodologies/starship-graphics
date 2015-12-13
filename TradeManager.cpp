@@ -21,8 +21,19 @@ void TradeManager::setActive(bool toggle)
 {
 	cTradeNum = 0;
 	active = toggle;
+	productionGain = false;
 	resourceMenu.setActive(toggle);
 	tradeMenu.setActive(toggle);
+}
+
+// (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
+//  Toggles the Active and Both Menus
+// (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
+void TradeManager::setAvailableResources(int resAvail[])
+{
+	productionGain = true;
+	for (int i = 0; i < NUMRESOURCES; i++)
+		this->resAvail[i] = resAvail[i];
 }
 
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
@@ -66,17 +77,18 @@ void TradeManager::greyAllButChosesnResources()
 
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
 //  Greys out any only resources that are maxed 
+//  If productionGain has been toggled... will also filter by 
+//  resAvail array.
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
 void TradeManager::greyUnavailResources(Player *cPlyr)
 {
 	for (int i = 0; i < resourceMenu.size(); i++)				
 	{
 		resourceMenu.unGreyItem(i);
-		if (cPlyr->getStarship()->holdFull(i))
+		if (cPlyr->getStarship()->holdFull(i) || (productionGain && resAvail[i] == 0))
 			resourceMenu.greyItem(i);
 	}
 }
-
 
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
 //  Adjust the four trade icons based on inventory levels
@@ -150,7 +162,6 @@ bool TradeManager::iconsTargeted(sf::RenderWindow &gWindow)			//////////////////
 	}
 	return false;
 }
-
 
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
 // draws the resourceMenu if a trade is in progress  

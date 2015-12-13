@@ -264,7 +264,7 @@ void Game::phaseSetup()
 {	
 	std::string tempString;
 	flag[phaseComplete] = false;	
-	int resAvail[6] = { 0 };
+	int resAvail[NUMRESOURCES] = { 0 };
 	switch (cPhase)
 	{
 	case production:
@@ -284,8 +284,9 @@ void Game::phaseSetup()
 				specialString.setString("Chose a colony resource");
 				currentPlanet.setSrcPos(CARDBACK);
 				flag[cPlanetActive] = true;
-				gainOneResource();	
-
+				trdMgr.setActive(true);
+				trdMgr.setAvailableResources(resAvail);
+				gainOneResource();
 			}
 			else
 			{
@@ -705,17 +706,14 @@ void Game::tradeMenuListener()
 		trdMgr.restoreResources(cPlyr);
 		flightEventString.setString("Trade Cancelled");
 
-		trdMgr.setActive(false);
 		trdMgr.setChoosingResource(false);
 		trdMgr.setResourceChosen(false);
-		trdMgr.setActive(false);
 
 		switch (cPhase)
 		{
 		case production:
 			trdMgr.setLimit(1);
 			trdMgr.setTransaction("Buy");
-			trdMgr.setActive(false);
 			gainOneResource();
 			break;
 		case flight:
@@ -894,6 +892,7 @@ void Game::initTradeMenu(int tempPos)
 	}
 
 	flightMenu.setActive(false);
+	flightEventString.setString("Trade In Progress");
 	trdMgr.setActive(true);
 	trdMgr.saveResources(cPlyr);
 
@@ -905,9 +904,7 @@ void Game::initTradeMenu(int tempPos)
 			gainOneResource();
 		return;
 	}
-	flightMenu.setActive(false);
-	flightEventString.setString("Trade In Progress");
-	trdMgr.setActive(true);
+
 	trdMgr.saveResources(cPlyr);
 	trdMgr.setTransaction(currentPlanet.getTransaction());
 	trdMgr.setLimit(currentPlanet.getLimit());
@@ -938,7 +935,6 @@ void Game::gainOneResource()
 	flightMenu.setActive(false);	
 	flightEventString.setString("Choose a Resource");
 	pirateMenu.setActive(false);
-	trdMgr.setActive(true);
 	trdMgr.saveResources(cPlyr);
 	trdMgr.setTransaction("Buy");
 	trdMgr.setLimit(1);

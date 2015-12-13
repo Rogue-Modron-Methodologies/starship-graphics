@@ -24,6 +24,7 @@ private:
 	bool active;
 	bool choosingRes;
 	bool resChosen;
+	bool productionGain;
 	int cResource;
 	int cTradeNum;
 	int cost;
@@ -48,7 +49,7 @@ public:
 	int getCost(){ return cost; }
 	bool isActive() const { return active; }
 	void setTransaction(std::string trans) { transaction = trans; }
-
+	
 	//  Misc Inline Functions
 	bool checkTargeted(sf::RenderWindow &gWindow)
 		{ return tradeMenu.isItemTargeted(gWindow, check); }
@@ -70,6 +71,7 @@ public:
 	bool resourceTargeted(sf::RenderWindow &gWindow, int &pos);
 	bool iconsTargeted(sf::RenderWindow &gWindow);
 	void draw(sf::RenderWindow &gWindow);
+	void setAvailableResources(int resAvail[]);
 
 private:
 	void createResourceMenu(ResourceManager<sf::Texture> &txtMgr);
