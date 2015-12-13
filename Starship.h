@@ -57,7 +57,6 @@ public:
 	bool areLasersMaxed() const { return shipObjects[L1]->isMaxed() && shipObjects[L2]->isMaxed() && shipObjects[L3]->isMaxed(); }
 	bool areHangersFull() const { return shipObjects[H1]->isMaxed() && shipObjects[H2]->isMaxed(); }
 	
-
 	//  Prototypes
 	void draw(sf::RenderWindow &window);
 	void makeSmall();

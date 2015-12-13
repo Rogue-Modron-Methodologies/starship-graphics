@@ -10,31 +10,26 @@
 #ifndef GAME_H
 #define GAME_H
 
-#include "Player.h"
 #include "Universe.h"
 #include "Menu.h"
+#include "TradeManager.h"
 #include <string>
 #include <fstream>
 #include <sstream>
 #include "SFML/Graphics.hpp"
 
-const std::string SDIEFLE = "resources/flightdie.png";
-const std::string CDIEFLE = "resources/combatdie.png";
-const std::string TRDICN = "resources/TradeMenuIcons.png";
-const int NUMRESOURCES = 7;
+
 const int FLIGHTACTIONS = 10;
 
 enum phases{ production, flight, tradeBuild };
 enum combatParties{ply, prt};
 
-const int FLAGNUM = 12;
+const int FLAGNUM = 10;
 enum flagTypes
 {
 	phaseSetupComplete,				//  Flag:  Phase Setup Complete
 	flightPathActive,				//  Flag:  flightPath, flightActionPath, and Adventures
 	phaseComplete,					//  Flag:  Phase Complete
-	choosingResource,				//  Flag;  In process of choosing Resource
-	resourceChosen,				//  Flag:  Resource Chosen
 	justActed,					//  Flag:  Performed and action on this planet
 	pirateResult,					//  Flag:  Lost to pirate and losing something
 	buildTradeBegin,				//  Flag:  Beginning of Trading during build phase
@@ -49,6 +44,7 @@ class Game
 private:
 	ResourceManager<sf::Texture> txtMgr;
 	ResourceManager<sf::Font> fntMgr;	
+	TradeManager trdMgr;	
 	bool flag[FLAGNUM];						//  Hold an array of flags for game decisions	
 	sf::RenderWindow gWindow;
 	sf::Vector2u screenSize;
@@ -60,9 +56,7 @@ private:
 	Menu			flightMenu,				//  Menu:  Flight Phase Actions
 				buildMenu,				//  Menu:  Build Phase Actions
 				pirateMenu,				//  Menu:  Pirate Options
-				tradeMenu,				//  Menu:  Trade Options
-				sectorMenu,				//  Menu:  Sector Selection
-				resourceMenu;				//  Menu:  Used for resource choice and save states
+				sectorMenu;				//  Menu:  Sector Selection
 	Object		**flightPathActions,		//  Displays actions by the Current Player during flight				
 				**combatDie,				//  Combat Die for Player and Pirate		 
 				flightDie,				//  Production/Flight Die
@@ -76,11 +70,9 @@ private:
 				infoString,				//  Info Text String
 				errorString,				//  Error Text String	
 				flightEventString;			//  In Progress/Complete/Cancelled	
-	int cType;							//  current resource type
 	int actionNum;							//  Current Action Num
 	int cPhase;							//  Current Phase Num
 	int errorTimer;						//  Controls error string fade
-	int cTradeNum;							//  Current Number of Trades in a specific trade
 	int numPlntsTrd;
 	int curAdv;
 
@@ -120,7 +112,6 @@ private:
 	void tradeMenuListener();
 	void updateFlightMenu();
 	void initTradeMenu(int tempPos = -1);
-	bool tradeIconsTargeted();
 	bool anyResourcesInListAvailable(int resAvail[]);
 	bool allRequirementsMet(int requirements[], int size = 6);
 	bool anyResAvail();
@@ -134,16 +125,13 @@ private:
 	bool startAdventure();
 	void adventureRewards();
 	std::string getAdvRewardsString(int res, int astro, int fame, int vic);
-	void updateTradeIcons();
 	void drawCurrentPlanet();
 	bool isCPlanetTargeted();
 	void showFlightPath();
 	void createFlightMenu();
 	void createBuildMenu();
 	void createPirateMenu();
-	void createTradeMenu();
 	void createSectorMenu();
-	void createResourceMenu();
 
 };
 

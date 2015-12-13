@@ -14,7 +14,8 @@
 //  Player Name Setup
 //
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
-Game::Game() : currentPlanet(txtMgr.getResource(UNIVERSECARDIMAGES), { 4, 13 }, 0, "", 0, 0, 0, "", 0, 0),
+Game::Game() : trdMgr(txtMgr),
+			currentPlanet(txtMgr.getResource(UNIVERSECARDIMAGES), { 4, 13 }, 0, "", 0, 0, 0, "", 0, 0),
 			friendPeople(txtMgr.getResource(FRIENDHERO), sf::Vector2f{ 900, 840 }, 1, sf::Vector2u(200, 200), { 1, 0 }),		
 			heroPeople(txtMgr.getResource(FRIENDHERO), sf::Vector2f{ 975, 840 }, 1, sf::Vector2u(200, 200), { 0, 0 }),
 			flightDie(txtMgr.getResource(SDIEFLE), sf::Vector2f{ 350, 525 }, 1, sf::Vector2u(80, 80))
@@ -41,9 +42,7 @@ Game::Game() : currentPlanet(txtMgr.getResource(UNIVERSECARDIMAGES), { 4, 13 }, 
 	createFlightMenu();
 	createBuildMenu();
 	createPirateMenu();
-	createTradeMenu();
 	createSectorMenu();
-	createResourceMenu();
 
 	phaseNameString.setFont(fntMgr.getResource(FNTFLE));
 	phaseNameString.setPosition({ 200, 820 });
@@ -153,7 +152,7 @@ void Game::gameLoop()
 				switch (cPhase)
 				{
 				case production: 
-					if (tradeMenu.isActive())
+					if (trdMgr.isActive())
 						tradeMenuListener();
 					productionPhaseListener();
 					break;
@@ -162,14 +161,14 @@ void Game::gameLoop()
 						preFlightListener(tempNum);
 					else if (pirateMenu.isActive())
 						pirateMenuListener(); 
-					else if (tradeMenu.isActive())
+					else if (trdMgr.isActive())
 						tradeMenuListener();					
 					else
 						flightPhaseListener(tempNum);
 					break;
 				case tradeBuild:
 					buildPhaseListener(tempNum);
-					if (tradeMenu.isActive() && (!flag[buildTradeBegin] != !flag[buildTradeEnd]))
+					if (trdMgr.isActive() && (!flag[buildTradeBegin] != !flag[buildTradeEnd]))
 						tradeMenuListener();					
 					break;
 				}			
@@ -227,8 +226,7 @@ void Game::drawGameWindow()
 
 	// Non Phase Specific Drawables
 	drawCurrentPlanet();
-	tradeMenu.draw(gWindow);		
-	resourceMenu.draw(gWindow);	
+	trdMgr.draw(gWindow);	
 	gWindow.draw(phaseNameString);
 	gWindow.draw(infoString);
 	gWindow.draw(specialString);
@@ -267,7 +265,6 @@ void Game::phaseSetup()
 	std::string tempString;
 	flag[phaseComplete] = false;	
 	int resAvail[6] = { 0 };
-	cTradeNum = 0;
 	switch (cPhase)
 	{
 	case production:
@@ -286,8 +283,6 @@ void Game::phaseSetup()
 			{
 				specialString.setString("Chose a colony resource");
 				currentPlanet.setSrcPos(CARDBACK);
-				currentPlanet.setLimit(1);
-				currentPlanet.setTransaction("Buy");
 				flag[cPlanetActive] = true;
 				gainOneResource();	
 
@@ -342,6 +337,7 @@ void Game::phaseSetup()
 void Game::productionPhaseListener()
 {
 	int pos;
+	int cType = trdMgr.resourceChosen();
 	// Starship (Small) is clicked
 	if (cPlyr->getStarship()->isTargeted(gWindow) && cPlyr->getStarship()->isSmall())
 	{
@@ -371,7 +367,7 @@ void Game::productionPhaseListener()
 	// Colony Zone (Large List) is clicked and player is entitled to a production resource
 	else if (!cPlyr->zonesSmall() && !cPlyr->getColonyZone()->getIconOnly() && cPlyr->getColonyZone()->isZoneTargeted(gWindow, cType, pos))
 	{
-		if (tradeMenu.isActive() && event.mouseButton.button == sf::Mouse::Left)	
+		if (trdMgr.isActive() && event.mouseButton.button == sf::Mouse::Left)	
 			if (cPlyr->getColonyZone()->resourceMatchesActNum(cType, flightDie.getQty()))
 			{
 				currentPlanet.setSrcPos(cPlyr->getColonyZone()->getZoneItem(pos)->getSrcPos());
@@ -381,7 +377,7 @@ void Game::productionPhaseListener()
 	// Trade Zone (Large List) is clicked
 	else if (!cPlyr->getTradeZone()->getIconOnly() && cPlyr->getTradeZone()->isZoneTargeted(gWindow, cType, cType)){}		// Do Nothing this Phase
 	//  Trade Menu is targeted
-	else if (tradeIconsTargeted()){}	// Do Nothing this Phase
+	else if (trdMgr.iconsTargeted(gWindow)){}	// Do Nothing this Phase
 	//  Starship (Large) && Empty Space is clicked
 	else if (!cPlyr->getStarship()->isTargeted(gWindow) && !cPlyr->getStarship()->isSmall()){
 		cPlyr->makeSmall();
@@ -602,7 +598,7 @@ void Game::flightPhaseListener(int tempType)
 		}
 	}
 	//  Starship (Large) && Empty Space is clicked
-	else if (!cPlyr->getStarship()->isTargeted(gWindow) && !cPlyr->getStarship()->isSmall() && !tradeIconsTargeted())
+	else if (!cPlyr->getStarship()->isTargeted(gWindow) && !cPlyr->getStarship()->isSmall() && !trdMgr.iconsTargeted(gWindow))
 	{
 		cPlyr->makeSmall();
 		flag[flightPathActive] = true;
@@ -614,75 +610,50 @@ void Game::flightPhaseListener(int tempType)
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
 void Game::tradeMenuListener()
 {	
-	int cost = currentPlanet.getCost();
-	int limit = currentPlanet.getLimit();
+	int temp = -1;
 	//  If player has option to chose resource but hasn't yet done so
-	if (flag[choosingResource] && !flag[resourceChosen])
+	if (trdMgr.choosingResource() && !trdMgr.resourceChosen())
 	{
-		for (int i = 0; i < resourceMenu.size(); i++)				//  Greys out any resources that are maxed
+		
+		if (trdMgr.resourceTargeted(gWindow, temp))
 		{
-			resourceMenu.unGreyItem(i);
-			if (cPlyr->getStarship()->holdFull(i))
-				resourceMenu.greyItem(i);
-		}
-		for (int i = 0; i < resourceMenu.size(); i++)				//  checks if a resource has been chosen
-		{
-			if (resourceMenu.isItemTargeted(gWindow, i))
-			{
-				currentPlanet.setResource(i);
-				for (int j = 0; j < resourceMenu.size(); j++)
-					resourceMenu.greyItem(j);
-				resourceMenu.unGreyItem(currentPlanet.getResource());
-				flag[resourceChosen] = true;
-				flightEventString.setString("Trade In Progress");
-				break;
-			}
+			trdMgr.setTradedResource(temp);
+			trdMgr.setResourceChosen(true);
+			trdMgr.greyAllButChosesnResources();
+			flightEventString.setString("Trade In Progress");
 		}
 	}
 	//  If player doesn't have the option to chose resource (auto chooses the resource)
-	else if (!flag[choosingResource])
+	else if (!trdMgr.choosingResource())
 	{
-		flag[resourceChosen] = true;
-		currentPlanet.getResource(); ///// ???  
+		trdMgr.setResourceChosen(true);
+		trdMgr.getTradedResource(); ///// ???  
 		flightEventString.setString("Trade In Progress");
 	}	
-
 	//  If the plus icon has been selected
-	if (event.mouseButton.button == sf::Mouse::Left && tradeMenu.isItemTargeted(gWindow, plus))
+	if (event.mouseButton.button == sf::Mouse::Left && trdMgr.plusTargeted(gWindow))
 	{
-		//  If the resource has been chosen
-		if (flag[resourceChosen])
+		if (cPlyr->canAfford(trdMgr.getCost(), statusUpdate) && cPlyr->getStarship()->gainItem(trdMgr.getTradedResource(), statusUpdate))
 		{
-			if (cPlyr->canAfford(cost, statusUpdate) && cPlyr->getStarship()->gainItem(currentPlanet.getResource(), statusUpdate))
-			{
-				cPlyr->updateIcon(currentPlanet.getResource());
-				cPlyr->subAstro(cost);
-				cPlyr->updateIcon(astro);				
-				cTradeNum++;
-			}
-		}	
-		//  If resource has NOT been chosen and the plus icon has been selected
-		else
-			statusUpdate = "Choose a resource";
-	}
-	//  If resource has been chosen and the minus icon has been selected
-	else if (flag[resourceChosen] && event.mouseButton.button == sf::Mouse::Left && tradeMenu.isItemTargeted(gWindow, minus))
-	{
-		if (cPlyr->getStarship()->loseItem(currentPlanet.getResource(), statusUpdate))
-		{
-			cPlyr->updateIcon(currentPlanet.getResource());
-			cPlyr->addAstro(cost);
+			cPlyr->updateIcon(trdMgr.getTradedResource());
+			cPlyr->subAstro(trdMgr.getCost());
 			cPlyr->updateIcon(astro);				
-			cTradeNum++;
+			trdMgr.tradNumPlusOne();
+		}		
+	}
+	//  If the minus icon has been selected
+	else if (trdMgr.resourceChosen() && event.mouseButton.button == sf::Mouse::Left && trdMgr.minusTargeted(gWindow))
+	{
+		if (cPlyr->getStarship()->loseItem(trdMgr.getTradedResource(), statusUpdate))
+		{
+			cPlyr->updateIcon(trdMgr.getTradedResource());
+			cPlyr->addAstro(trdMgr.getCost());
+			cPlyr->updateIcon(astro);				
+			trdMgr.tradNumPlusOne();
 		}
 	}
-	//  If resource has NOT been chosen and the minus icon has been selected
-	else if (flag[resourceChosen] && event.mouseButton.button == sf::Mouse::Left && tradeMenu.isItemTargeted(gWindow, minus))
-	{
-		statusUpdate = "Choose a resource";
-	}
 	//  If the Check Icon has been selected
-	else if (event.mouseButton.button == sf::Mouse::Left && tradeMenu.isItemTargeted(gWindow, check))
+	else if (event.mouseButton.button == sf::Mouse::Left && trdMgr.checkTargeted(gWindow))
 	{
 		if (cPhase == flight)
 		{
@@ -725,54 +696,43 @@ void Game::tradeMenuListener()
 			flightEventString.setString("Resource Gained");
 		}
 
-		cTradeNum = 0;
-		tradeMenu.setActive(false);
-		resourceMenu.setActive(false);
+		trdMgr.setActive(false);
 
 	}
 	//  If the Cancel Icon has been selected
-	else if (event.mouseButton.button == sf::Mouse::Left && tradeMenu.isItemTargeted(gWindow, cancel))
+	else if (event.mouseButton.button == sf::Mouse::Left && trdMgr.cancelTargeted(gWindow))
 	{
-		for (int i = 0; i < resourceMenu.size(); i++)							// restores the saveState for all resource and astro values
-		{
-			cPlyr->getStarship()->setShipObjectQty(i, (resourceMenu.getItemQty(i)));
-			cPlyr->updateIcon(i);
-		}
-		cTradeNum = 0;
-		cPlyr->getStarship()->updateShipIcons();		
-		cPlyr->setAstro(resourceMenu.getItemQty(astro));
-		cPlyr->updateIcon(astro);
+		trdMgr.restoreResources(cPlyr);
 		flightEventString.setString("Trade Cancelled");
 
-		tradeMenu.setActive(false);
-		resourceMenu.setActive(false);
-		flag[choosingResource] = false;
-		flag[resourceChosen] = false;
-		tradeMenu.setActive(false);
+		trdMgr.setActive(false);
+		trdMgr.setChoosingResource(false);
+		trdMgr.setResourceChosen(false);
+		trdMgr.setActive(false);
 
 		switch (cPhase)
 		{
 		case production:
-			currentPlanet.setLimit(1);
-			currentPlanet.setTransaction("Buy");
-			tradeMenu.setActive(false);
+			trdMgr.setLimit(1);
+			trdMgr.setTransaction("Buy");
+			trdMgr.setActive(false);
 			gainOneResource();
 			break;
 		case flight:
 			if (universe->getCurrentPlanet()->getType() == pirate)
 			{
-				currentPlanet.setLimit(1);
-				currentPlanet.setTransaction("Buy");
-				tradeMenu.setActive(false);
+				trdMgr.setLimit(1);
+				trdMgr.setTransaction("Buy");
+				trdMgr.setActive(false);
 				pirateMenu.setActive(true);
 				gainOneResource();
 			}
 			// Adventure Resource
 			else if (flag[adventureReward])
 			{
-				currentPlanet.setLimit(1);
-				currentPlanet.setTransaction("Buy");
-				tradeMenu.setActive(false);
+				trdMgr.setLimit(1);
+				trdMgr.setTransaction("Buy");
+				trdMgr.setActive(false);
 				gainOneResource();
 
 			}
@@ -785,7 +745,7 @@ void Game::tradeMenuListener()
 		}
 	}
 
-	updateTradeIcons();
+	trdMgr.updateTradeIcons(cPlyr);
 }
 
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
@@ -818,14 +778,14 @@ void Game::pirateMenuListener()
 		std::cout << "Pirate: " << pirRes << "   " << combatDie[prt]->getQty() << " + " << universe->getCurrentPlanet()->getCannons() << std::endl;
 		if (plyRes >= pirRes)			//  If the player wins
 		{
-			tradeMenu.setActive(true); ///  HERE
+			trdMgr.setActive(true); ///  HERE
 			flightEventString.setString("Choose a resource");
 			specialString.setString("VICTORY!!! Gain a resource and a fame point");
 			cPlyr->addFmPt();
 			updateHeroOfThePeople();
 			flightPathActions[universe->getCurrentMove() - 1]->setSrcPosX(2);
-			currentPlanet.setLimit(1);
-			currentPlanet.setTransaction("Buy");
+			trdMgr.setLimit(1);
+			trdMgr.setTransaction("Buy");
 			gainOneResource();		
 		}
 		else                              	//  If the pirate wins
@@ -909,7 +869,7 @@ void Game::buildPhaseListener(int &tempNum)
 		initTradeMenu(tempPos);
 	else if (!cPlyr->zonesSmall() && !cPlyr->getTradeZone()->getIconOnly() && flag[buildTradeEnd] && cPlyr->getTradeZone()->isZoneTargeted(gWindow, tempNum, tempPos))
 		statusUpdate = "Max Trades Reached";
-	else if (tradeIconsTargeted() && (!flag[buildTradeBegin] != !flag[buildTradeEnd])){}
+	else if (trdMgr.iconsTargeted(gWindow) && (!flag[buildTradeBegin] != !flag[buildTradeEnd])){}
 	//  Starship (Large) && Empty Space is clicked
 	else if (!cPlyr->getStarship()->isTargeted(gWindow) && !cPlyr->getStarship()->isSmall())
 		cPlyr->makeSmall();
@@ -920,7 +880,7 @@ void Game::buildPhaseListener(int &tempNum)
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
 void Game::initTradeMenu(int tempPos)
 {
-	cTradeNum = 0;
+	std::cout << "initTradeMenu" << std::endl;
 	switch (cPhase)
 	{
 	case flight:
@@ -932,28 +892,31 @@ void Game::initTradeMenu(int tempPos)
 		flag[cPlanetActive] = true;
 		break;
 	}
-	
-	if (currentPlanet.getResource() == 6)
-	{
-		flag[choosingResource] = true;
-		flag[resourceChosen] = false;
-	}
-	
+
 	flightMenu.setActive(false);
-	tradeMenu.setActive(true);
-	resourceMenu.setActive(true);
-	flightEventString.setString("Trade In Progress");			
+	trdMgr.setActive(true);
+	trdMgr.saveResources(cPlyr);
 
-	for (int i = 0; i < resourceMenu.size(); i++)
+	// If the card allows for any resource to be chosen
+	if (currentPlanet.getResource() == 6) 
 	{
-		resourceMenu.setItemQty(i, cPlyr->getStatQty(i));			//  saves the current resource and astro values	
-		resourceMenu.greyItem(i);							//  makes all items unavailable
+		//  calls the gainOneResource function getLimit() times
+		for (int i = currentPlanet.getLimit(); i > 0; i--)
+			gainOneResource();
+		return;
 	}
-
-	if (currentPlanet.getResource() > 0 && currentPlanet.getResource() < 6)
-		resourceMenu.unGreyItem(currentPlanet.getResource());		//  ungreys the resource of current Planet if able
-	
-	updateTradeIcons();
+	flightMenu.setActive(false);
+	flightEventString.setString("Trade In Progress");
+	trdMgr.setActive(true);
+	trdMgr.saveResources(cPlyr);
+	trdMgr.setTransaction(currentPlanet.getTransaction());
+	trdMgr.setLimit(currentPlanet.getLimit());
+	trdMgr.setCost(currentPlanet.getCost());
+	trdMgr.setTradedResource(currentPlanet.getResource());
+	trdMgr.greyAllButChosesnResources();
+	trdMgr.setChoosingResource(false);
+	trdMgr.setResourceChosen(false);
+	trdMgr.updateTradeIcons(cPlyr);
 }
 
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
@@ -963,35 +926,26 @@ void Game::initTradeMenu(int tempPos)
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
 void Game::gainOneResource()
 {
+	std::cout << "GainOneResource" << std::endl;
 	if (!anyResAvail())
 	{
 		statusUpdate = "No Resources Available";
 		flightEventString.setString("No Resources\nAvailable");
 		return;
 	}
-
-	flightMenu.setActive(false);
-	tradeMenu.setActive(true);
-	resourceMenu.setActive(true);
-
-	for (int i = 0; i < resourceMenu.size(); i++)
-	{
-		resourceMenu.setItemQty(i, cPlyr->getStatQty(i));			//  saves the current resource and astro values	
-		resourceMenu.unGreyItem(i);							//  makes all items available
-		if (cPlyr->getStarship()->holdFull(i))
-			resourceMenu.greyItem(i);						//  greys all resources that are unavailable
-	}
-
-	if (pirateMenu.isActive())
-		pirateMenu.setActive(false);
+	flightMenu.setActive(false);	
 	flightEventString.setString("Choose a Resource");
-	currentPlanet.setLimit(1);
-	currentPlanet.setCost(0);
-	flag[choosingResource] = true;
-	flag[resourceChosen] = false;
-	updateTradeIcons();
+	pirateMenu.setActive(false);
+	trdMgr.setActive(true);
+	trdMgr.saveResources(cPlyr);
+	trdMgr.setTransaction("Buy");
+	trdMgr.setLimit(1);
+	trdMgr.setCost(0);
+	trdMgr.greyUnavailResources(cPlyr);
+	trdMgr.setChoosingResource(true);
+	trdMgr.setResourceChosen(false);
+	trdMgr.updateTradeIcons(cPlyr);	
 }
-
 
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
 //
@@ -1063,26 +1017,6 @@ void Game::showFlightPath()
 		}
 		universe->drawCurrentAdventures(gWindow);
 	}
-}
-
-// (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
-//
-//  Returns true if any Trade Icons are clicked
-//
-// (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
-bool Game::tradeIconsTargeted()			////////////////////////////////////   REFACTOR
-{
-	int thisISTEMP = 0;
-	if (tradeMenu.isActive())
-	{
-		if (tradeMenu.isMenuTargeted(gWindow, thisISTEMP))
-			return true;
-		if (resourceMenu.isMenuTargeted(gWindow, thisISTEMP))
-			return true;
-		if (isCPlanetTargeted())
-			return true;
-	}
-	return false;
 }
 
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
@@ -1498,8 +1432,8 @@ void Game::adventureRewards()
 	if (numRes > 0)
 	{
 		flag[adventureReward] = true;
-		currentPlanet.setLimit(1);
-		currentPlanet.setTransaction("Buy");
+		trdMgr.setLimit(1);
+		trdMgr.setTransaction("Buy");
 		gainOneResource();
 	}
 	else
@@ -1530,56 +1464,6 @@ std::string Game::getAdvRewardsString(int res, int astro, int fame, int vic)
 		tempString += std::to_string(vic) + " Victory Point\n";
 
 	return tempString;
-}
-
-// (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
-//
-//  Adjust the four trade icons based on inventory levels
-//  Uses the members of currentPlanet Object 
-//
-// (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
-void Game::updateTradeIcons()
-{
-	//  If player has option to chose resource but hasn't yet done so
-	if (flag[choosingResource] && !flag[resourceChosen])
-	{
-		tradeMenu.hideAll();
-	}
-	else
-	{
-		tradeMenu.unhideAll();
-		if (currentPlanet.getCost())
-		{
-			if (resourceMenu.getItemQty(astro) == cPlyr->getStatQty(astro))
-				tradeMenu.greyItem(check);
-			else
-				tradeMenu.unGreyItem(check);
-		}
-		else
-		{
-			if (cTradeNum)
-				tradeMenu.unGreyItem(check);
-			else
-				tradeMenu.greyItem(check);
-		}
-
-		if (currentPlanet.getLimit() && cTradeNum == currentPlanet.getLimit())
-		{
-			tradeMenu.greyItem(plus);
-			tradeMenu.greyItem(minus);
-		}
-		else
-		{
-			cPlyr->getStarship()->holdFull(currentPlanet.getResource()) ? tradeMenu.greyItem(plus) : tradeMenu.unGreyItem(plus);
-			cPlyr->getStarship()->holdEmpty(currentPlanet.getResource()) ? tradeMenu.greyItem(minus) : tradeMenu.unGreyItem(minus);
-		}
-
-		if (currentPlanet.getTransaction() == "Buy")				//  Can only buy at this trade post
-			tradeMenu.greyItem(minus);
-		else if (currentPlanet.getTransaction() == "Sell")		//  Can only sell at this trade post
-			tradeMenu.greyItem(plus);
-	}
-
 }
 
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
@@ -1653,17 +1537,6 @@ void Game::createPirateMenu()
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
 //  Creates the Trade Menu
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
-void Game::createTradeMenu()
-{
-	tradeMenu.push_back( new Object(txtMgr.getResource(TRDICN), { 675, 575 }, 1, { 50, 50 }, { 0, 0 }));
-	tradeMenu.push_back(new Object(txtMgr.getResource(TRDICN), { 675, 675 }, 1, { 50, 50 }, { 1, 0 }));
-	tradeMenu.push_back(new Object(txtMgr.getResource(TRDICN), { 635, 760 }, 1, { 50, 50 }, { 2, 0 }));
-	tradeMenu.push_back(new Object(txtMgr.getResource(TRDICN), { 710, 760 }, 1, { 50, 50 }, { 3, 0 }));
-}
-
-// (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
-//  Creates the Trade Menu
-// (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
 void Game::createSectorMenu()
 {
 	Object* tempObject;
@@ -1688,30 +1561,6 @@ void Game::createSectorMenu()
 	tempObject->setTextScale({ 5, 5 });
 	sectorMenu.push_back(tempObject);
 
-}
-
-// (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
-//  Creates the Resource Managment/Save State Menu
-// (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
-void Game::createResourceMenu()
-{
-	Object* tempObject;
-
-	tempObject = new Object(txtMgr.getResource(RICNFLE), { 780, 565 }, 1, { 35, 35 });				//  Science
-	resourceMenu.push_back(tempObject);
-	tempObject = new Object(txtMgr.getResource(RICNFLE), { 780, 600 }, 1, { 35, 35 }, { 1, 0 });		//  Ore
-	resourceMenu.push_back(tempObject);
-	tempObject = new Object(txtMgr.getResource(RICNFLE), { 780, 635 }, 1, { 35, 35 }, { 2, 0 });		//  Fuel
-	resourceMenu.push_back(tempObject);
-	tempObject = new Object(txtMgr.getResource(RICNFLE), { 780, 670 }, 1, { 35, 35 }, { 3, 0 });		//  TradeGood
-	resourceMenu.push_back(tempObject);
-	tempObject = new Object(txtMgr.getResource(RICNFLE), { 780, 705 }, 1, { 35, 35 }, { 4, 0 });		//  Wheat
-	resourceMenu.push_back(tempObject);
-	tempObject = new Object(txtMgr.getResource(RICNFLE), { 780, 740 }, 1, { 35, 35 }, { 5, 0 });		//  Carbon	
-	resourceMenu.push_back(tempObject);
-	tempObject = new Object(txtMgr.getResource(SYM1FLE), { 780, 562 }, 25, { 35, 35 }, { 3, 0 });		//  Astro
-	tempObject->hide();
-	resourceMenu.push_back(tempObject);
 }
 
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
