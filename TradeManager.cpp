@@ -41,7 +41,7 @@ void TradeManager::setAvailableResources(int resAvail[])
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
 void TradeManager::saveResources(Player *cPlyr)
 {
-	for (int i = 0; i < resourceMenu.size(); i++)
+	for (int i = 0; i < 6; i++)
 	{
 		resourceMenu.setItemQty(i, cPlyr->getStatQty(i));
 	}
@@ -52,7 +52,7 @@ void TradeManager::saveResources(Player *cPlyr)
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
 void TradeManager::restoreResources(Player *cPlyr)
 {
-	for (int i = 0; i < resourceMenu.size(); i++)
+	for (int i = 0; i < 6; i++)
 	{
 		cPlyr->getStarship()->setShipObjectQty(i, (resourceMenu.getItemQty(i)));
 		cPlyr->updateIcon(i);

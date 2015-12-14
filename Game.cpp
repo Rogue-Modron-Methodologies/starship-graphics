@@ -666,7 +666,7 @@ void Game::tradeMenuListener()
 			if (universe->getCurrentPlanet()->getType() == pirate)
 				endPiratePhase();
 			else if (flag[adventureReward])
-				endAdventerPhase();
+				endAdventurePhase();
 			else
 				actionNum++;
 		}
@@ -718,7 +718,7 @@ void Game::tradeMenuListener()
 			else
 			{
 				trdMgr.setActive(false);
-				flightMenu.setActive(true); /////////////////////////////////
+				flightMenu.setActive(true); 
 			}		
 			break;
 		case tradeBuild:
@@ -921,7 +921,7 @@ void Game::gainOneResource()
 		}
 		else if (flag[adventureReward])
 		{
-			endAdventerPhase();
+			endAdventurePhase();
 		}
 		return;
 	}
@@ -1250,7 +1250,7 @@ void Game::endPiratePhase()
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
 //  Ends Adventure Combat
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
-void Game::endAdventerPhase()
+void Game::endAdventurePhase()
 {
 	flag[adventureReward] = false;
 	cPlyr->getAdventureZone()->push_back((AdventureCard*)universe->getAdvCard(curAdv));

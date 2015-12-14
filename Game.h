@@ -120,7 +120,7 @@ private:
 	void updateHeroOfThePeople();
 	void pirateMenuListener();
 	void endPiratePhase();
-	void endAdventerPhase();
+	void endAdventurePhase();
 	void adventureListener(int tempType);
 	bool buildShipObject(int item);
 	std::string getAdvReqString();
