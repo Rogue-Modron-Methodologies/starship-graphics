@@ -73,6 +73,7 @@ public:
 	void draw(sf::RenderWindow &gWindow);
 	void setAvailableResources(int resAvail[]);
 
+
 private:
 	void createResourceMenu(ResourceManager<sf::Texture> &txtMgr);
 	void createTradeMenu(ResourceManager<sf::Texture> &txtMgr);

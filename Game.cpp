@@ -660,28 +660,15 @@ void Game::tradeMenuListener()
 		if (cPhase == flight)
 		{
 			flag[justActed] = true;
-			flightPathActions[universe->getCurrentMove() - 1]->setSrcPosX(3);
-			flightEventString.setString("Trade Complete");				
+			flightPathActions[universe->getCurrentMove() - 1]->setSrcPosX(3);					
 			flightMenu.setActive(true);
 			//  If the resource was granted by a pirate
 			if (universe->getCurrentPlanet()->getType() == pirate)
-			{
-				pirateMenu.setActive(false);
-				cPlyr->getPirateZone()->push_back((Pirate*)universe->getCurrentPlanet());
-				universe->replaceCurrentPlanet();
-				flightEventString.setString("Resource Gained");
-			}
+				endPiratePhase();
 			else if (flag[adventureReward])
-			{
-				flag[adventureReward] = false;
-				cPlyr->getAdventureZone()->push_back((AdventureCard*)universe->getAdvCard(curAdv)); 
-				universe->addCardtoAdvDeck(curAdv);
-				currentPlanet.setSrcPos(universe->getCurrentPlanet()->getSrcPos());
-				actionNum++;
-			}
+				endAdventerPhase();
 			else
 				actionNum++;
-
 		}
 		else if (cPhase == tradeBuild)
 		{
@@ -689,17 +676,14 @@ void Game::tradeMenuListener()
 			if (numPlntsTrd == 2)
 				flag[buildTradeEnd] = true;
 			flag[cPlanetActive] = false;
-			flightEventString.setString("Trade Complete");
 		}
 		else
 		{
 			flag[phaseComplete] = true;
 			flag[cPlanetActive] = false;
-			flightEventString.setString("Resource Gained");
 		}
-
+		flightEventString.setString("Trade Complete");	
 		trdMgr.setActive(false);
-
 	}
 	//  If the Cancel Icon has been selected
 	else if (event.mouseButton.button == sf::Mouse::Left && trdMgr.cancelTargeted(gWindow))
@@ -735,8 +719,7 @@ void Game::tradeMenuListener()
 			{
 				trdMgr.setActive(false);
 				flightMenu.setActive(true); /////////////////////////////////
-			}
-				
+			}		
 			break;
 		case tradeBuild:
 			flag[cPlanetActive] = false;
@@ -922,12 +905,11 @@ void Game::initTradeMenu(int tempPos)
 //
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
 void Game::gainOneResource()
-{
-	pirateMenu.setActive(false);
+{	
 	std::cout << "GainOneResource" << std::endl;
 	if (!anyResAvail())
 	{
-		flag[justActed] = true;		
+		flag[justActed] = true;
 		statusUpdate = "All Cargo Holds Full";
 		flightEventString.setString("No Resources Gained");
 		trdMgr.setActive(false);
@@ -935,20 +917,15 @@ void Game::gainOneResource()
 		//  If the resource was granted by a pirate
 		if (universe->getCurrentPlanet()->getType() == pirate)
 		{
-			cPlyr->getPirateZone()->push_back((Pirate*)universe->getCurrentPlanet());
-			universe->replaceCurrentPlanet();
+			endPiratePhase();
 		}
 		else if (flag[adventureReward])
 		{
-			flag[adventureReward] = false;
-			cPlyr->getAdventureZone()->push_back((AdventureCard*)universe->getAdvCard(curAdv));
-			universe->addCardtoAdvDeck(curAdv);
-			currentPlanet.setSrcPos(universe->getCurrentPlanet()->getSrcPos());
-			actionNum++;
+			endAdventerPhase();
 		}
 		return;
 	}
-
+	pirateMenu.setActive(false);
 	flightMenu.setActive(false);	
 	flightEventString.setString("Choose a Resource");
 	trdMgr.saveResources(cPlyr);
@@ -1254,6 +1231,32 @@ void Game::rollCombatDie(int party)
 		break;
 	}
 	combatDie[party]->setString("Dice roll: " + std::to_string(num));
+}
+
+// (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
+//  Ends Pirate Combat
+// (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
+void Game::endPiratePhase()
+{
+	std::cout << "Pirate being replaced";
+	flag[justActed] = true;
+	trdMgr.setActive(false);
+	flightMenu.setActive(true);
+	pirateMenu.setActive(false);
+	cPlyr->getPirateZone()->push_back((Pirate*)universe->getCurrentPlanet());
+	universe->replaceCurrentPlanet();
+}
+
+// (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
+//  Ends Adventure Combat
+// (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
+void Game::endAdventerPhase()
+{
+	flag[adventureReward] = false;
+	cPlyr->getAdventureZone()->push_back((AdventureCard*)universe->getAdvCard(curAdv));
+	universe->addCardtoAdvDeck(curAdv);
+	currentPlanet.setSrcPos(universe->getCurrentPlanet()->getSrcPos());
+	actionNum++;
 }
 
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 

@@ -134,8 +134,7 @@ public:
 		{
 			statistics[i]->setQty(4);
 			updateIcon(i);
-		}
-			
+		}	
 	}
 	
 };

@@ -119,6 +119,8 @@ private:
 	void updateFriendOfThePeople();
 	void updateHeroOfThePeople();
 	void pirateMenuListener();
+	void endPiratePhase();
+	void endAdventerPhase();
 	void adventureListener(int tempType);
 	bool buildShipObject(int item);
 	std::string getAdvReqString();
