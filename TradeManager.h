@@ -25,6 +25,7 @@ private:
 	bool choosingRes;
 	bool resChosen;
 	bool productionGain;
+	bool paused;
 	int cResource;
 	int cTradeNum;
 	int cost;
@@ -48,17 +49,18 @@ public:
 	void setCost(int co) { cost = co; }	
 	int getCost(){ return cost; }
 	bool isActive() const { return active; }
+	bool isPaused() const { return paused; }
 	void setTransaction(std::string trans) { transaction = trans; }
 	
 	//  Misc Inline Functions
 	bool checkTargeted(sf::RenderWindow &gWindow)
-		{ return tradeMenu.isItemTargeted(gWindow, check); }
+		{ return !paused && tradeMenu.isItemTargeted(gWindow, check); }
 	bool cancelTargeted(sf::RenderWindow &gWindow)
-		{ return tradeMenu.isItemTargeted(gWindow, cancel);}
+	{ return !paused && tradeMenu.isItemTargeted(gWindow, cancel); }
 	bool plusTargeted(sf::RenderWindow &gWindow)
-		{ return tradeMenu.isItemTargeted(gWindow, plus); }
+	{ return !paused && tradeMenu.isItemTargeted(gWindow, plus); }
 	bool minusTargeted(sf::RenderWindow &gWindow)
-		{return tradeMenu.isItemTargeted(gWindow, minus); }
+	{ return !paused && tradeMenu.isItemTargeted(gWindow, minus); }
 
 	//  Prototypes
 	void tradNumPlusOne(){ cTradeNum++; }
@@ -72,7 +74,8 @@ public:
 	bool iconsTargeted(sf::RenderWindow &gWindow);
 	void draw(sf::RenderWindow &gWindow);
 	void setAvailableResources(int resAvail[]);
-
+	void pauseTrade();
+	void unpauseTrade();
 
 private:
 	void createResourceMenu(ResourceManager<sf::Texture> &txtMgr);

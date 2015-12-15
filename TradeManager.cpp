@@ -37,7 +37,7 @@ void TradeManager::setAvailableResources(int resAvail[])
 }
 
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
-///  saves the current resource and astro values	 
+//  saves the current resource and astro values	
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
 void TradeManager::saveResources(Player *cPlyr)
 {
@@ -153,7 +153,7 @@ bool TradeManager::resourceTargeted(sf::RenderWindow &gWindow, int &pos)
 bool TradeManager::iconsTargeted(sf::RenderWindow &gWindow)			////////////////////////////////////   REFACTOR
 {
 	int thisISTEMP = 0;
-	if (active)
+	if (active && !paused)
 	{
 		if (tradeMenu.isMenuTargeted(gWindow, thisISTEMP))
 			return true;
@@ -164,11 +164,37 @@ bool TradeManager::iconsTargeted(sf::RenderWindow &gWindow)			//////////////////
 }
 
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
+//  
+// (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
+void TradeManager::pauseTrade()			
+{
+	if (active)
+	{
+		paused = true;
+		tradeMenu.hideAll();
+		resourceMenu.hideAll();
+	}
+}
+
+// (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
+//  
+// (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
+void TradeManager::unpauseTrade()
+{
+	if (active)
+	{
+		paused = false;
+		tradeMenu.unhideAll();
+		resourceMenu.unhideAll();
+	}
+}
+
+// (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
 // draws the resourceMenu if a trade is in progress  
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
 void TradeManager::draw(sf::RenderWindow &gWindow)
 {
-	if (active)
+	if (active && !paused)
 	{
 		resourceMenu.draw(gWindow);
 		tradeMenu.draw(gWindow);

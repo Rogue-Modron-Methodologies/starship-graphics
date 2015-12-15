@@ -153,7 +153,7 @@ void Game::gameLoop()
 			case sf::Event::MouseButtonPressed:
 				switch (cPhase)
 				{
-				case production: 
+				case production:
 					if (trdMgr.isActive())
 						tradeMenuListener();
 					productionPhaseListener();
@@ -162,11 +162,13 @@ void Game::gameLoop()
 					if (sectorMenu.isActive())
 						preFlightListener(tempNum);
 					else if (pirateMenu.isActive())
-						pirateMenuListener(); 
-					else if (trdMgr.isActive())
-						tradeMenuListener();					
+						pirateMenuListener();
 					else
+					{
 						flightPhaseListener(tempNum);
+						if (trdMgr.isActive())
+							tradeMenuListener();
+					}
 					break;
 				case tradeBuild:
 					buildPhaseListener(tempNum);
@@ -487,6 +489,11 @@ void Game::flightPhaseListener(int tempType)
 			currentPlanet.setSrcPos(universe->getFlightPathPlanet(tempType)->getSrcPos());
 			currentPlanet.setString("Previous Planet");
 			flightMenu.setActive(false);
+			if (trdMgr.isActive())
+			{
+				flightEventString.setString("Trade Paused");
+				trdMgr.pauseTrade();
+			}
 		}
 	}
 	// Current Planet in the FlightPath is clicked
@@ -496,14 +503,19 @@ void Game::flightPhaseListener(int tempType)
 		{
 			currentPlanet.setSrcPos(universe->getCurrentPlanet()->getSrcPos());
 			currentPlanet.setString("Current Planet");
-			if (!flag[phaseComplete])
-				flightMenu.setActive(true);
+			if (!flag[phaseComplete] && !trdMgr.isActive())
+				flightMenu.setActive(true);	
+			if (trdMgr.isActive())
+			{
+				flightEventString.setString("Trade In Progress");
+				trdMgr.unpauseTrade();
+			}
 		}
 	}
 	// Current Planet (Large Icon) clicked
 	else if (isCPlanetTargeted()) { ; }
 	//  Current Planet's Menu in the FlightPath is clicked
-	else if (!flag[phaseComplete] && flightMenu.isActive() && flightMenu.isMenuTargeted(gWindow, tempType))
+	else if (!flag[phaseComplete] && !trdMgr.isActive() && flightMenu.isActive() && flightMenu.isMenuTargeted(gWindow, tempType))
 	{
 		switch (tempType)
 		{
@@ -556,9 +568,7 @@ void Game::flightPhaseListener(int tempType)
 			if (flag[adventureAvailable] && universe->getAdvCard(curAdv)->isAvailable())
 			{
 				if (startAdventure())
-				{
-					adventureRewards();
-				}		
+					adventureRewards();	
 			}
 			else if (!flag[adventureAvailable] && universe->getAdvCard(curAdv)->isAvailable())
 			{
@@ -599,6 +609,11 @@ void Game::flightPhaseListener(int tempType)
 			flightEventString.setString("");
 			statusUpdate = "Adventure Only Available on " + universe->getAdvCard(curAdv)->getName();
 		}
+		if (trdMgr.isActive())
+		{
+			flightEventString.setString("Trade Paused");
+			trdMgr.pauseTrade();
+		}
 	}
 	//  Starship (Large) && Empty Space is clicked
 	else if (!cPlyr->getStarship()->isTargeted(gWindow) && !cPlyr->getStarship()->isSmall() && !trdMgr.iconsTargeted(gWindow))
@@ -623,14 +638,14 @@ void Game::tradeMenuListener()
 			trdMgr.setTradedResource(temp);
 			trdMgr.setResourceChosen(true);
 			trdMgr.greyAllButChosesnResources();
-			flightEventString.setString("Trade In Progress");
+			//flightEventString.setString("Trade In Progress");
 		}
 	}
 	//  If player doesn't have the option to chose resource (auto chooses the resource)
 	else if (!trdMgr.choosingResource())
 	{
 		trdMgr.setResourceChosen(true);
-		flightEventString.setString("Trade In Progress");
+		//flightEventString.setString("Trade In Progress");
 	}	
 	//  If the plus icon has been selected
 	if (event.mouseButton.button == sf::Mouse::Left && trdMgr.plusTargeted(gWindow))
@@ -686,7 +701,7 @@ void Game::tradeMenuListener()
 		trdMgr.setActive(false);
 	}
 	//  If the Cancel Icon has been selected
-	else if (event.mouseButton.button == sf::Mouse::Left && trdMgr.cancelTargeted(gWindow))
+	else if (event.type == event.MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left && trdMgr.cancelTargeted(gWindow))
 	{
 		trdMgr.restoreResources(cPlyr);
 		flightEventString.setString("Trade Cancelled");
@@ -727,6 +742,7 @@ void Game::tradeMenuListener()
 		}
 	}
 	trdMgr.updateTradeIcons(cPlyr);
+
 }
 
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
