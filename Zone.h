@@ -21,13 +21,12 @@ class Zone
 {
 private:
 	std::vector<T*> zone;
-	Object	*zoneIcon;
+	Object *zoneIcon;
 	Object *beginArrow;
 	Object *endArrow;
 	bool	showIconOnly;
 	bool begArwVis;
 	bool endArwVis;
-
 
 public:
 	Zone(ResourceManager<sf::Texture> &txtMgr, ResourceManager<sf::Font> &fntMgr, std::string name)
@@ -44,7 +43,6 @@ public:
 		beginArrow = new Object(txtMgr.getResource(SYMBFLE), { CLPOS.x + 175, CLPOS.y - 60 }, 0, { 50, 50 }, { 7, 0 });
 		endArrow = new Object(txtMgr.getResource(SYMBFLE), { CLPOS.x + 250, CLPOS.y - 60 }, 3, { 50, 50 }, { 8, 0 });
 	}
-
 	~Zone()
 	{
 		for (int i = 0; i < zone.size(); i++)
@@ -56,23 +54,22 @@ public:
 	sf::Vector2f getPosition() const { return zoneIcon->getPosition(); }
 	sf::Vector2f getScale() const { return zoneIcon->getScale(); }
 	T* getZoneItem(int pos){ return zone[pos]; }
-
-	//  Misc Inline Functions
 	bool isIconTargeted(sf::RenderWindow &gWindow) { 	return zoneIcon->isTargeted(gWindow); }
 
-
-	
+	//  Push item into vector	
 	void push_back(T* item) 	
 	{ 
 		zone.push_back(item); 
 		sortZone();
 	}
 
-	//
-	void draw(sf::RenderWindow &gWindow){
+	// Draws Zone and Objects
+	void draw(sf::RenderWindow &gWindow)
+	{
 		if (showIconOnly)
 			zoneIcon->draw(gWindow);
-		else	{
+		else	
+		{
 			gWindow.draw(zoneIcon->getText());
 			if (zone.empty())
 				return;
@@ -87,7 +84,8 @@ public:
 	}
 
 	//  Updates the ColonyZone based on given pos and scale 
-	void updateZone(sf::Vector2f pos, sf::Vector2f scale, bool toggle){
+	void updateZone(sf::Vector2f pos, sf::Vector2f scale, bool toggle)
+	{
 		showIconOnly = toggle;
 		zoneIcon->setPosition(pos);
 		zoneIcon->setScale(scale);
@@ -100,7 +98,8 @@ public:
 
 		int cardCnt = 0;
 
-		for (int i = beginArrow->getQty(); i <= endArrow->getQty() && i < zone.size(); i++){
+		for (int i = beginArrow->getQty(); i <= endArrow->getQty() && i < zone.size(); i++)
+		{
 			zone[i]->setScale(scale);
 			zone[i]->setPosition(pos + sf::Vector2f{ 150.0f * cardCnt, 0 });
 			cardCnt++;
@@ -109,35 +108,39 @@ public:
 	}
 
 	// Checks to see if any card in the vector has been targeted   
-	bool isZoneTargeted(sf::RenderWindow &gWindow, int &resource, int &pos){
-		for (int i = beginArrow->getQty(); i <= endArrow->getQty() && i < zone.size(); i++){
+	bool isZoneTargeted(sf::RenderWindow &gWindow, int &resource, int &pos)
+	{
+		for (int i = beginArrow->getQty(); i <= endArrow->getQty() && i < zone.size(); i++)
+		{
 			if (zone[i]->isTargeted(gWindow)){
 				pos = i;				
 				resource = zone[i]->getResource();
 				return true;
 			}
 		}
-		if (begArwVis && beginArrow->isTargeted(gWindow)){
+		if (begArwVis && beginArrow->isTargeted(gWindow))
+		{
 			beginArrow->setQty(beginArrow->getQty() - 1);
 			endArrow->setQty(endArrow->getQty() - 1);
 			updateZone(CLPOS, CRDZNSCL, false);
 			return true;
 		}
-		if (endArwVis && endArrow->isTargeted(gWindow)){
+		if (endArwVis && endArrow->isTargeted(gWindow))
+		{
 			beginArrow->setQty(beginArrow->getQty() + 1);
 			endArrow->setQty(endArrow->getQty() + 1);
 			updateZone(CLPOS, CRDZNSCL, false);
 			return true;
-		}
-				
+		}		
 		return false;
 	}
 
 	// Checks to see
-	bool resourceMatchesActNum(int resource, int actNum){
+	bool resourceMatchesActNum(int resource, int actNum)
+	{
 		bool flag = false;
-
-		for (int i = 0; i < zone.size(); i++){
+		for (int i = 0; i < zone.size(); i++)
+		{
 			if ( zone[i]->getActNum() == actNum && zone[i]->getResource() == resource )
 				return true;
 		}
@@ -146,11 +149,13 @@ public:
 
 	//  Returns true if any activation nums match passed number
 	//  toggles resAvail position to 1 if found
-	bool findResource(int num, int resAvail[]){
+	bool findResource(int num, int resAvail[])
+	{
 		bool flag = false;
-
-		for (int i = 0; i < zone.size(); i++){
-			if (zone[i]->getActNum() == num){
+		for (int i = 0; i < zone.size(); i++)
+		{
+			if (zone[i]->getActNum() == num)
+			{
 				resAvail[zone[i]->getResource()] = 1;
 				flag = true;
 			}			
@@ -159,14 +164,16 @@ public:
 	}
 
 private:
-	void sortZone(){
+	void sortZone()
+	{
 		typedef bool(*comparer_t)(const T*, const T*);
 		//comparer_t cmp = &sortBy;
 		//std::sort(zone.begin(), zone.end(), cmp);
 		std::sort(zone.begin(), zone.end());
 	}
 
-	void updateArrows(){
+	void updateArrows()
+	{
 		if (beginArrow->getQty() > 0)
 			begArwVis = true;
 		else
@@ -176,8 +183,7 @@ private:
 		else
 			endArwVis = false;
 	}
-
 };
 
-#endif
+#endif // ZONE_H
 

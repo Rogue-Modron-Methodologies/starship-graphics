@@ -21,12 +21,16 @@ class Menu
 {
 private:
 	std::vector<Object*> menu;
+	sf::Text updateText;			
 	bool active;
 
 public:
-	Menu()
+	Menu(ResourceManager<sf::Font> &fntMgr)
 	{
 		active = false;
+		updateText.setFont(fntMgr.getResource(FNTFLE));
+		updateText.setPosition({ 200, 820 });
+		updateText.setString("");
 	}
 
 	~Menu()
@@ -43,13 +47,35 @@ public:
 	void unGreyItem(int pos){ menu[pos]->unGreyOut(); }
 	int getItemQty(int i) const { return menu[i]->getQty(); }
 	void setItemQty(int i, int qty) { menu[i]->setQty(qty); }
+	void setItemString(int i, std::string text) { menu[i]->setString(text); }
 	int size() const { return (int)menu.size(); }
-
+	void hideItem(int pos) {	menu[pos]->hide(); }
+	void unhideItem(int pos)	{ menu[pos]->unhide(); }
 	bool isItemTargeted(sf::RenderWindow & gWindow, int pos)
+	{ return active && menu[pos]->isTargeted(gWindow); }
+	//  Menu is active but all Icons get hidden
+	void hideAll()
 	{
-		return active && menu[pos]->isTargeted(gWindow);
+		for (int i = 0; i < menu.size(); ++i)
+			menu[i]->hide();
 	}
-
+	//  Menu is active and all Icons get unhidden
+	void unhideAll()
+	{
+		for (int i = 0; i < menu.size(); ++i)
+			menu[i]->unhide();
+	}
+	//  Menu is drawn if active
+	void draw(sf::RenderWindow &gWindow)
+	{
+		if (active)
+		{
+			for (int i = 0; i < menu.size(); ++i)
+				menu[i]->draw(gWindow);
+			gWindow.draw(updateText);
+		}
+	}
+	//  Menu is checked for targeted if active
 	bool isMenuTargeted(sf::RenderWindow &gWindow, int &pos)
 	{
 		if (active)
@@ -60,42 +86,11 @@ public:
 				{
 					pos = i;
 					return true;
-				}
-					
+				}		
 			}
 		}
 		return false;
 	}
-	//  Menu is active but all Icons get hidden
-	void hideAll()
-	{
-		for (int i = 0; i < menu.size(); ++i)
-			menu[i]->hide();
-	}
-
-	void hideItem(int pos)
-	{
-		menu[pos]->hide();
-	}
-	
-	void unhideAll()
-	{
-		for (int i = 0; i < menu.size(); ++i)
-			menu[i]->unhide();
-	}
-
-	void unhideItem(int pos)
-	{
-		menu[pos]->unhide();
-	}
-
-	void draw(sf::RenderWindow &gWindow)
-	{
-		if (active)
-		{
-			for (int i = 0; i < menu.size(); ++i)
-				menu[i]->draw(gWindow);
-		}
-	}
 };
-#endif // ADVENTURECARD_H
+
+#endif // MENU_H

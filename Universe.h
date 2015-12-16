@@ -62,8 +62,7 @@ private:
 	void universeSetup(ResourceManager<sf::Texture> &txtMgr);
 	void shuffleDeck(Card* list[], int size);
 	void addCardtoSector(int secNum, int i);
-//	Object* getFlightSector() const { return flightSector[0]; }
 	void setSector(Card* nCard, int sNum, int cNum);
-
 };
+
 #endif // UNIVERSE_H

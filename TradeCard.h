@@ -59,6 +59,6 @@ public:
 		this->setName(right->getName());
 		this->setVisible(right->isVisible());
 	}
-
 };
+
 #endif // TRADECARD_H

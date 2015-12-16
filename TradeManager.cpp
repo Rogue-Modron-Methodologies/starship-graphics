@@ -3,7 +3,8 @@
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
 //  Constructor
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
-TradeManager::TradeManager(ResourceManager<sf::Texture> &txtMgr)
+TradeManager::TradeManager(ResourceManager<sf::Texture> &txtMgr, ResourceManager<sf::Font> &fntMgr)
+	: resourceMenu(fntMgr), tradeMenu(fntMgr)
 {
 	active = false;
 	choosingRes = false;

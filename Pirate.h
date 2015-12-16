@@ -46,4 +46,5 @@ public:
 		draw(gWindow);
 	}
 };
+
 #endif // PIRATE_H

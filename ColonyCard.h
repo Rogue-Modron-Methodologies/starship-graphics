@@ -39,7 +39,6 @@ public:
 	{	return actNum;	}
 	int getPts() const
 	{  return vicPts;  }
-
-
 };
+
 #endif // COLONYCARD_H

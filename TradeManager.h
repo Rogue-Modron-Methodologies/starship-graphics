@@ -36,7 +36,7 @@ private:
 	std::string transaction;
 
 public:
-	TradeManager(ResourceManager<sf::Texture> &txtMgr);
+	TradeManager(ResourceManager<sf::Texture> &txtMgr, ResourceManager<sf::Font> &fntMgr);
 
 	//  Getters/Setters
 	void setChoosingResource(bool toggle) { choosingRes = toggle;}
@@ -81,8 +81,6 @@ private:
 	void createResourceMenu(ResourceManager<sf::Texture> &txtMgr);
 	void createTradeMenu(ResourceManager<sf::Texture> &txtMgr);
 };
-
-
 
 #endif // TRADEMANAGER_H
 

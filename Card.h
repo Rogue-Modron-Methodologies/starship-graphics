@@ -115,6 +115,6 @@ public:
 	{	return -100;	}
 	virtual int getVicPts() const
 	{	return -100;	}
+};  
 
-};
 #endif // CARD_H

@@ -49,7 +49,6 @@ public:
 		return true;
 	}
 	bool isMaxed() const { return qty >= 1; }
-
 };
 
 #endif // HANGARSHIPS_H

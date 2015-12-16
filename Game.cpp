@@ -14,11 +14,11 @@
 //  Player Name Setup
 //
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
-Game::Game() : trdMgr(txtMgr),
-			currentPlanet(txtMgr.getResource(UNIVERSECARDIMAGES), { 4, 13 }, 0, "", 0, 0, 0, "", 0, 0),
+Game::Game() : currentPlanet(txtMgr.getResource(UNIVERSECARDIMAGES), { 4, 13 }, 0, "", 0, 0, 0, "", 0, 0),
 			friendPeople(txtMgr.getResource(FRIENDHERO), sf::Vector2f{ 900, 840 }, 1, sf::Vector2u(200, 200), { 1, 0 }),		
 			heroPeople(txtMgr.getResource(FRIENDHERO), sf::Vector2f{ 975, 840 }, 1, sf::Vector2u(200, 200), { 0, 0 }),
-			flightDie(txtMgr.getResource(SDIEFLE), sf::Vector2f{ 350, 525 }, 1, sf::Vector2u(80, 80))
+			flightDie(txtMgr.getResource(SDIEFLE), sf::Vector2f{ 350, 525 }, 1, sf::Vector2u(80, 80)),
+			flightMenu(fntMgr), buildMenu(fntMgr), pirateMenu(fntMgr), sectorMenu(fntMgr), trdMgr(txtMgr, fntMgr)
 {  
 	flightDie.initString(fntMgr.getResource(FNTFLE), { 440, 545 }, "", sf::Text::Bold);		
 
@@ -407,14 +407,16 @@ void Game::preFlightListener(int &tempType){
 	// Starship (Large) is clicked
 	else if (cPlyr->getStarship()->isTargeted(gWindow) && !cPlyr->getStarship()->isSmall()){}	// Do Nothing this Phase
 	// Colony Zone (Large Icon) is clicked
-	else if (!cPlyr->zonesSmall() && cPlyr->getColonyZone()->getIconOnly() && cPlyr->getColonyZone()->isIconTargeted(gWindow)){
+	else if (!cPlyr->zonesSmall() && cPlyr->getColonyZone()->getIconOnly() && cPlyr->getColonyZone()->isIconTargeted(gWindow))
+	{
 		if (event.mouseButton.button == sf::Mouse::Left)
 			cPlyr->expandColonyZone();
 		else if (event.mouseButton.button == sf::Mouse::Right)
 			cPlyr->makeBig();
 	}
 	// Trade Zone (Large Icon) is clicked
-	else if (!cPlyr->zonesSmall() && cPlyr->getTradeZone()->getIconOnly() && cPlyr->getTradeZone()->isIconTargeted(gWindow)){
+	else if (!cPlyr->zonesSmall() && cPlyr->getTradeZone()->getIconOnly() && cPlyr->getTradeZone()->isIconTargeted(gWindow))
+	{
 		if (event.mouseButton.button == sf::Mouse::Left)
 			cPlyr->expandTradeZone();
 		else if (event.mouseButton.button == sf::Mouse::Right)
@@ -439,7 +441,8 @@ void Game::preFlightListener(int &tempType){
 		return;
 	}
 	//  Starship (Large) && Empty Space is clicked
-	else if (!cPlyr->getStarship()->isTargeted(gWindow) && !cPlyr->getStarship()->isSmall()){
+	else if (!cPlyr->getStarship()->isTargeted(gWindow) && !cPlyr->getStarship()->isSmall())
+	{
 		cPlyr->makeSmall();
 		sectorMenu.unhideAll();
 	}
@@ -740,7 +743,6 @@ void Game::tradeMenuListener()
 		}
 	}
 	trdMgr.updateTradeIcons(cPlyr);
-
 }
 
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
@@ -1409,7 +1411,6 @@ bool Game::startAdventure()
 			flag = true;
 		else
 			flag = false;
-
 	}
 	
 	if (flag)			//  Remove resources and/or astro
@@ -1434,8 +1435,6 @@ bool Game::startAdventure()
 		}
 	}	
 	return flag;
-
-
 }
 
 // (¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯`'•.¸//(*_*)\\¸.•'´¯) 
@@ -1495,7 +1494,6 @@ std::string Game::getAdvRewardsString(int res, int astro, int fame, int vic)
 		tempString += std::to_string(fame) + " Fame Point(s)\n";
 	if (vic > 0)
 		tempString += std::to_string(vic) + " Victory Point\n";
-
 	return tempString;
 }
 

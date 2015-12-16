@@ -66,6 +66,6 @@ public:
 	int getReq1Type() const { return req1Type; }
 	int getReq2Qty() const { return req2Qty; }
 	int getReq2Type() const { return req2Type; }
+}; 
 
-};
 #endif // ADVENTURECARD_H

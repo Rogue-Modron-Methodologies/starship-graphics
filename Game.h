@@ -11,7 +11,6 @@
 #define GAME_H
 
 #include "Universe.h"
-#include "Menu.h"
 #include "TradeManager.h"
 #include <string>
 #include <fstream>
@@ -134,7 +133,6 @@ private:
 	void createBuildMenu();
 	void createPirateMenu();
 	void createSectorMenu();
-
 };
 
-#endif // BOARDGAME_H
+#endif // GAME_H

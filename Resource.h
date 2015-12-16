@@ -33,8 +33,7 @@ public:
 	bool gainItem(std::string &error);
 	void setSrcPos(sf::Vector2u source) { this->srcPos = source; updateTextRect(); }
 	bool isMaxed() const { return qty >= rCap; }
-	bool isEmpty() const { return qty <= 0; }
-	
+	bool isEmpty() const { return qty <= 0; }	
 };
 
 #endif // RESOURCE_H

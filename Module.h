@@ -41,4 +41,5 @@ public:
 	void setMaxQty(int maxQty)
 	{  this->maxQty = maxQty;  }
 };
+
 #endif // MODULE_H
