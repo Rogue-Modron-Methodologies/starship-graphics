@@ -427,7 +427,6 @@ void Game::preFlightListener(int &tempType){
 	//  Sector is Clicked  (Initializes upcoming Flight Phase)
 	else if (sectorMenu.isMenuTargeted(gWindow, tempType) && cPlyr->getStarship()->isSmall())
 	{
-		infoString.setString("Flight: 1 / " + std::to_string(cPlyr->getStarship()->getMaxDistance()) + "\nMax Actions: 0 / " + std::to_string(cPlyr->getStarship()->getMaxActions()));
 		sectorMenu.setActive(false);
 		flightMenu.setActive(true);
 		flag[flightPathActive] = true;
@@ -436,7 +435,7 @@ void Game::preFlightListener(int &tempType){
 		currentPlanet.setSrcPos(universe->getCurrentPlanet()->getSrcPos());
 		for (int i = 0; i < FLIGHTACTIONS; i++)
 			flightPathActions[i]->setSrcPosX(6);
-		specialString.setString("Flight Sector: " + std::to_string(universe->getCurrentSectorNum() + 1));
+		specialString.setString("");
 		return;
 	}
 	//  Starship (Large) && Empty Space is clicked
@@ -562,7 +561,6 @@ void Game::flightPhaseListener(int tempType)
 			pirateMenu.setActive(false);
 			flightMenu.setActive(true);
 			flightEventString.setString("");
-			specialString.setString("Flight Sector: " + std::to_string(universe->getCurrentSectorNum() + 1));
 			universe->makeAdventuresAvailable();
 			break;
 		case adv:
@@ -639,7 +637,6 @@ void Game::tradeMenuListener()
 			trdMgr.setTradedResource(temp);
 			trdMgr.setResourceChosen(true);
 			trdMgr.greyAllButChosesnResources();
-			//flightEventString.setString("Trade In Progress");
 		}
 	}
 	//  If player doesn't have the option to chose resource (auto chooses the resource)
@@ -966,7 +963,8 @@ void Game::updateFlightMenu()
 	{
 		flightMenu.hideAll();
 		infoString.setString("Flight: " + std::to_string(universe->getCurrentMove()) + " / " + std::to_string(cPlyr->getStarship()->getMaxDistance())
-			+ "\nMax Actions: " + std::to_string(actionNum) + " / " + std::to_string(cPlyr->getStarship()->getMaxActions()));
+			+ "\nMax Actions: " + std::to_string(actionNum) + " / " + std::to_string(cPlyr->getStarship()->getMaxActions())
+			+ "\nFlight Sector: " + std::to_string(universe->getCurrentSectorNum() + 1));
 
 		if (universe->getCurrentPlanet()->getType() == 2 && !flag[justActed])			//  PIRATE'S CHOICE
 		{
