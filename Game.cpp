@@ -436,6 +436,7 @@ void Game::preFlightListener(int &tempType){
 		currentPlanet.setSrcPos(universe->getCurrentPlanet()->getSrcPos());
 		for (int i = 0; i < FLIGHTACTIONS; i++)
 			flightPathActions[i]->setSrcPosX(6);
+		specialString.setString("Flight Sector: " + std::to_string(universe->getCurrentSectorNum() + 1));
 		return;
 	}
 	//  Starship (Large) && Empty Space is clicked
