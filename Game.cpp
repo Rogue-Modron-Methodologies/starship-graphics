@@ -682,7 +682,10 @@ void Game::tradeMenuListener()
 			if (universe->getCurrentPlanet()->getType() == pirate)
 				endPiratePhase();
 			else if (flag[adventureReward])
+			{
 				endAdventurePhase();
+				flightPathActions[universe->getCurrentMove() - 1]->setSrcPosX(9); /////////////////////////////////
+			}
 			else
 				actionNum++;
 		}
